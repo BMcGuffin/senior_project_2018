@@ -8,16 +8,15 @@
 package Models;
 
 /**
- * A complete script, which contains one or more plotlines. It has a running
- * time and may have some header data. It contains a reference to the DTD which
- * is used by this script. The script can be converted to XML via the
+ * The event is the atomic unit of the script model. It contains some data which
+ * begins at some moment in time. It may or may not be a media event. It has a
+ * reference to the instance it's a part of. It can be written to XML using the
  * XML_Writable interface.
  *
  * @author Bryan McGuffin
- * @version Feb 1, 2018
- * @see Plotline
+ * @version Feb 5, 2018
  */
-public class Script implements XML_Writable
+public class Event implements XML_Writable
 {
 
     @Override

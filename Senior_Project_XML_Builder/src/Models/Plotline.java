@@ -8,16 +8,15 @@
 package Models;
 
 /**
- * A complete script, which contains one or more plotlines. It has a running
- * time and may have some header data. It contains a reference to the DTD which
- * is used by this script. The script can be converted to XML via the
- * XML_Writable interface.
+ * A plotline is an time-ordered sequence of Instances. It has a start time and 0
+ * or more instances.
  *
  * @author Bryan McGuffin
- * @version Feb 1, 2018
- * @see Plotline
+ * @version Feb 5, 2018
+ * @see Instance
+ * @see Event
  */
-public class Script implements XML_Writable
+public class Plotline implements XML_Writable
 {
 
     @Override

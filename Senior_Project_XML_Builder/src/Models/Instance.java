@@ -8,16 +8,14 @@
 package Models;
 
 /**
- * A complete script, which contains one or more plotlines. It has a running
- * time and may have some header data. It contains a reference to the DTD which
- * is used by this script. The script can be converted to XML via the
- * XML_Writable interface.
+ * An Instance is a cluster of one or more Events. It has a group of media-based
+ * events, and a group of non-media-based events. It has a reference to the
+ * plotline it's currently inside.
  *
  * @author Bryan McGuffin
- * @version Feb 1, 2018
- * @see Plotline
+ * @version Feb 5, 2018
  */
-public class Script implements XML_Writable
+public class Instance implements XML_Writable
 {
 
     @Override
