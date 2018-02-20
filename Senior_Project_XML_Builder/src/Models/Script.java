@@ -7,6 +7,10 @@
  */
 package Models;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+
 /**
  * A complete script, which contains one or more plotlines. It has a running
  * time and may have some header data. It contains a reference to the DTD which
@@ -19,7 +23,24 @@ package Models;
  */
 public class Script implements XML_Writable
 {
-
+    public List<Plotline> plotlines;
+    
+    public Script()
+    {
+        plotlines = new ArrayList<Plotline>();
+    }
+    
+    public boolean addPlotline(int start)
+    {
+        return plotlines.add(new Plotline(start, this));
+    }
+    
+    public int plotlineCount()
+    {
+        return plotlines.size();
+    }
+    
+    
     @Override
     public void toXML()
     {
