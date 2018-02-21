@@ -22,86 +22,113 @@ import java.util.List;
 public class Event implements XML_Writable
 {
 
-    public Instance instance;
-
-    private int curr_index;
-    private int curr_text;
-    private int curr_menu;
-    private int curr_media;
-    private int curr_transcript;
     /**
-     * The meta-list of all text fields in this event.
+     * The instance to which this event belongs.
      */
-    public List<Text> textFields;
-    /**
-     * The meta-list of all dropdown menus in this event.
-     */
-    public List<Menu> menus;
-    /**
-     * The meta-list of all media in this event.
-     */
-    public List<Media> media;
-    /**
-     * The meta-list of all transcripts in this event.
-     */
-    public List<Transcript> transcripts;
+    private Instance instance;
 
     /**
-     * Contains the ordering by which to construct the data in this event. Read
-     * as K = index.get(i); Where i is the element in buildableIndex and K is
-     * the list to pull the next element from.
+     * Contains the data fields for this event.
      */
-    public List<buildableType> buildableIndex;
+    private List<Buildable> fields;
 
     /**
      * Contains the labels for each field in this event.
      */
-    public List<String> labels;
+    private List<String> labels;
 
+    /**
+     * Constructor. Generate a new Event with no data.
+     *
+     * @param parent the Instance that this event is a part of.
+     */
     public Event(Instance parent)
     {
         instance = parent;
-        textFields = new ArrayList<Text>();
-        menus = new ArrayList<Menu>();
-        media = new ArrayList<Media>();
-        transcripts = new ArrayList<Transcript>();
-        buildableIndex = new ArrayList<buildableType>();
-        reset();
-    }
-    
-    public Buildable next()
-    {
-        if(curr_index < buildableIndex.size())
-            return getItem(curr_index++);
-        else
-            return null;
+        fields = new ArrayList<>();
+        labels = new ArrayList<>();
     }
 
-    public void reset()
+    /**
+     * Add a new data field to the end of the list.
+     *
+     * @param b The buildable data field entity
+     * @param label the title for this data field
+     */
+    public void addElement(Buildable b, String label)
     {
-        curr_index = 0;
-        curr_text = 0;
-        curr_menu = 0;
-        curr_media = 0;
-        curr_transcript = 0;
+        fields.add(b);
+        labels.add(label);
     }
-    
-    private Buildable getItem(int index)
+
+    /**
+     * Remove an element from the list.
+     *
+     * @param index the index of the field to remove
+     * @return true if the event was removed successfully
+     */
+    public boolean removeElement(int index)
     {
-        buildableType choice = buildableIndex.get(index);
-        switch (choice)
+        Buildable check = fields.remove(index);
+        if (check != null)
         {
-            case B_TEXT:
-                return textFields.get(curr_text++);
-            case B_MENU:
-                return menus.get(curr_menu++);
-            case B_MEDIA:
-                return media.get(curr_media++);
-            case B_TRANSCRIPT:
-                return transcripts.get(curr_transcript++);
-            default:
-                return null;
+            return labels.remove(index) != null;
         }
+        return false;
+    }
+
+    /**
+     * Swap the index of this element and the element above it.
+     *
+     * @param index the index of the element to be moved.
+     * @return true if the element was successfully moved.
+     */
+    public boolean moveElementUp(int index)
+    {
+        if (index <= 0)
+        {
+            return false;
+        }
+        Buildable temp = fields.get(index - 1);
+        fields.set(index - 1, fields.get(index));
+        fields.set(index, temp);
+        return true;
+    }
+
+    /**
+     * Swap the index of this element and the one below it.
+     *
+     * @param index the index of the element to be moved.
+     * @return true if the element was successfully moved.
+     */
+    public boolean moveElementDown(int index)
+    {
+        if (index >= fields.size() - 1)
+        {
+            return false;
+        }
+        Buildable temp = fields.get(index + 1);
+        fields.set(index + 1, fields.get(index));
+        fields.set(index, temp);
+        return true;
+    }
+
+    /**
+     * Determines whether event can be classified as a media event. A media
+     * event contains at least one media field.
+     *
+     * @return true if this event contains at least one media field
+     */
+    public boolean isMediaEvent()
+    {
+        for (Buildable b : fields)
+        {
+            if (b instanceof Media)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -109,13 +136,4 @@ public class Event implements XML_Writable
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    private enum buildableType
-    {
-        B_TEXT,
-        B_MENU,
-        B_MEDIA,
-        B_TRANSCRIPT;
-    }
-
 }
