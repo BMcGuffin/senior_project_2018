@@ -20,26 +20,37 @@ import java.util.List;
  */
 public class Instance implements XML_Writable
 {
-    public List<Event> mediaEvents;
-    public List<Event> nonMediaEvents;
+    /**
+     * All the events which occur at this moment in time.
+     */
+    public List<Event> events;
     
+    /**
+     * The plotline to which this event belongs.
+     */
     public Plotline plotline;
     
+    /**
+     * Constructor. Generates a new instance.
+     * 
+     * @param parent the plotline to which this instance belongs.
+     */
     public Instance(Plotline parent)
     {
-        mediaEvents = new ArrayList<Event>();
-        nonMediaEvents = new ArrayList<Event>();
+        events = new ArrayList<>();
         plotline = parent;
     }
     
-    public int mediaCount()
+    /**
+     * Add a new blank event to this instance.
+     * 
+     * @return the new event
+     */
+    public Event addEvent()
     {
-        return mediaEvents.size();
-    }
-    
-    public int nonMediaCount()
-    {
-        return nonMediaEvents.size();
+        Event e = new Event(this);
+        events.add(e);
+        return e;
     }
     
     @Override

@@ -23,24 +23,35 @@ import java.util.TreeMap;
  */
 public class Script implements XML_Writable
 {
+
+    /**
+     * The plotlines which make up this script.
+     */
     public List<Plotline> plotlines;
-    
+
+    /**
+     * Constructor. Generates a new Script object.
+     */
     public Script()
     {
-        plotlines = new ArrayList<Plotline>();
+        plotlines = new ArrayList<>();
     }
-    
-    public boolean addPlotline(int start)
+
+    /**
+     * Generate a new plotline which starts at the given time, and add it to the
+     * list.
+     *
+     * @param start The number of seconds into the script that the plotline
+     * should begin.
+     * @return the new plotline.
+     */
+    public Plotline addPlotline(int start)
     {
-        return plotlines.add(new Plotline(start, this));
+        Plotline p = new Plotline(start, this);
+        plotlines.add(p);
+        return p;
     }
-    
-    public int plotlineCount()
-    {
-        return plotlines.size();
-    }
-    
-    
+
     @Override
     public void toXML()
     {

@@ -54,11 +54,46 @@ public class Event implements XML_Writable
      *
      * @param b The buildable data field entity
      * @param label the title for this data field
+     * @return the buildable data, for convenience 
      */
-    public void addElement(Buildable b, String label)
+    public Buildable addElement(Buildable b, String label)
     {
         fields.add(b);
         labels.add(label);
+        
+        return b;
+    }
+    
+    /**
+     * Accessor for the buildable data.
+     * 
+     * @param index the index of the data to access
+     * @return the data requested
+     */
+    public Buildable getData(int index)
+    {
+        return fields.get(index);
+    }
+    
+    /**
+     * Accessor for the field labels.
+     * 
+     * @param index the index of the label to access
+     * @return the label requested
+     */
+    public String getLabel(int index)
+    {
+        return labels.get(index);
+    }
+    
+    /**
+     * Get the number of fields in this event.
+     * 
+     * @return the size of this event
+     */
+    public int fieldCount()
+    {
+        return fields.size();
     }
 
     /**
