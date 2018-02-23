@@ -158,7 +158,7 @@ public class Event implements XML_Writable
     {
         for (Buildable b : fields)
         {
-            if (b instanceof Media)
+            if (b instanceof Data_Media)
             {
                 return true;
             }

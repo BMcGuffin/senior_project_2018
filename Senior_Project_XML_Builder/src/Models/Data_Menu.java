@@ -12,7 +12,7 @@ package Models;
  * @author Bryan McGuffin
  * @version Feb 20, 2018
  */
-class Transcript implements Buildable
+class Data_Menu implements Buildable
 {
 
 }
