@@ -8,6 +8,7 @@
 package Models;
 
 /**
+ * Represents a text field.
  *
  * @author Bryan McGuffin
  * @version Feb 20, 2018
@@ -15,4 +16,42 @@ package Models;
 class Data_Text implements Buildable
 {
 
+    /**
+     * The name of this text field.
+     */
+    public String elementName;
+
+    /**
+     * The content of this text field.
+     */
+    private String text;
+
+    /**
+     * Constructor.
+     */
+    public Data_Text(String eName)
+    {
+        text = "";
+        elementName = eName;
+    }
+
+    /**
+     * Setter for the text field.
+     *
+     * @param str the text to be used.
+     */
+    public void setContent(String str)
+    {
+        text = str;
+    }
+
+    /**
+     * Getter for the text field.
+     *
+     * @return the current text.
+     */
+    public String getContent()
+    {
+        return text;
+    }
 }
