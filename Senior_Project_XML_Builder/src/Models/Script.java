@@ -27,7 +27,7 @@ public class Script implements XML_Writable
     /**
      * The plotlines which make up this script.
      */
-    public List<Plotline> plotlines;
+    private List<Plotline> plotlines;
 
     /**
      * Constructor. Generates a new Script object.
@@ -43,13 +43,55 @@ public class Script implements XML_Writable
      *
      * @param start The number of seconds into the script that the plotline
      * should begin.
-     * @return the new plotline.
+     * @return the index of the new plotline.
      */
-    public Plotline addPlotline(int start)
+    public int addPlotline(int start)
     {
         Plotline p = new Plotline(start, this);
+
         plotlines.add(p);
-        return p;
+        return plotlines.size() - 1;
+    }
+
+    /**
+     * Get the plotline at the given index.
+     *
+     * @param index The index of the plotline.
+     * @return the plotline in question.
+     */
+    public Plotline getPlotLine(int index)
+    {
+        if (index < plotlines.size() && index >= 0)
+        {
+            return plotlines.get(index);
+        }
+        return null;
+    }
+
+    /**
+     * Remove a plotline from the script.
+     *
+     * @param index the position of the plotline to be removed.
+     * @return true if that plotline was removed.
+     */
+    public boolean removePlotline(int index)
+    {
+        if (index < plotlines.size() && index >= 0)
+        {
+            plotlines.remove(index);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the number of plotlines in this script.
+     *
+     * @return the number of registered plotlines.
+     */
+    public int countPlotlines()
+    {
+        return plotlines.size();
     }
 
     @Override
