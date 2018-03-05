@@ -11,7 +11,11 @@ import java.util.TreeMap;
 
 /**
  * A plotline is an time-ordered sequence of Instances. It has a start time and
- * 0 or more instances.
+ * 0 or more instances. Instances are keyed relative to the start of the
+ * plotline itself; thus, the first instance is always located at position 0.
+ * Adding an instance to the start of the plotline, or relocating/removing the
+ * first instance, causes the plotline to shift the instances to reassert this
+ * condition.
  *
  * @author Bryan McGuffin
  * @version Feb 5, 2018
@@ -28,13 +32,18 @@ public class Plotline implements XML_Writable
      * to the start of this plotline; the value here is different from the
      * absolute script time.
      */
-    public TreeMap<Integer, Instance> instances;
+    private TreeMap<Integer, Instance> instances;
 
     /**
      * Number of seconds into the script that this plotline starts. Not relevant
      * to length of plotline.
      */
     public int startTime;
+
+    /**
+     * Name of this plotline.
+     */
+    public String title;
 
     /**
      * The script that this plotline belongs to.
@@ -47,11 +56,12 @@ public class Plotline implements XML_Writable
      * @param start The start time, in seconds, of this plotline.
      * @param parentScript The script to which this plotline belongs.
      */
-    public Plotline(int start, Script parentScript)
+    public Plotline(String name, int start, Script parentScript)
     {
         instances = new TreeMap<>();
         startTime = start;
         script = parentScript;
+        title = name;
     }
 
     /**
@@ -69,8 +79,9 @@ public class Plotline implements XML_Writable
         {
             return instances.get(time);
         }
-        Instance inst = new Instance(this);
+        Instance inst = new Instance(this, time);
         instances.put(time, inst);
+        assertOrder();
         return inst;
     }
 
@@ -86,8 +97,10 @@ public class Plotline implements XML_Writable
         if (instances.containsKey(time))
         {
             instances.remove(time);
+            assertOrder();
             return true;
         }
+        assertOrder();
         return false;
     }
 
@@ -102,12 +115,30 @@ public class Plotline implements XML_Writable
      */
     public boolean relocateInstance(int from, int to)
     {
-        if(instances.containsKey(from) && !instances.containsKey(to))
+        if (instances.containsKey(from) && !instances.containsKey(to))
         {
-            instances.put(to, instances.remove(from));
+            Instance ins = instances.remove(from);
+            ins.time = to;
+            instances.put(to, ins);
+            assertOrder();
             return true;
         }
+        assertOrder();
         return false;
+    }
+
+    /**
+     * Gets the instance associated at a given time.
+     *
+     * @param time The amount of seconds into the plotline that this instance
+     * occurs.
+     * @return the instance in question, or null if no instance exists at that
+     * time.
+     */
+    public Instance getInstance(int time)
+    {
+        return instances.get(time);
+
     }
 
     /**
@@ -127,7 +158,53 @@ public class Plotline implements XML_Writable
      */
     public int length()
     {
-        return instances.lastKey();
+        if (instances.isEmpty())
+        {
+            return 0;
+        }
+        return instances.lastKey() + 1;
+    }
+
+    private void assertOrder()
+    {
+        if (instances.isEmpty())
+        {
+            return;
+        }
+        int start = instances.firstKey();
+        //If earliest event is after t=0, pull all events backwards
+        if (start > 0)
+        {
+            TreeMap<Integer, Instance> instances2 = new TreeMap<>();
+
+            for (int i : instances.keySet())
+            {
+                Instance ins = instances.get(i);
+                ins.time -= start;
+                instances2.put(i - start, ins);
+            }
+            instances = instances2;
+        }
+
+        //If earliest event is before t=0, pull all events forwards
+        else if (start < 0)
+        {
+            TreeMap<Integer, Instance> instances2 = new TreeMap<>();
+
+            for (int i : instances.descendingKeySet())
+            {
+                Instance ins = instances.get(i);
+                ins.time -= start;
+                instances2.put(i - start, ins);
+            }
+            instances = instances2;
+        }
+    }
+
+    public String toString()
+    {
+        return "Plotline \"" + title + "\", starting at time t=" + startTime
+                + " seconds, in:\n" + script.toString();
     }
 
     @Override

@@ -48,6 +48,16 @@ class Data_Menu implements Buildable
     }
 
     /**
+     * The number of options in this menu.
+     *
+     * @return the size of the menu
+     */
+    public int menuSize()
+    {
+        return options.size();
+    }
+
+    /**
      * Add a new String option to the end of the menu.
      *
      * @param newOp the new option to add to the menu.
@@ -66,7 +76,7 @@ class Data_Menu implements Buildable
      */
     public boolean removeOption(int index)
     {
-        if (index < options.size())
+        if (index < options.size() && index >= 0)
         {
             options.remove(index);
             return true;
@@ -81,7 +91,11 @@ class Data_Menu implements Buildable
      */
     public String getSelected()
     {
-        return options.get(currentlySelected);
+        if (options.size() > 0)
+        {
+            return options.get(currentlySelected);
+        }
+        return null;
     }
 
     /**
@@ -93,7 +107,7 @@ class Data_Menu implements Buildable
      */
     public boolean setSelected(int newIndex)
     {
-        if (newIndex < options.size())
+        if (newIndex < options.size() && newIndex >= 0)
         {
             currentlySelected = newIndex;
             return true;

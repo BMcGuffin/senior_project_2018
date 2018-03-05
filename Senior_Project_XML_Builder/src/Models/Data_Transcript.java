@@ -38,68 +38,106 @@ class Data_Transcript implements Buildable
         actors = new ArrayList<>();
         lines = new ArrayList<>();
     }
-    
+
     /**
      * Add a single line of dialog to this transcript.
-     * 
-     * @param actor
-     * @param dial 
+     *
+     * @param actor the entity speaking this line.
+     * @param dialog the line spoken.
      */
-    public void addLine(String actor, String dial)
+    public void addLine(String actor, String dialog)
     {
-        lines.add(new Line(actor, dial));
+        if (!actors.contains(actor))
+        {
+            actors.add(actor);
+        }
+        lines.add(new Line(actor, dialog));
     }
-    
+
+    /**
+     * Get the number of lines of dialog in this conversation.
+     *
+     * @return the length of the transcript.
+     */
+    public int length()
+    {
+        return lines.size();
+    }
+
     /**
      * Access a particular line from this transcript.
-     * 
+     *
      * @param index the index of the line in question.
      * @return a line from the transcript.
      */
     public Line getLine(int index)
     {
-        return lines.get(index);
+        if (index < lines.size() && index >= 0)
+        {
+            return lines.get(index);
+        }
+        return null;
     }
-    
+
     /**
      * Delete a line of dialog from this transcript.
-     * 
+     *
      * @param index the index of the line to be removed.
      * @return true if the line was successfully removed.
      */
     public boolean removeLine(int index)
     {
-        return lines.remove(index) != null;
+        if (index < lines.size() && index >= 0)
+        {
+            return lines.remove(index) != null;
+        }
+        return false;
     }
-    
+
     /**
      * Move a line up one position in the transcript.
-     * 
+     *
      * @param index the index of the line to be moved.
      */
-    public void moveLineUp(int index)
+    public boolean moveLineUp(int index)
     {
-        if(index > 0 && index < lines.size())
+        if (index > 0 && index < lines.size())
         {
             Line temp = lines.get(index - 1);
             lines.set(index - 1, lines.get(index));
             lines.set(index, temp);
+            return true;
         }
+        return false;
     }
-    
+
     /**
      * Move a line down one position in the transcript.
-     * 
+     *
      * @param index the index of the line to be moved.
      */
-    public void moveLineDown (int index)
+    public boolean moveLineDown(int index)
     {
-        if(index >= 0 && index < lines.size() - 1)
+        if (index >= 0 && index < lines.size() - 1)
         {
             Line temp = lines.get(index + 1);
             lines.set(index + 1, lines.get(index));
             lines.set(index, temp);
+            return true;
         }
+        return false;
+    }
+
+    /**
+     * Get all the actors in this conversation.
+     *
+     * @return an array of actors.
+     */
+    public String[] getActors()
+    {
+        String[] result = new String[actors.size()];
+        result = actors.toArray(result);
+        return result;
     }
 
 }

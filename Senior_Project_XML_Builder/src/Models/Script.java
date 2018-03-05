@@ -45,9 +45,9 @@ public class Script implements XML_Writable
      * should begin.
      * @return the index of the new plotline.
      */
-    public int addPlotline(int start)
+    public int addPlotline(String title, int start)
     {
-        Plotline p = new Plotline(start, this);
+        Plotline p = new Plotline(title, start, this);
 
         plotlines.add(p);
         return plotlines.size() - 1;

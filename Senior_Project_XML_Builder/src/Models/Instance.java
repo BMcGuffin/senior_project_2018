@@ -20,31 +20,38 @@ import java.util.List;
  */
 public class Instance implements XML_Writable
 {
+
     /**
      * All the events which occur at this moment in time.
      */
     public List<Event> events;
-    
+
     /**
      * The plotline to which this event belongs.
      */
     public Plotline plotline;
-    
+
+    /**
+     * The time at which this instance occurs.
+     */
+    public Integer time;
+
     /**
      * Constructor. Generates a new instance.
-     * 
+     *
      * @param parent the plotline to which this instance belongs.
      */
-    public Instance(Plotline parent)
+    public Instance(Plotline parent, int t)
     {
         events = new ArrayList<>();
         plotline = parent;
+        time = t;
     }
-    
+
     /**
      * Add a new blank event to this instance.
-     * 
-     * @return the new event
+     *
+     * @return the new event.
      */
     public Event addEvent()
     {
@@ -52,7 +59,24 @@ public class Instance implements XML_Writable
         events.add(e);
         return e;
     }
-    
+
+    /**
+     * Remove an event from this instance.
+     *
+     * @param evt the event to be removed.
+     * @return true if the event was removed.
+     */
+    public boolean removeEvent(Event evt)
+    {
+        return events.remove(evt);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Instance occurring at t=" + time + " seconds, in:\n" + plotline.toString();
+    }
+
     @Override
     public void toXML()
     {

@@ -67,10 +67,10 @@ public class Event implements XML_Writable
     /**
      * Accessor for the buildable data.
      * 
-     * @param index the index of the data to access
+     * @param index the index of the element to access
      * @return the data requested
      */
-    public Buildable getData(int index)
+    public Buildable getElement(int index)
     {
         return fields.get(index);
     }
@@ -104,6 +104,8 @@ public class Event implements XML_Writable
      */
     public boolean removeElement(int index)
     {
+        if(index >= fieldCount())
+            return false;
         Buildable check = fields.remove(index);
         if (check != null)
         {
@@ -127,6 +129,11 @@ public class Event implements XML_Writable
         Buildable temp = fields.get(index - 1);
         fields.set(index - 1, fields.get(index));
         fields.set(index, temp);
+        
+        String tempStr = labels.get(index - 1);
+        labels.set(index - 1, labels.get(index));
+        labels.set(index, tempStr);
+        
         return true;
     }
 
@@ -145,6 +152,11 @@ public class Event implements XML_Writable
         Buildable temp = fields.get(index + 1);
         fields.set(index + 1, fields.get(index));
         fields.set(index, temp);
+        
+        String tempStr = labels.get(index + 1);
+        labels.set(index + 1, labels.get(index));
+        labels.set(index, tempStr);
+        
         return true;
     }
 
@@ -164,6 +176,12 @@ public class Event implements XML_Writable
             }
         }
         return false;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "Event containing " + fieldCount() + "fields in:\n" + instance.toString();
     }
 
     @Override
