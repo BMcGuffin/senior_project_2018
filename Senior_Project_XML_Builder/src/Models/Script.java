@@ -9,6 +9,7 @@ package Models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.TreeMap;
 
 /**
@@ -21,7 +22,7 @@ import java.util.TreeMap;
  * @version Feb 1, 2018
  * @see Plotline
  */
-public class Script implements XML_Writable
+public class Script extends Observable implements XML_Writable
 {
 
     /**
@@ -29,12 +30,15 @@ public class Script implements XML_Writable
      */
     private List<Plotline> plotlines;
 
+    public String scriptTitle;
+
     /**
      * Constructor. Generates a new Script object.
      */
     public Script()
     {
         plotlines = new ArrayList<>();
+        scriptTitle = "untitled1";
     }
 
     /**
@@ -50,6 +54,8 @@ public class Script implements XML_Writable
         Plotline p = new Plotline(title, start, this);
 
         plotlines.add(p);
+        setChanged();
+        notifyObservers();
         return plotlines.size() - 1;
     }
 
@@ -79,8 +85,12 @@ public class Script implements XML_Writable
         if (index < plotlines.size() && index >= 0)
         {
             plotlines.remove(index);
+            setChanged();
+            notifyObservers();
             return true;
         }
+        setChanged();
+        notifyObservers();
         return false;
     }
 

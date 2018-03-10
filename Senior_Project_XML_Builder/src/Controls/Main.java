@@ -6,22 +6,43 @@
  * Advisor is John Clements: aoeuclements@brinckerhoff.org
  */
 package Controls;
+
 import Models.*;
 import Views.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
  * @author Bryan McGuffin
  * @version Feb 23, 2018
  */
-public class Main 
+public class Main
 {
+
+    static boolean terminal;
+
     /**
-     * 
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args)
-    {   
+    {
+
+        ArrayList<String> arguments = new ArrayList(Arrays.asList(args));
+        terminal = arguments.contains("-term");
+        Script script = new Script();
+        I_Controller ctrl = new Coordinator(script);
+
+        if (terminal)
+        {
+            TerminalView term = new TerminalView(ctrl);
+            script.addObserver(term);
+            term.setVisible(true);
+        }
+        else
+        {
+
 //        /* Disable the following Nimbus code for a default netbeans look. */
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -57,14 +78,15 @@ public class Main
 //        }
 //        //</editor-fold>
 //        
-        
-        ScriptOverview mainWindow = new ScriptOverview();
-        java.awt.EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
+            ScriptOverview mainWindow = new ScriptOverview(ctrl);
+            script.addObserver(mainWindow);
+            java.awt.EventQueue.invokeLater(new Runnable()
             {
-                mainWindow.setVisible(true);
-            }
-        });
+                public void run()
+                {
+                    mainWindow.setVisible(true);
+                }
+            });
+        }
     }
 }

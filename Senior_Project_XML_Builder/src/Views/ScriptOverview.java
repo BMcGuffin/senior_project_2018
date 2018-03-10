@@ -5,22 +5,34 @@
  * The author of the project is Bryan McGuffin: bmcguffi@calpoly.edu
  * Advisor is John Clements: aoeuclements@brinckerhoff.org
  */
-
 package Views;
+
+import Controls.I_Controller;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  *
  * @author Bryan McGuffin
  */
-public class ScriptOverview extends javax.swing.JFrame
+public class ScriptOverview extends javax.swing.JFrame implements I_View
 {
+
+    private I_Controller ctrl;
 
     /**
      * Creates new form ScriptOverview
      */
-    public ScriptOverview()
+    public ScriptOverview(I_Controller c)
     {
         initComponents();
+        ctrl = c;
+    }
+
+    @Override
+    public void update(Observable o, Object arg)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -109,7 +121,7 @@ public class ScriptOverview extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu MenuBtnEvents;
     private javax.swing.JMenu MenuBtnFile;
