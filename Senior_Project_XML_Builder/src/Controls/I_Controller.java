@@ -5,16 +5,22 @@
  * The author of the project is Bryan McGuffin: bmcguffi@calpoly.edu
  * Advisor is John Clements: aoeuclements@brinckerhoff.org
  */
-
 package Controls;
 
-import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  *
  * @author Bryan McGuffin
  */
-public interface I_Controller extends ActionListener
+public interface I_Controller
 {
-    
+
+    /**
+     * Read in a command and any relevant data.
+     *
+     * @param cmd the command object.
+     * @param args the data values going along with this command.
+     */
+    public void readCommand(Command cmd, List<String> args);
 }

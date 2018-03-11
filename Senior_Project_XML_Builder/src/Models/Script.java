@@ -7,6 +7,7 @@
  */
 package Models;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -31,6 +32,10 @@ public class Script extends Observable implements XML_Writable
     private List<Plotline> plotlines;
 
     public String scriptTitle;
+    
+    public String description;
+    
+    public File saveFile;
 
     /**
      * Constructor. Generates a new Script object.
@@ -108,6 +113,15 @@ public class Script extends Observable implements XML_Writable
     public void toXML()
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * Send out the initial update so that all views have a connection.
+     */
+    public void spark()
+    {
+        setChanged();
+        notifyObservers();
     }
 
 }

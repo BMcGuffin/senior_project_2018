@@ -38,7 +38,8 @@ public class Main
         {
             TerminalView term = new TerminalView(ctrl);
             script.addObserver(term);
-            term.setVisible(true);
+            script.spark();
+            term.setVisible(true);   
         }
         else
         {

@@ -150,6 +150,16 @@ public class Plotline implements XML_Writable
     {
         return instances.size();
     }
+    
+    public int totalEventCount()
+    {
+        int count = 0;
+        for (Instance inst : instances.values())
+        {
+            count += inst.events.size();
+        }
+        return count;
+    }
 
     /**
      * Get the length, in seconds, from the start to the end of the plotline.

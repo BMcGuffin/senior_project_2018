@@ -11,6 +11,7 @@ import Models.Script;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,23 +30,77 @@ public class Coordinator implements I_Controller
     }
 
     @Override
-    public void actionPerformed(ActionEvent e)
+    public void readCommand(Command cmd, List<String> args)
     {
-        Object source = e.getSource();
-        Command cmd = Command.valueOf(e.getActionCommand());
-
+        int len = args.size();
         switch (cmd)
         {
             case NOTHING:
                 break;
-            case PING:
-                System.out.println("Pong!");
+
+            case ADD_PLOTLINE:
+                String title;
+                int startTime;
+
+                if (len == 2)
+                {
+                    title = args.get(0);
+                    try
+                    {
+                        startTime = Integer.parseInt(args.get(1));
+                        sc.addPlotline(title, startTime);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
                 break;
+
+            case REMOVE_PLOTLINE:
+                int index;
+                if (len == 1)
+                {
+                    try
+                    {
+                        index = Integer.parseInt(args.get(0));
+                        sc.removePlotline(index);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
+                break;
+
+            case PRINT:
+                sc.toXML();
+                break;
+
             case QUIT:
                 System.exit(0);
+            case LOAD_FILE:
+                break;
+            case NEW_FILE:
+                break;
+            case CHANGE_SCRIPT_TITLE:
+                break;
+            case CHANGE_PLOTLINE_TITLE:
+                break;
+            case SAVE_AS:
+                break;
+            case ADD_EVENT:
+                break;
+            case RELOCATE_EVENT:
+                break;
+            case REMOVE_EVENT:
+                break;
+            case CHANGE_SCRIPT_DESCRIPTION:
+                break;
+            case CHANGE_PLOTLINE_DESCRIPTION:
+                break;
+            default:
+                break;
         }
 
     }
 
-    
 }
