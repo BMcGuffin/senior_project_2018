@@ -185,8 +185,10 @@ public class Event implements XML_Writable
     }
 
     @Override
-    public void toXML()
+    public String toXML()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        //TODO Implement method Models.Event.toXML, of type java.lang.String
+        System.out.println("DEBUG: Models.Event.toXML hasn't been been implemented yet.");
+        return null;
+    }  
 }

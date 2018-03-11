@@ -41,6 +41,11 @@ public class Plotline implements XML_Writable
     public int startTime;
 
     /**
+     * The description of this plotline.
+     */
+    public String description;
+
+    /**
      * Name of this plotline.
      */
     public String title;
@@ -150,7 +155,7 @@ public class Plotline implements XML_Writable
     {
         return instances.size();
     }
-    
+
     public int totalEventCount()
     {
         int count = 0;
@@ -173,6 +178,14 @@ public class Plotline implements XML_Writable
             return 0;
         }
         return instances.lastKey() + 1;
+    }
+
+    @Override
+    public String toXML()
+    {
+        //TODO Implement method Models.Plotline.toXML, of type java.lang.String
+        System.out.println("DEBUG: Models.Plotline.toXML hasn't been been implemented yet.");
+        return null;
     }
 
     private void assertOrder()
@@ -215,12 +228,6 @@ public class Plotline implements XML_Writable
     {
         return "Plotline \"" + title + "\", starting at time t=" + startTime
                 + " seconds, in:\n" + script.toString();
-    }
-
-    @Override
-    public void toXML()
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

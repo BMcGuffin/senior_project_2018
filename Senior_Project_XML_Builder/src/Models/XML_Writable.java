@@ -19,5 +19,5 @@ public interface XML_Writable
     /**
      * Convert the data in this object to XML.
      */
-    void toXML();
+    String toXML();
 }

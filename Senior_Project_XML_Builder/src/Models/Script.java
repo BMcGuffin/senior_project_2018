@@ -32,9 +32,9 @@ public class Script extends Observable implements XML_Writable
     private List<Plotline> plotlines;
 
     public String scriptTitle;
-    
+
     public String description;
-    
+
     public File saveFile;
 
     /**
@@ -109,11 +109,7 @@ public class Script extends Observable implements XML_Writable
         return plotlines.size();
     }
 
-    @Override
-    public void toXML()
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
 
     /**
      * Send out the initial update so that all views have a connection.
@@ -124,4 +120,31 @@ public class Script extends Observable implements XML_Writable
         notifyObservers();
     }
 
+    @Override
+    public String toXML()
+    {
+        //TODO Implement method Models.Script.toXML, of type java.lang.String
+        System.out.println("DEBUG: Models.Script.toXML hasn't been been implemented yet.");
+        return null;
+    }
+
+    public void loadFromFile(File newFile)
+    {
+        //TODO Implement method Models.Script.loadFromFile, of type void
+        System.out.println("DEBUG: Models.Script.loadFromFile hasn't been been implemented yet.");
+    }
+
+    public void saveToFile()
+    {
+        //TODO Implement method Models.Script.saveToFile, of type void
+        System.out.println("DEBUG: Models.Script.saveToFile hasn't been been implemented yet.");
+    }
+
+    public void newFile()
+    {
+        //TODO Implement method Models.Script.newFile, of type void
+        System.out.println("DEBUG: Models.Script.newFile hasn't been been implemented yet.");
+    }
+
+    
 }

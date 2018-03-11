@@ -38,6 +38,8 @@ public class TerminalView implements I_View
 
     int currentPlotIndex;
 
+    int currentEventIndex;
+
     Script scr;
 
     public TerminalView(I_Controller c)
@@ -98,21 +100,26 @@ public class TerminalView implements I_View
                         System.out.println("Plotline name:");
                         args.add(in.nextLine());
                         System.out.println("Start time:");
-                        args.add("" + in.nextInt());
-                        in.nextLine();
+                        args.add("" + in.nextLine());
                         break;
                     case "r"://remove a plotline from the script
                         cmd = Command.REMOVE_PLOTLINE;
                         System.out.println("Index to remove:");
-                        args.add("" + in.nextInt());
-                        in.nextLine();
+                        args.add("" + in.nextLine());
                         break;
-                    case "p"://print out the current script to a file
-                        cmd = Command.PRINT;
-                        System.out.println("Enter name of output file (or leave blank to overwrite current output file):");
-                        args.add(in.nextLine());
+                    case "s"://print out the current script to a file
+                        if (scr.saveFile == null)
+                        {
+                            cmd = Command.SAVE_AS;
+                            System.out.println("Enter the name of the save file:");
+                            args.add(in.nextLine());
+                        }
+                        else
+                        {
+                            cmd = Command.SAVE;
+                        }
                         break;
-                    case "s"://go to script settings menu
+                    case "p"://go to script settings menu
                         cmd = Command.NOTHING;
                         currentMenu = menus.SCRIPTSETTINGS;
                         break;
@@ -131,14 +138,36 @@ public class TerminalView implements I_View
                 switch (option.toLowerCase())
                 {
                     case "r"://rename script
+                        cmd = Command.CHANGE_SCRIPT_TITLE;
+                        System.out.println("Enter new script title:");
+                        args.add(in.nextLine());
                         break;
                     case "d"://change script description
+                        cmd = Command.CHANGE_SCRIPT_DESCRIPTION;
+                        System.out.println("Enter new description:");
+                        args.add(in.nextLine());
                         break;
                     case "s"://save as
+                        cmd = Command.SAVE_AS;
+                        System.out.println("Enter the name of the save file:");
+                        args.add(in.nextLine());
                         break;
                     case "l"://load script
+                        cmd = Command.LOAD_FILE;
+                        System.out.println("Enter the path to the file:");
+                        args.add(in.nextLine());
                         break;
                     case "n"://new script
+                        cmd = Command.NEW_FILE;
+                        System.out.println("Do you want to save the current file? y/n");
+                        if (in.nextLine().equalsIgnoreCase("n"))
+                        {
+                            args.add("0");
+                        }
+                        else
+                        {
+                            args.add("1");
+                        }
                         break;
                     case "b"://back to main menu
                         currentMenu = menus.MAINMENU;
@@ -151,20 +180,66 @@ public class TerminalView implements I_View
                 switch (option.toLowerCase())
                 {
                     case "n"://Rename plotline
+                        cmd = Command.CHANGE_PLOTLINE_TITLE;
+                        System.out.println("Enter new plotline title:");
+                        args.add("" + currentPlotIndex);
+                        args.add(in.nextLine());
                         break;
                     case "d"://Change plotline description
+                        cmd = Command.CHANGE_PLOTLINE_DESCRIPTION;
+                        System.out.println("Enter new plotline description:");
+                        args.add("" + currentPlotIndex);
+                        args.add(in.nextLine());
                         break;
                     case "t"://Change start time
+                        cmd = Command.CHANGE_PLOTLINE_START;
+                        System.out.println("Enter new start time in seconds:");
+                        args.add("" + currentPlotIndex);
+                        args.add(in.nextLine());
                         break;
                     case "l"://Get list of events in this plotline
+                        cmd = Command.NOTHING;
+                        for (int i = 0; i < scr.getPlotLine(currentPlotIndex).instanceCount(); i++)
+                        {
+                            Instance inst = scr.getPlotLine(currentPlotIndex).getInstance(i);
+                            for (Event e : inst.events)
+                            {
+                                String str = String.format("(%d) %s", inst.time, e.toString());
+                                System.out.println(str);
+                            }
+                        }
                         break;
                     case "a"://Add new event
+                        cmd = Command.ADD_EVENT;
+                        args.add("" + currentPlotIndex);
+                        System.out.println("Enter time (in seconds) to add new event:");
+                        args.add(in.nextLine());
+                        System.out.println("Available event types:");
+                        //TODO add event builder class
+                        System.out.println("Enter index of event type:");
+                        args.add(in.nextLine());
                         break;
                     case "r"://Remove event
+                        cmd = Command.REMOVE_EVENT;
+                        args.add("" + currentPlotIndex);
+                        System.out.println("Enter time (in seconds) of event to be removed:");
+                        args.add(in.nextLine());
+                        //TODO: print out all events in this instance
+                        System.out.println("Enter index of event to remove:");
+                        args.add(in.nextLine());
                         break;
                     case "e"://Go to edit event menu
                         break;
                     case "m"://Move event
+                        cmd = Command.RELOCATE_EVENT;
+                        args.add("" + currentPlotIndex);
+                        System.out.println("Enter time (in seconds) of event to be moved:");
+                        args.add(in.nextLine());
+                        //TODO: print out all events in this instance
+                        System.out.println("Enter index of event to move:");
+                        args.add(in.nextLine());
+                        System.out.println("Enter new time (in seconds) for event:");
+                        args.add(in.nextLine());
                         break;
                     case "b"://Back to main menu
                         currentMenu = menus.MAINMENU;
@@ -181,7 +256,7 @@ public class TerminalView implements I_View
     }
 
     /**
-     * When data changes, update our reference, and then print as appropriate.
+     * When data changes, update our reference.
      *
      * @param o
      * @param arg
@@ -260,7 +335,7 @@ public class TerminalView implements I_View
     {
 
         MAINMENU("[A] Add Plotline | [R] Remove Plotline | [E] Edit Plotline | \n"
-                + "[S] Script Settings | [P] Print Script | [X] Save and exit", new String[]
+                + "[P] Script Settings | [S] Save Script | [X] Exit", new String[]
                 {
                     "a", "r", "e", "s", "p", "x"
                 }),

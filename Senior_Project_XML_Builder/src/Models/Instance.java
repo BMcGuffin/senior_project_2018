@@ -78,9 +78,11 @@ public class Instance implements XML_Writable
     }
 
     @Override
-    public void toXML()
+    public String toXML()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO Implement method Models.Instance.toXML, of type java.lang.String
+        System.out.println("DEBUG: Models.Instance.toXML hasn't been been implemented yet.");
+        return null;
     }
 
 }
