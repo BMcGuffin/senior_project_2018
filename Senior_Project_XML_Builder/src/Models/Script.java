@@ -144,6 +144,11 @@ public class Script extends Observable implements XML_Writable
         //TODO implement this method.
         throw new UnsupportedOperationException("Method not implemented.");
     }
+    
+    public String toString()
+    {
+        return "Script \"" + this.scriptTitle + "\"";
+    }
 
       
 }

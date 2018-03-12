@@ -1,0 +1,39 @@
+Example
+5
+My Media 1
+type_media
+src/Resources/Media
+0
+25
+My Menu 1
+type_menu
+4
+opt_1
+opt_2
+opt_3
+opt_4
+2
+My Text 1
+type_text
+0
+My Transcript 1
+type_transcript
+7
+actor_1
+Hey, I'm speaking in a transcript.
+actor_2
+Hi there! This will show up inside the transcript field.
+actor_1
+Yeah, and we're the actors in that transcript!
+actor_2
+Here's some more example text for actors.
+actor_3
+Hi, guys. What's up?
+actor_1
+We're demonstrating how a transcript works!
+actor_3
+Wow! That's so neat!
+My Text 2
+type_text
+1
+Here is some sample text. It will show up in the text field.

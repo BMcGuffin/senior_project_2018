@@ -66,6 +66,7 @@ public class Instance implements XML_Writable
     public Event addEvent(Event e)
     {
         events.add(e);
+        e.setParentInstance(this);
         return e;
     }
 

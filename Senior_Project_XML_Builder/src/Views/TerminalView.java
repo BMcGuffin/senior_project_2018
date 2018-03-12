@@ -196,13 +196,16 @@ public class TerminalView implements I_View
                         break;
                     case "l"://Get list of events in this plotline
                         cmd = Command.NOTHING;
-                        for (int i = 0; i < scr.getPlotLine(currentPlotIndex).instanceCount(); i++)
+                        for (int i = 0; i < scr.getPlotLine(currentPlotIndex).length(); i++)
                         {
                             Instance inst = scr.getPlotLine(currentPlotIndex).getInstance(i);
-                            for (Event e : inst.events)
+                            if (inst != null)
                             {
-                                String str = String.format("(%d) %s", inst.time, e.toString());
-                                System.out.println(str);
+                                for (Event e : inst.events)
+                                {
+                                    String str = String.format("(%d) %s", inst.time, e.toString());
+                                    System.out.println(str);
+                                }
                             }
                         }
                         break;
@@ -212,9 +215,11 @@ public class TerminalView implements I_View
                         args.add("" + getIntFromInput("Enter time (in seconds) to add new event:"));
                         System.out.println("Available event types:");
                         ArrayList<String> types = bldr.getEventDeck();
-                        for (String str : types)
+
+                        for (int i = 0; i < types.size(); i++)
                         {
-                            System.out.println(str);
+                            System.out.println(i + ": " + types.get(i));
+
                         }
                         System.out.println("Choose an event type:");
                         args.add(in.nextLine());

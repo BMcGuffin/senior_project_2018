@@ -12,8 +12,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * The Controller portion of the MCV model. Accepts inputs from the view and
- * subsequently manipulates the model.
+ * The Controller portion of the MCV model. Accepts inputs from the view and subsequently manipulates the model.
  *
  * @author Bryan McGuffin
  * @version Mar 10, 2018
@@ -153,6 +152,10 @@ public class Coordinator implements I_Controller
                         index = Integer.parseInt(args.get(0));
                         int time = Integer.parseInt(args.get(1));
                         Event evt = builder.generateEvent(args.get(2));
+                        if (sc.getPlotLine(index).getInstance(time) == null)
+                        {
+                            sc.getPlotLine(index).addInstance(time);
+                        }
                         sc.getPlotLine(index).getInstance(time).addEvent(evt);
                     }
                     catch (Exception e)
@@ -176,7 +179,7 @@ public class Coordinator implements I_Controller
                         {
                             sc.getPlotLine(index).addInstance(to);
                         }
-                        sc.getPlotLine(index).addInstance(to).addEvent(evt);
+                        sc.getPlotLine(index).getInstance(to).addEvent(evt);
                         if (inst.events.isEmpty())
                         {
                             sc.getPlotLine(index).removeInstance(from);

@@ -11,14 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The transcript of a conversation between one or more actors. A series of
- * lines in chronological order.
+ * The transcript of a conversation between one or more actors. A series of lines in chronological order.
  *
  * @author Bryan McGuffin
  * @version Feb 20, 2018
  */
 class Data_Transcript implements Buildable
 {
+
+    /**
+     * The name of this text field.
+     */
+    public String elementName;
 
     /**
      * A list of the actors in this conversation.
@@ -33,8 +37,9 @@ class Data_Transcript implements Buildable
     /**
      * Constructor.
      */
-    public Data_Transcript()
+    public Data_Transcript(String eName)
     {
+        elementName = eName;
         actors = new ArrayList<>();
         lines = new ArrayList<>();
     }
@@ -138,6 +143,17 @@ class Data_Transcript implements Buildable
         String[] result = new String[actors.size()];
         result = actors.toArray(result);
         return result;
+    }
+
+    @Override
+    public Buildable duplicate()
+    {
+        Data_Transcript dup = new Data_Transcript(this.elementName);
+        for (Line l : this.lines)
+        {
+            dup.addLine(l.actor, l.dialog);
+        }
+        return dup;
     }
 
 }

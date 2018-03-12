@@ -54,4 +54,13 @@ class Data_Text implements Buildable
     {
         return text;
     }
+
+    @Override
+    public Buildable duplicate()
+    {
+        Data_Text dup = new Data_Text(this.elementName);
+        dup.setContent(this.text);
+        
+        return dup;
+    }
 }

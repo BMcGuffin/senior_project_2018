@@ -11,16 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The event is the atomic unit of the script model. It contains some data which
- * begins at some moment in time. It may or may not be a media event. It has a
- * reference to the instance it's a part of. It can be written to XML using the
- * XML_Writable interface.
+ * The event is the atomic unit of the script model. It contains some data which begins at some moment in time. It may or may not be a media event. It has a reference to the instance it's a part of. It can be written to XML using the XML_Writable interface.
  *
  * @author Bryan McGuffin
  * @version Feb 5, 2018
  */
 public class Event implements XML_Writable
 {
+
+    /**
+     * The type of event that this is.
+     */
+    public String eventType;
 
     /**
      * The instance to which this event belongs.
@@ -47,6 +49,7 @@ public class Event implements XML_Writable
         instance = parent;
         fields = new ArrayList<>();
         labels = new ArrayList<>();
+        eventType = "Blank";
     }
 
     /**
@@ -54,19 +57,29 @@ public class Event implements XML_Writable
      *
      * @param b The buildable data field entity
      * @param label the title for this data field
-     * @return the buildable data, for convenience 
+     * @return the buildable data, for convenience
      */
     public Buildable addElement(Buildable b, String label)
     {
         fields.add(b);
         labels.add(label);
-        
+
         return b;
     }
-    
+
+    /**
+     * Set a new instance as the parent of this one.
+     *
+     * @param parent the new parent instance.
+     */
+    public void setParentInstance(Instance parent)
+    {
+        instance = parent;
+    }
+
     /**
      * Accessor for the buildable data.
-     * 
+     *
      * @param index the index of the element to access
      * @return the data requested
      */
@@ -74,10 +87,10 @@ public class Event implements XML_Writable
     {
         return fields.get(index);
     }
-    
+
     /**
      * Accessor for the field labels.
-     * 
+     *
      * @param index the index of the label to access
      * @return the label requested
      */
@@ -85,10 +98,10 @@ public class Event implements XML_Writable
     {
         return labels.get(index);
     }
-    
+
     /**
      * Get the number of fields in this event.
-     * 
+     *
      * @return the size of this event
      */
     public int fieldCount()
@@ -104,8 +117,10 @@ public class Event implements XML_Writable
      */
     public boolean removeElement(int index)
     {
-        if(index >= fieldCount())
+        if (index >= fieldCount())
+        {
             return false;
+        }
         Buildable check = fields.remove(index);
         if (check != null)
         {
@@ -129,11 +144,11 @@ public class Event implements XML_Writable
         Buildable temp = fields.get(index - 1);
         fields.set(index - 1, fields.get(index));
         fields.set(index, temp);
-        
+
         String tempStr = labels.get(index - 1);
         labels.set(index - 1, labels.get(index));
         labels.set(index, tempStr);
-        
+
         return true;
     }
 
@@ -152,17 +167,16 @@ public class Event implements XML_Writable
         Buildable temp = fields.get(index + 1);
         fields.set(index + 1, fields.get(index));
         fields.set(index, temp);
-        
+
         String tempStr = labels.get(index + 1);
         labels.set(index + 1, labels.get(index));
         labels.set(index, tempStr);
-        
+
         return true;
     }
 
     /**
-     * Determines whether event can be classified as a media event. A media
-     * event contains at least one media field.
+     * Determines whether event can be classified as a media event. A media event contains at least one media field.
      *
      * @return true if this event contains at least one media field
      */
@@ -177,11 +191,12 @@ public class Event implements XML_Writable
         }
         return false;
     }
-    
+
     @Override
     public String toString()
     {
-        return "Event containing " + fieldCount() + "fields in:\n" + instance.toString();
+        return "Event of type \"" + eventType + "\", containing "
+                + fieldCount() + " fields in:\n" + instance.toString();
     }
 
     @Override

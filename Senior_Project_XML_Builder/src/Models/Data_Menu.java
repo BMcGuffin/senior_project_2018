@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a dropdown menu. Contains a series of unique, mutually exclusive
- * choices, exactly one of which may be selected. Has a list of selection
- * options, and a reference to the currently selected option. The list of
- * options may be arbitrarily long.
+ * Represents a dropdown menu. Contains a series of unique, mutually exclusive choices, exactly one of which may be selected. Has a list of selection options, and a reference to the currently selected option. The list of options may be arbitrarily long.
  *
  * @author Bryan McGuffin
  * @version Feb 20, 2018
@@ -102,8 +99,7 @@ class Data_Menu implements Buildable
      * Set the currently selected option to a different valid state.
      *
      * @param newIndex the index of an item in the menu.
-     * @return true if the new index is not out of bounds, and the current index
-     * was successfully changed.
+     * @return true if the new index is not out of bounds, and the current index was successfully changed.
      */
     public boolean setSelected(int newIndex)
     {
@@ -113,5 +109,19 @@ class Data_Menu implements Buildable
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Buildable duplicate()
+    {
+        Data_Menu dup = new Data_Menu(this.elementName);
+
+        for (String op : options)
+        {
+            dup.addOption(op);
+        }
+        dup.setSelected(this.currentlySelected);
+
+        return dup;
     }
 }
