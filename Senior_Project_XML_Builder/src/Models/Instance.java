@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An Instance is a cluster of one or more Events. It has a group of media-based
- * events, and a group of non-media-based events. It has a reference to the
- * plotline it's currently inside.
+ * An Instance is a cluster of one or more Events. It has a group of media-based events, and a group of non-media-based events. It has a reference to the plotline it's currently inside.
  *
  * @author Bryan McGuffin
  * @version Feb 5, 2018
@@ -61,6 +59,17 @@ public class Instance implements XML_Writable
     }
 
     /**
+     * Add a new, preformatted event to this instance.
+     *
+     * @return the new event.
+     */
+    public Event addEvent(Event e)
+    {
+        events.add(e);
+        return e;
+    }
+
+    /**
      * Remove an event from this instance.
      *
      * @param evt the event to be removed.
@@ -80,9 +89,8 @@ public class Instance implements XML_Writable
     @Override
     public String toXML()
     {
-        //TODO Implement method Models.Instance.toXML, of type java.lang.String
-        System.out.println("DEBUG: Models.Instance.toXML hasn't been been implemented yet.");
-        return null;
+        //TODO implement this method.
+        throw new UnsupportedOperationException("Method not implemented.");
     }
 
 }

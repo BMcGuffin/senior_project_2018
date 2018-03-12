@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A terminal interface for the program. Reads from, and writes to, the
- * terminal.
+ * A terminal interface for the program. Reads from, and writes to, the terminal.
  *
  * @author Bryan McGuffin
  * @version Mar 5, 2018
@@ -31,6 +30,8 @@ public class TerminalView implements I_View
     Scanner in;
 
     I_Controller ctrl;
+
+    EventBuilder bldr;
 
     boolean quitThis;
 
@@ -49,6 +50,7 @@ public class TerminalView implements I_View
         currentMenu = menus.MAINMENU;
         ctrl = c;
         currentPlotIndex = 0;
+        bldr = EventBuilder.getBuilder();
     }
 
     @Override
@@ -99,13 +101,11 @@ public class TerminalView implements I_View
                         cmd = Command.ADD_PLOTLINE;
                         System.out.println("Plotline name:");
                         args.add(in.nextLine());
-                        System.out.println("Start time:");
-                        args.add("" + in.nextLine());
+                        args.add("" + getIntFromInput("Start time:"));
                         break;
                     case "r"://remove a plotline from the script
                         cmd = Command.REMOVE_PLOTLINE;
-                        System.out.println("Index to remove:");
-                        args.add("" + in.nextLine());
+                        args.add("" + getIntFromInput("Index to remove:"));
                         break;
                     case "s"://print out the current script to a file
                         if (scr.saveFile == null)
@@ -125,9 +125,7 @@ public class TerminalView implements I_View
                         break;
                     case "e"://go to edit plotline menu
                         cmd = Command.NOTHING;
-                        System.out.println("Enter the index of the plotline you'd like to edit.");
-                        currentPlotIndex = in.nextInt();
-                        in.nextLine();
+                        currentPlotIndex = getIntFromInput("Enter the index of the plotline you'd like to edit.");
                         currentMenu = menus.EDITPLOTLINE;
                         break;
                     default:
@@ -193,9 +191,8 @@ public class TerminalView implements I_View
                         break;
                     case "t"://Change start time
                         cmd = Command.CHANGE_PLOTLINE_START;
-                        System.out.println("Enter new start time in seconds:");
                         args.add("" + currentPlotIndex);
-                        args.add(in.nextLine());
+                        args.add("" + getIntFromInput("Enter new start time in seconds:"));
                         break;
                     case "l"://Get list of events in this plotline
                         cmd = Command.NOTHING;
@@ -212,34 +209,46 @@ public class TerminalView implements I_View
                     case "a"://Add new event
                         cmd = Command.ADD_EVENT;
                         args.add("" + currentPlotIndex);
-                        System.out.println("Enter time (in seconds) to add new event:");
-                        args.add(in.nextLine());
+                        args.add("" + getIntFromInput("Enter time (in seconds) to add new event:"));
                         System.out.println("Available event types:");
-                        //TODO add event builder class
-                        System.out.println("Enter index of event type:");
+                        ArrayList<String> types = bldr.getEventDeck();
+                        for (String str : types)
+                        {
+                            System.out.println(str);
+                        }
+                        System.out.println("Choose an event type:");
                         args.add(in.nextLine());
                         break;
                     case "r"://Remove event
                         cmd = Command.REMOVE_EVENT;
                         args.add("" + currentPlotIndex);
-                        System.out.println("Enter time (in seconds) of event to be removed:");
-                        args.add(in.nextLine());
-                        //TODO: print out all events in this instance
-                        System.out.println("Enter index of event to remove:");
-                        args.add(in.nextLine());
+                        int instIndex = getIntFromInput("Enter time (in seconds) of event to be removed:");
+                        args.add("" + instIndex);
+                        Instance inst = scr.getPlotLine(currentPlotIndex).getInstance(instIndex);
+                        System.out.println("Found " + inst.events.size() + " events at this time.");
+                        for (int i = 0; i < inst.events.size(); i++)
+                        {
+                            String str = String.format("[%d] %s", i, inst.events.get(i));
+                            System.out.println(str);
+                        }
+                        args.add("" + getIntFromInput("Enter index of event to remove:"));
                         break;
                     case "e"://Go to edit event menu
                         break;
                     case "m"://Move event
                         cmd = Command.RELOCATE_EVENT;
                         args.add("" + currentPlotIndex);
-                        System.out.println("Enter time (in seconds) of event to be moved:");
-                        args.add(in.nextLine());
-                        //TODO: print out all events in this instance
-                        System.out.println("Enter index of event to move:");
-                        args.add(in.nextLine());
-                        System.out.println("Enter new time (in seconds) for event:");
-                        args.add(in.nextLine());
+                        instIndex = getIntFromInput("Enter time (in seconds) of event to be moved:");
+                        args.add("" + instIndex);
+                        inst = scr.getPlotLine(currentPlotIndex).getInstance(instIndex);
+                        System.out.println("Found " + inst.events.size() + " events at this time.");
+                        for (int i = 0; i < inst.events.size(); i++)
+                        {
+                            String str = String.format("[%d] %s", i, inst.events.get(i));
+                            System.out.println(str);
+                        }
+                        args.add("" + getIntFromInput("Enter index of event to move:"));
+                        args.add("" + getIntFromInput("Enter new time (in seconds) for event:"));
                         break;
                     case "b"://Back to main menu
                         currentMenu = menus.MAINMENU;
@@ -359,6 +368,28 @@ public class TerminalView implements I_View
             this.MENU_TEXT = text;
             this.OPTIONS = options;
         }
+    }
+
+    private int getIntFromInput(String prompt)
+    {
+        int number = 0;
+        boolean found = false;
+        while (!found)
+        {
+            System.out.println(prompt);
+            String input = in.nextLine();
+            try
+            {
+                number = Integer.parseInt(input);
+                found = true;
+            }
+            catch (NumberFormatException e)
+            {
+                found = false;
+                System.out.println("Invalid input.");
+            }
+        }
+        return number;
     }
 
 }

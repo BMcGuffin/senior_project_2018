@@ -183,11 +183,11 @@ public class Plotline implements XML_Writable
     @Override
     public String toXML()
     {
-        //TODO Implement method Models.Plotline.toXML, of type java.lang.String
-        System.out.println("DEBUG: Models.Plotline.toXML hasn't been been implemented yet.");
-        return null;
+        //TODO implement this method.
+        throw new UnsupportedOperationException("Method not implemented.");
     }
 
+    
     private void assertOrder()
     {
         if (instances.isEmpty())

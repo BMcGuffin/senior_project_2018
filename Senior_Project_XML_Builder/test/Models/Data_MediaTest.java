@@ -24,7 +24,6 @@ public class Data_MediaTest extends TestCase
     {
         System.out.println("setMediaFile");
         Data_Media instance = new Data_Media("File tester");
-         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
         
     }
@@ -40,7 +39,6 @@ public class Data_MediaTest extends TestCase
         boolean expResult = false;
         boolean result = instance.setPlayLength(newLength);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -55,7 +53,6 @@ public class Data_MediaTest extends TestCase
         boolean expResult = false;
         boolean result = instance.setStartTime(newStart);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 }

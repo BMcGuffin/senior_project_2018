@@ -7,18 +7,13 @@
  */
 package Controls;
 
-import Models.Script;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import Models.*;
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
+ * The Controller portion of the MCV model. Accepts inputs from the view and
+ * subsequently manipulates the model.
  *
  * @author Bryan McGuffin
  * @version Mar 10, 2018
@@ -26,11 +21,13 @@ import java.util.logging.Logger;
 public class Coordinator implements I_Controller
 {
 
-    Script sc;
+    private Script sc;
+    private EventBuilder builder;
 
     public Coordinator(Script script)
     {
         sc = script;
+        builder = EventBuilder.getBuilder();
     }
 
     @Override
@@ -110,7 +107,7 @@ public class Coordinator implements I_Controller
                     {
                     }
                 }
-                
+
                 break;
             case CHANGE_SCRIPT_TITLE:
                 if (len == 1)
@@ -149,13 +146,62 @@ public class Coordinator implements I_Controller
                 sc.saveToFile();
                 break;
             case ADD_EVENT:
-                //TODO Add case for ADD_EVENT
+                if (len == 3)
+                {
+                    try
+                    {
+                        index = Integer.parseInt(args.get(0));
+                        int time = Integer.parseInt(args.get(1));
+                        Event evt = builder.generateEvent(args.get(2));
+                        sc.getPlotLine(index).getInstance(time).addEvent(evt);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
                 break;
             case RELOCATE_EVENT:
-                //TODO Add case for RELOCATE_EVENT
+                if (len == 4)
+                {
+                    try
+                    {
+                        index = Integer.parseInt(args.get(0));
+                        int from = Integer.parseInt(args.get(1));
+                        int pos = Integer.parseInt(args.get(2));
+                        int to = Integer.parseInt(args.get(3));
+                        Instance inst = sc.getPlotLine(index).getInstance(from);
+                        Event evt = inst.events.get(pos);
+                        inst.removeEvent(evt);
+                        if (sc.getPlotLine(index).getInstance(to) == null)
+                        {
+                            sc.getPlotLine(index).addInstance(to);
+                        }
+                        sc.getPlotLine(index).addInstance(to).addEvent(evt);
+                        if (inst.events.isEmpty())
+                        {
+                            sc.getPlotLine(index).removeInstance(from);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
                 break;
             case REMOVE_EVENT:
-                //TODO Add case for REMOVE_EVENT
+                if (len == 3)
+                {
+                    try
+                    {
+                        index = Integer.parseInt(args.get(0));
+                        int time = Integer.parseInt(args.get(1));
+                        int evt = Integer.parseInt(args.get(2));
+                        Instance inst = sc.getPlotLine(index).getInstance(time);
+                        inst.removeEvent(inst.events.get(evt));
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
                 break;
             case CHANGE_SCRIPT_DESCRIPTION:
                 if (len == 1)

@@ -188,7 +188,7 @@ class Data_Media implements Buildable
 
         if (isVideo)
         {
-            //TODO: Add code for determining duration of a video file.
+            //TODO Add code for determining duration of a video file.
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
