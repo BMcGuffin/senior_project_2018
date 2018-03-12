@@ -133,7 +133,7 @@ public class Script extends Observable implements XML_Writable
         output += "<?xml version=\"1.0\" standalone=\"no\"?>\n";
         output += "<!DOCTYPE SCRIPT SYSTEM \"" + dtd.getDTDName() + "\">\n";
         output += XML_Writer.openTag("SCRIPT");
-        for (Plotline plt: plotlines)
+        for (Plotline plt : plotlines)
         {
             output += plt.toXML();
         }
@@ -178,10 +178,8 @@ public class Script extends Observable implements XML_Writable
         scriptTitle = "untitled1";
         description = "";
         saveFile = null;
-        //TODO add "reset" method to DTD builder
-        //TODO add "reset" method to Event Builder
-        //TODO implement this method.
-        throw new UnsupportedOperationException("Method not implemented.");
+        dtd.reset();
+        eb.reset();
     }
 
     public void loadFromFile(File newFile)

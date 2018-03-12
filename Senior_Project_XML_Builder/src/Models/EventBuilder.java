@@ -8,9 +8,11 @@
 package Models;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,8 @@ public class EventBuilder
      */
     private Map<String, Event> prototypes;
 
+    private List<Event> inScript;
+
     /**
      * Constructor. Builds prototypes for each event. This will be a singleton
      * class.
@@ -49,6 +53,7 @@ public class EventBuilder
         dtd = DTDBuilder.getDTDBuilder(scr);
         prototypes = new TreeMap<>();
         templatesFolder = new File("src/Templates");
+        inScript = new ArrayList<>();
         File[] files = templatesFolder.listFiles();
         for (File f : files)
         {
@@ -88,6 +93,13 @@ public class EventBuilder
     {
         Event prototype = prototypes.get(eventType);
 
+        //If this type of event is being added to the script for the first time, add it to the dtd
+        if (!inScript.contains(prototype))
+        {
+            inScript.add(prototype);
+            dtd.digestEvent(prototype);
+        }
+
         Event newEvent = new Event(null);
 
         newEvent.eventType = prototype.eventType;
@@ -116,13 +128,56 @@ public class EventBuilder
      * Given a new event, create an entry for it in the event deck and add a
      * prototype to the list of prototypes.
      *
-     * @param evt
-     * @return
+     * @param evt the event to be added to the prototype list.
+     * @return false if the event name is already taken.
      */
     public boolean recordEventToDeck(Event evt)
     {
-        //TODO implement this method.
-        throw new UnsupportedOperationException("Method not implemented.");
+        //Check to make sure a file with this name doesn't exist.
+        String ecfName = formatECFName(evt);
+        File[] files = templatesFolder.listFiles();
+        for (File f : files)
+        {
+            if (f.getName().equals(ecfName))
+            {
+                return false;
+            }
+        }
+
+        //Construct a file in the templates folder.
+        File newEvent = new File(templatesFolder.getPath() + File.pathSeparator + ecfName);
+        try
+        {
+            newEvent.createNewFile();
+        }
+        catch (IOException ex)
+        {
+            return false;
+        }
+
+        //Write to the new file.
+        BufferedWriter bw;
+        try
+        {
+            bw = new BufferedWriter(new FileWriter(newEvent));
+            bw.write(this.asECF(evt));
+            bw.flush();
+            bw.close();
+        }
+        catch (IOException ex)
+        {
+            System.out.println("Unable to generate ecf file " + ecfName);
+            return false;
+        }
+        return true;
+    }
+
+    private String formatECFName(Event evt)
+    {
+        String lower = evt.eventType.toLowerCase();
+        String underscores = lower.replace(" ", "_");
+        String ecf = underscores + ".ecf";
+        return ecf;
     }
 
     /**
@@ -190,6 +245,8 @@ public class EventBuilder
                     b = new Data_Transcript(label);
                     //First line is number of lines of dialog
                     int numberOfLines = Integer.parseInt(in.readLine());
+                    //Next lines are all lines of dialog
+                    //Actor on one line, dialog on the next
                     for (int j = 0; j < numberOfLines; j++)
                     {
                         String actor = in.readLine();
@@ -203,8 +260,92 @@ public class EventBuilder
         in.close();
 
         prototypes.put(evt.eventType, evt);
-        //TODO prototypes should not be added to the DTD until the user puts one in the script.
-        dtd.digestEvent(evt);
         return evt;
+    }
+
+    public void reset()
+    {
+        inScript = new ArrayList<>();
+    }
+
+    private String asECF(Event evt)
+    {
+        String output = "";
+        //First line is event type
+        output += evt.eventType + "\n";
+        //Second line is number of fields
+        output += evt.fieldCount() + "\n";
+        //Execute on each of the remaining fields
+        for (int i = 0; i < evt.fieldCount(); i++)
+        {
+            Buildable b = evt.getElement(i);
+            //First line is label for field
+            output += evt.getLabel(i) + "\n";
+            //Second line is type of data
+            if (b instanceof Data_Media)
+            {
+                output += "type_media" + "\n";
+                //First line is path to media file
+                output += ((Data_Media) b).getFileName() + "\n";
+                //Second line is time to start playback
+                output += ((Data_Media) b).getStartTime() + "\n";
+                //Third line is length of playback
+                output += ((Data_Media) b).getPlayLength() + "\n";
+            }
+            else if (b instanceof Data_Menu)
+            {
+                output += "type_menu" + "\n";
+                //First line is number of options in menu
+                output += ((Data_Menu) b).menuSize() + "\n";
+                //Next lines are all the menu options
+                String currentSelection = ((Data_Menu) b).getSelected();
+                int selectedIndex = 0;
+                for (int j = 0; j < ((Data_Menu) b).menuSize(); j++)
+                {
+                    ((Data_Menu) b).setSelected(j);
+                    String str = ((Data_Menu) b).getSelected();
+                    if (str.equals(currentSelection))
+                    {
+                        selectedIndex = j;
+                    }
+                    output += str + "\n";
+
+                }
+                //Last line is currently selected index
+                output += selectedIndex + "\n";
+            }
+            else if (b instanceof Data_Text)
+            {
+                output += "type_text" + "\n";
+                String text = ((Data_Text) b).getContent();
+                //First line is 1 or 0. If 1, text follows. If 0, textbox is blank
+                if (text.isEmpty())
+                {
+                    output += 0 + "\n";
+                }
+                else
+                {
+                    output += 1 + "\n";
+                    output += text + "\n";
+                }
+
+            }
+            else if (b instanceof Data_Transcript)
+            {
+                output += "type_transcript" + "\n";
+                //First line is number of lines of dialog
+                output += ((Data_Transcript) b).length() + "\n";
+                //Next lines are all lines of dialog
+                //Actor on one line, dialog on the next
+                for (int j = 0; j < ((Data_Transcript) b).length(); j++)
+                {
+                    Line line = ((Data_Transcript) b).getLine(j);
+                    output += line.actor + "\n";
+                    output += line.dialog + "\n";
+                }
+            }
+        }
+
+        return output;
     }
 }

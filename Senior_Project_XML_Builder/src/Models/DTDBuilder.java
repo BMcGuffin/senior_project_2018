@@ -234,7 +234,6 @@ public class DTDBuilder
 
     private String formatExternalDTD()
     {
-        //TODO implement this method.
         String output = "";
         output += elementWithSubs("SCRIPT", "PLOTLINE");
         output += elementWithSubs("PLOTLINE", "INSTANT");
@@ -287,6 +286,14 @@ public class DTDBuilder
     private String attListOpen(String element, String attName)
     {
         return "<!ATTLIST " + element + " " + attName + " ";
+    }
+
+    public void reset()
+    {
+        reserved = new ArrayList<>();
+        elements = new ArrayList<>();
+        subelements = new TreeMap<>();
+        addTopLevelTags();
     }
 
 }
