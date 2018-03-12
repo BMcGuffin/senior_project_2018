@@ -179,4 +179,74 @@ public class EventTest extends TestCase
         
     }
 
+    /**
+     * Test of setParentInstance method, of class Event.
+     */
+    public void testSetParentInstance()
+    {
+        System.out.println("setParentInstance");
+        Instance parent = null;
+        Event instance = null;
+        instance.setParentInstance(parent);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getElement method, of class Event.
+     */
+    public void testGetElement()
+    {
+        System.out.println("getElement");
+        int index = 0;
+        Event instance = null;
+        Buildable expResult = null;
+        Buildable result = instance.getElement(index);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of fieldCount method, of class Event.
+     */
+    public void testFieldCount()
+    {
+        System.out.println("fieldCount");
+        Event instance = null;
+        int expResult = 0;
+        int result = instance.fieldCount();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of toString method, of class Event.
+     */
+    public void testToString()
+    {
+        System.out.println("toString");
+        Event instance = null;
+        String expResult = "";
+        String result = instance.toString();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of toXML method, of class Event.
+     */
+    public void testToXML()
+    {
+        System.out.println("toXML");
+        Event instance = null;
+        String expResult = "";
+        String result = instance.toXML();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
 }

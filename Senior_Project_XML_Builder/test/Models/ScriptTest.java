@@ -1,5 +1,6 @@
 package Models;
 
+import java.io.File;
 import junit.framework.TestCase;
 
 /**
@@ -171,6 +172,83 @@ public class ScriptTest extends TestCase
         result = instance.countPlotlines();
         assertEquals(expResult, result);
 
+    }
+
+    /**
+     * Test of spark method, of class Script.
+     */
+    public void testSpark()
+    {
+        System.out.println("spark");
+        Script instance = new Script();
+        instance.spark();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of toXML method, of class Script.
+     */
+    public void testToXML()
+    {
+        System.out.println("toXML");
+        Script instance = new Script();
+        String expResult = "";
+        String result = instance.toXML();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of saveToFile method, of class Script.
+     */
+    public void testSaveToFile()
+    {
+        System.out.println("saveToFile");
+        Script instance = new Script();
+        instance.saveToFile();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of newFile method, of class Script.
+     */
+    public void testNewFile()
+    {
+        System.out.println("newFile");
+        Script instance = new Script();
+        instance.newFile();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of loadFromFile method, of class Script.
+     */
+    public void testLoadFromFile()
+    {
+        System.out.println("loadFromFile");
+        File newFile = null;
+        Script instance = new Script();
+        instance.loadFromFile(newFile);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of toString method, of class Script.
+     */
+    public void testToString()
+    {
+        System.out.println("toString");
+        Script instance = new Script();
+        String expResult = "";
+        String result = instance.toString();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
 }

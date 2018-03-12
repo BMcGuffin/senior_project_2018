@@ -21,7 +21,7 @@ public class Data_TranscriptTest extends TestCase
     public void testAddLine()
     {
         System.out.println("addLine");
-        Data_Transcript instance = new Data_Transcript();
+        Data_Transcript instance = new Data_Transcript("text transcript module");
         assertEquals(0, instance.length());
         instance.addLine("act1", "hello 1");
         assertEquals(1, instance.length());
@@ -37,7 +37,7 @@ public class Data_TranscriptTest extends TestCase
     public void testGetActors()
     {
         System.out.println("getActors");
-        Data_Transcript instance = new Data_Transcript();
+        Data_Transcript instance = new Data_Transcript("text transcript module");
         String[] expResult =
         {
         };
@@ -74,7 +74,7 @@ public class Data_TranscriptTest extends TestCase
     {
         System.out.println("getLine");
         int index = 0;
-        Data_Transcript instance = new Data_Transcript();
+        Data_Transcript instance = new Data_Transcript("text transcript module");
         Line result = instance.getLine(index);
         assertNull(result);
         instance.addLine("act1", "hello 1");
@@ -91,7 +91,7 @@ public class Data_TranscriptTest extends TestCase
     public void testRemoveLine()
     {
         System.out.println("removeLine");
-        Data_Transcript instance = new Data_Transcript();
+        Data_Transcript instance = new Data_Transcript("text transcript module");
         assertEquals(0, instance.length());
         instance.addLine("act1", "hello 1");
         assertEquals(1, instance.length());
@@ -119,7 +119,7 @@ public class Data_TranscriptTest extends TestCase
     public void testMoveLineUp()
     {
         System.out.println("moveLineUp");
-        Data_Transcript instance = new Data_Transcript();
+        Data_Transcript instance = new Data_Transcript("text transcript module");
         instance.addLine("act1", "hello 1");
         instance.addLine("act2", "hello 2");
         assertFalse(instance.moveLineUp(0));
@@ -139,7 +139,7 @@ public class Data_TranscriptTest extends TestCase
     public void testMoveLineDown()
     {
         System.out.println("moveLineDown");
-        Data_Transcript instance = new Data_Transcript();
+        Data_Transcript instance = new Data_Transcript("text transcript module");
         instance.addLine("act1", "hello 1");
         instance.addLine("act2", "hello 2");
         assertFalse(instance.moveLineDown(1));
@@ -150,6 +150,34 @@ public class Data_TranscriptTest extends TestCase
         result = instance.getLine(1);
         assertEquals("act1", result.actor);
         assertEquals("hello 1", result.dialog);
+    }
+
+    /**
+     * Test of length method, of class Data_Transcript.
+     */
+    public void testLength()
+    {
+        System.out.println("length");
+        Data_Transcript instance = null;
+        int expResult = 0;
+        int result = instance.length();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of duplicate method, of class Data_Transcript.
+     */
+    public void testDuplicate()
+    {
+        System.out.println("duplicate");
+        Data_Transcript instance = null;
+        Buildable expResult = null;
+        Buildable result = instance.duplicate();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
 }

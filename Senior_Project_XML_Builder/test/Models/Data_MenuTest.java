@@ -82,4 +82,32 @@ public class Data_MenuTest extends TestCase
         assertFalse(instance.setSelected(-1));
     }
 
+    /**
+     * Test of menuSize method, of class Data_Menu.
+     */
+    public void testMenuSize()
+    {
+        System.out.println("menuSize");
+        Data_Menu instance = null;
+        int expResult = 0;
+        int result = instance.menuSize();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of duplicate method, of class Data_Menu.
+     */
+    public void testDuplicate()
+    {
+        System.out.println("duplicate");
+        Data_Menu instance = null;
+        Buildable expResult = null;
+        Buildable result = instance.duplicate();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
 }
