@@ -60,7 +60,13 @@ class Data_Text implements Buildable
     {
         Data_Text dup = new Data_Text(this.elementName);
         dup.setContent(this.text);
-        
+
         return dup;
+    }
+
+    @Override
+    public String elementName()
+    {
+        return elementName;
     }
 }

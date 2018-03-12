@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An Instance is a cluster of one or more Events. It has a group of media-based events, and a group of non-media-based events. It has a reference to the plotline it's currently inside.
+ * An Instance is a cluster of one or more Events. It has a group of media-based
+ * events, and a group of non-media-based events. It has a reference to the
+ * plotline it's currently inside.
  *
  * @author Bryan McGuffin
  * @version Feb 5, 2018
@@ -90,8 +92,17 @@ public class Instance implements XML_Writable
     @Override
     public String toXML()
     {
-        //TODO implement this method.
-        throw new UnsupportedOperationException("Method not implemented.");
+        String output = "";
+
+        output += XML_Writer.openTag("INSTANT");
+
+        for (Event evt : events)
+        {
+            output += evt.toXML();
+        }
+
+        output += XML_Writer.closeTag("INSTANT");
+        return output;
     }
 
 }

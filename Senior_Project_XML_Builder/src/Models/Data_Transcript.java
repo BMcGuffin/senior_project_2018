@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The transcript of a conversation between one or more actors. A series of lines in chronological order.
+ * The transcript of a conversation between one or more actors. A series of
+ * lines in chronological order.
  *
  * @author Bryan McGuffin
  * @version Feb 20, 2018
@@ -154,6 +155,12 @@ class Data_Transcript implements Buildable
             dup.addLine(l.actor, l.dialog);
         }
         return dup;
+    }
+
+    @Override
+    public String elementName()
+    {
+        return elementName;
     }
 
 }

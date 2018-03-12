@@ -50,7 +50,7 @@ public class TerminalView implements I_View
         currentMenu = menus.MAINMENU;
         ctrl = c;
         currentPlotIndex = 0;
-        bldr = EventBuilder.getBuilder();
+        bldr = EventBuilder.getBuilder(null);
     }
 
     @Override

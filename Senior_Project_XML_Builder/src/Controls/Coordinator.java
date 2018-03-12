@@ -26,7 +26,7 @@ public class Coordinator implements I_Controller
     public Coordinator(Script script)
     {
         sc = script;
-        builder = EventBuilder.getBuilder();
+        builder = EventBuilder.getBuilder(sc);
     }
 
     @Override
@@ -132,7 +132,12 @@ public class Coordinator implements I_Controller
                 {
                     try
                     {
-                        sc.saveFile = new File(args.get(0));
+                        String filename = args.get(0);
+                        if(!filename.endsWith(".xml"))
+                        {
+                            filename += ".xml";
+                        }
+                        sc.saveFile = new File(filename);
                         sc.saveFile.createNewFile();
                         sc.saveToFile();
                     }

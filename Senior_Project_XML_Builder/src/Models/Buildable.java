@@ -20,4 +20,6 @@ public interface Buildable
      * @return a deep copy of the buildable object
      */
     Buildable duplicate();
+    
+    String elementName();
 }

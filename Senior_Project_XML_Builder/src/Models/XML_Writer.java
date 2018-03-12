@@ -18,23 +18,23 @@ package Models;
 public abstract class XML_Writer
 {
 
-    public String openTag(String s)
+    public static String openTag(String s)
     {
-        return s;
+        return "<"+s+">\n";
     }
 
-    public String closeTag(String s)
+    public static String closeTag(String s)
     {
-        return s;
+        return "</"+s+">\n";
     }
 
-    public String emptyTag(String s)
+    public static String emptyTag(String s)
     {
-        return s;
+        return "<"+s+"/>\n";
     }
 
-    public String SimpleTag(String s)
+    public static String SimpleTag(String s, String body)
     {
-        return s;
+        return openTag(s) + body + closeTag(s);
     }
 }

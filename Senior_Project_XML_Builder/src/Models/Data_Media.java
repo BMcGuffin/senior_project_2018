@@ -13,7 +13,8 @@ import java.nio.file.Files;
 import javax.sound.sampled.*;
 
 /**
- * Represents a single piece of media data. Includes metadata relevant to the playback of audio or video.
+ * Represents a single piece of media data. Includes metadata relevant to the
+ * playback of audio or video.
  *
  * @author Bryan McGuffin
  * @version Feb 20, 2018
@@ -42,7 +43,8 @@ class Data_Media implements Buildable
     private boolean isImage, isAudio, isVideo;
 
     /**
-     * How many seconds into the media file playback should begin. Defaults to 0.
+     * How many seconds into the media file playback should begin. Defaults to
+     * 0.
      */
     private int startTime;
 
@@ -67,7 +69,8 @@ class Data_Media implements Buildable
     }
 
     /**
-     * Discern the type of media file; if acceptable, set it as the current file.
+     * Discern the type of media file; if acceptable, set it as the current
+     * file.
      *
      * @param f the file in question.
      * @return true if the file is of an acceptable format.
@@ -181,6 +184,12 @@ class Data_Media implements Buildable
         dup.setStartTime(this.startTime);
 
         return dup;
+    }
+
+    @Override
+    public String elementName()
+    {
+        return elementName;
     }
 
     /**

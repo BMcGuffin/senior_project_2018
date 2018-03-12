@@ -7,11 +7,15 @@
  */
 package Models;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A complete script, which contains one or more plotlines. It has a running
@@ -30,12 +34,11 @@ public class Script extends Observable implements XML_Writable
      * The plotlines which make up this script.
      */
     private List<Plotline> plotlines;
-
     public String scriptTitle;
-
     public String description;
-
     public File saveFile;
+    private EventBuilder eb;
+    private DTDBuilder dtd;
 
     /**
      * Constructor. Generates a new Script object.
@@ -44,6 +47,10 @@ public class Script extends Observable implements XML_Writable
     {
         plotlines = new ArrayList<>();
         scriptTitle = "untitled1";
+        description = "";
+        saveFile = null;
+        dtd = DTDBuilder.getDTDBuilder(this);
+        eb = EventBuilder.getBuilder(this);
     }
 
     /**
@@ -109,8 +116,6 @@ public class Script extends Observable implements XML_Writable
         return plotlines.size();
     }
 
-   
-
     /**
      * Send out the initial update so that all views have a connection.
      */
@@ -123,32 +128,73 @@ public class Script extends Observable implements XML_Writable
     @Override
     public String toXML()
     {
-        //TODO implement this method.
-        throw new UnsupportedOperationException("Method not implemented.");
+        String output = "";
+        //Preamble
+        output += "<?xml version=\"1.0\" standalone=\"no\"?>\n";
+        output += "<!DOCTYPE SCRIPT SYSTEM \"" + dtd.getDTDName() + "\">\n";
+        output += XML_Writer.openTag("SCRIPT");
+        for (Plotline plt: plotlines)
+        {
+            output += plt.toXML();
+        }
+        output += XML_Writer.closeTag("SCRIPT");
+        return output;
     }
 
+    /**
+     * Write the current script out to a file.
+     */
     public void saveToFile()
     {
-        //TODO implement this method.
-        throw new UnsupportedOperationException("Method not implemented.");
+        try
+        {
+            dtd.generateDTD();
+        }
+        catch (IOException ex)
+        {
+            System.out.println("Unable to generate DTD file " + dtd.getDTDName());
+        }
+        BufferedWriter bw;
+        try
+        {
+            bw = new BufferedWriter(new FileWriter(saveFile));
+            bw.write(this.toXML());
+            bw.flush();
+            bw.close();
+        }
+        catch (IOException ex)
+        {
+            System.out.println("Unable to generate XML file " + saveFile.getName());
+        }
+
     }
 
+    /**
+     * Start a new file.
+     */
     public void newFile()
     {
+        plotlines = new ArrayList<>();
+        scriptTitle = "untitled1";
+        description = "";
+        saveFile = null;
+        //TODO add "reset" method to DTD builder
+        //TODO add "reset" method to Event Builder
         //TODO implement this method.
         throw new UnsupportedOperationException("Method not implemented.");
     }
 
     public void loadFromFile(File newFile)
     {
+        newFile();
+        saveFile = newFile;
         //TODO implement this method.
         throw new UnsupportedOperationException("Method not implemented.");
     }
-    
+
     public String toString()
     {
         return "Script \"" + this.scriptTitle + "\"";
     }
 
-      
 }

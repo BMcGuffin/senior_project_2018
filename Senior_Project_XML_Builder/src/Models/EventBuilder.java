@@ -20,13 +20,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Generates events from templates. Accesses the folder of event templates, known here as the "deck."
+ * Generates events from templates. Accesses the folder of event templates,
+ * known here as the "deck."
  *
  * @author Bryan McGuffin
  * @version Mar 11, 2018
  */
 public class EventBuilder
 {
+
+    private DTDBuilder dtd;
 
     private File templatesFolder;
 
@@ -38,10 +41,12 @@ public class EventBuilder
     private Map<String, Event> prototypes;
 
     /**
-     * Constructor. Builds prototypes for each event. This will be a singleton class.
+     * Constructor. Builds prototypes for each event. This will be a singleton
+     * class.
      */
-    private EventBuilder()
+    private EventBuilder(Script scr)
     {
+        dtd = DTDBuilder.getDTDBuilder(scr);
         prototypes = new TreeMap<>();
         templatesFolder = new File("src/Templates");
         File[] files = templatesFolder.listFiles();
@@ -53,7 +58,8 @@ public class EventBuilder
             }
             catch (Exception ex)
             {
-
+                System.out.println("Had a problem importing event templates.");
+                ex.printStackTrace();
             }
         }
     }
@@ -63,11 +69,11 @@ public class EventBuilder
      *
      * @return the event builder
      */
-    public static EventBuilder getBuilder()
+    public static EventBuilder getBuilder(Script scr)
     {
         if (singleton == null)
         {
-            singleton = new EventBuilder();
+            singleton = new EventBuilder(scr);
         }
         return singleton;
     }
@@ -107,7 +113,8 @@ public class EventBuilder
     }
 
     /**
-     * Given a new event, create an entry for it in the event deck and add a prototype to the list of prototypes.
+     * Given a new event, create an entry for it in the event deck and add a
+     * prototype to the list of prototypes.
      *
      * @param evt
      * @return
@@ -196,7 +203,8 @@ public class EventBuilder
         in.close();
 
         prototypes.put(evt.eventType, evt);
-
+        //TODO prototypes should not be added to the DTD until the user puts one in the script.
+        dtd.digestEvent(evt);
         return evt;
     }
 }

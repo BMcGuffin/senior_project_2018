@@ -38,6 +38,8 @@ public class Event implements XML_Writable
      * Contains the labels for each field in this event.
      */
     private List<String> labels;
+    
+    private DTDBuilder dtd;
 
     /**
      * Constructor. Generate a new Event with no data.
@@ -50,6 +52,7 @@ public class Event implements XML_Writable
         fields = new ArrayList<>();
         labels = new ArrayList<>();
         eventType = "Blank";
+        dtd = DTDBuilder.getDTDBuilder(null);
     }
 
     /**
@@ -198,11 +201,20 @@ public class Event implements XML_Writable
         return "Event of type \"" + eventType + "\", containing "
                 + fieldCount() + " fields in:\n" + instance.toString();
     }
+    
 
     @Override
     public String toXML()
     {
-        //TODO implement this method.
-        throw new UnsupportedOperationException("Method not implemented.");
+        String output = "";
+        
+        output += XML_Writer.openTag(DTDBuilder.formatTag(eventType));
+        for (Buildable b : fields)
+        {
+            output += XML_Writer.SimpleTag(dtd.getElement(this, b), b.toString());
+        }
+        output += XML_Writer.closeTag(DTDBuilder.formatTag(eventType));
+        
+        return output;
     }
 }
