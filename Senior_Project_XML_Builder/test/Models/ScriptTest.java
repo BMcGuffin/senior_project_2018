@@ -179,11 +179,6 @@ public class ScriptTest extends TestCase
      */
     public void testSpark()
     {
-        System.out.println("spark");
-        Script instance = new Script();
-        instance.spark();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -191,13 +186,6 @@ public class ScriptTest extends TestCase
      */
     public void testToXML()
     {
-        System.out.println("toXML");
-        Script instance = new Script();
-        String expResult = "";
-        String result = instance.toXML();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -205,11 +193,6 @@ public class ScriptTest extends TestCase
      */
     public void testSaveToFile()
     {
-        System.out.println("saveToFile");
-        Script instance = new Script();
-        instance.saveToFile();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -217,11 +200,6 @@ public class ScriptTest extends TestCase
      */
     public void testNewFile()
     {
-        System.out.println("newFile");
-        Script instance = new Script();
-        instance.newFile();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -229,12 +207,6 @@ public class ScriptTest extends TestCase
      */
     public void testLoadFromFile()
     {
-        System.out.println("loadFromFile");
-        File newFile = null;
-        Script instance = new Script();
-        instance.loadFromFile(newFile);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -242,13 +214,6 @@ public class ScriptTest extends TestCase
      */
     public void testToString()
     {
-        System.out.println("toString");
-        Script instance = new Script();
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }

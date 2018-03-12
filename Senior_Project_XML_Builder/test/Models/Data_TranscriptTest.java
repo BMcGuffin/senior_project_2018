@@ -130,7 +130,7 @@ public class Data_TranscriptTest extends TestCase
         result = instance.getLine(0);
         assertEquals("act2", result.actor);
         assertEquals("hello 2", result.dialog);
-        
+
     }
 
     /**
@@ -157,13 +157,6 @@ public class Data_TranscriptTest extends TestCase
      */
     public void testLength()
     {
-        System.out.println("length");
-        Data_Transcript instance = null;
-        int expResult = 0;
-        int result = instance.length();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -171,13 +164,6 @@ public class Data_TranscriptTest extends TestCase
      */
     public void testDuplicate()
     {
-        System.out.println("duplicate");
-        Data_Transcript instance = null;
-        Buildable expResult = null;
-        Buildable result = instance.duplicate();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }

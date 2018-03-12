@@ -87,13 +87,6 @@ public class Data_MenuTest extends TestCase
      */
     public void testMenuSize()
     {
-        System.out.println("menuSize");
-        Data_Menu instance = null;
-        int expResult = 0;
-        int result = instance.menuSize();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -101,13 +94,6 @@ public class Data_MenuTest extends TestCase
      */
     public void testDuplicate()
     {
-        System.out.println("duplicate");
-        Data_Menu instance = null;
-        Buildable expResult = null;
-        Buildable result = instance.duplicate();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }

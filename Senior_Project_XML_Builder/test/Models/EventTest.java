@@ -45,10 +45,10 @@ public class EventTest extends TestCase
         Event instance = new Event(ins);
         instance.addElement(a, "a");
         instance.addElement(b, "b");
-        
+
         assertSame(a, instance.getElement(0));
         assertSame(b, instance.getElement(1));
-        
+
     }
 
     /**
@@ -63,7 +63,7 @@ public class EventTest extends TestCase
         Event instance = new Event(ins);
         instance.addElement(a, "a");
         instance.addElement(b, "b");
-        
+
         assertEquals("a", instance.getLabel(0));
         assertEquals("b", instance.getLabel(1));
     }
@@ -80,12 +80,12 @@ public class EventTest extends TestCase
         Event instance = new Event(ins);
         instance.addElement(a, "a");
         instance.addElement(b, "b");
-        
+
         assertSame(a, instance.getElement(0));
         assertSame(b, instance.getElement(1));
-        
+
         assertFalse(instance.removeElement(2));
-        
+
         assertTrue(instance.removeElement(0));
         assertSame(b, instance.getElement(0));
     }
@@ -102,19 +102,19 @@ public class EventTest extends TestCase
         Event instance = new Event(ins);
         instance.addElement(a, "a");
         instance.addElement(b, "b");
-        
+
         assertSame(a, instance.getElement(0));
         assertSame(b, instance.getElement(1));
-        
+
         assertFalse(instance.moveElementUp(0));
-        
+
         assertSame(a, instance.getElement(0));
         assertSame(b, instance.getElement(1));
         assertEquals("a", instance.getLabel(0));
         assertEquals("b", instance.getLabel(1));
-        
+
         assertTrue(instance.moveElementUp(1));
-        
+
         assertSame(b, instance.getElement(0));
         assertSame(a, instance.getElement(1));
         assertEquals("b", instance.getLabel(0));
@@ -133,19 +133,19 @@ public class EventTest extends TestCase
         Event instance = new Event(ins);
         instance.addElement(a, "a");
         instance.addElement(b, "b");
-        
+
         assertSame(a, instance.getElement(0));
         assertSame(b, instance.getElement(1));
-        
+
         assertFalse(instance.moveElementDown(1));
-        
+
         assertSame(a, instance.getElement(0));
         assertSame(b, instance.getElement(1));
         assertEquals("a", instance.getLabel(0));
         assertEquals("b", instance.getLabel(1));
-        
+
         assertTrue(instance.moveElementDown(0));
-        
+
         assertSame(b, instance.getElement(0));
         assertSame(a, instance.getElement(1));
         assertEquals("b", instance.getLabel(0));
@@ -165,18 +165,17 @@ public class EventTest extends TestCase
         Event instance = new Event(ins);
         instance.addElement(a, "a");
         instance.addElement(b, "b");
-        
+
         assertFalse(instance.isMediaEvent());
-        
+
         instance.addElement(med, "med");
-        
+
         assertTrue(instance.isMediaEvent());
-        
+
         assertTrue(instance.removeElement(2));
-        
+
         assertFalse(instance.isMediaEvent());
-        
-        
+
     }
 
     /**
@@ -184,12 +183,6 @@ public class EventTest extends TestCase
      */
     public void testSetParentInstance()
     {
-        System.out.println("setParentInstance");
-        Instance parent = null;
-        Event instance = null;
-        instance.setParentInstance(parent);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -197,14 +190,6 @@ public class EventTest extends TestCase
      */
     public void testGetElement()
     {
-        System.out.println("getElement");
-        int index = 0;
-        Event instance = null;
-        Buildable expResult = null;
-        Buildable result = instance.getElement(index);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -212,13 +197,6 @@ public class EventTest extends TestCase
      */
     public void testFieldCount()
     {
-        System.out.println("fieldCount");
-        Event instance = null;
-        int expResult = 0;
-        int result = instance.fieldCount();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -226,13 +204,6 @@ public class EventTest extends TestCase
      */
     public void testToString()
     {
-        System.out.println("toString");
-        Event instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -240,13 +211,6 @@ public class EventTest extends TestCase
      */
     public void testToXML()
     {
-        System.out.println("toXML");
-        Event instance = null;
-        String expResult = "";
-        String result = instance.toXML();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }

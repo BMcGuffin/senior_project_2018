@@ -179,13 +179,6 @@ public class PlotlineTest extends TestCase
      */
     public void testInstanceCount()
     {
-        System.out.println("instanceCount");
-        Plotline instance = null;
-        int expResult = 0;
-        int result = instance.instanceCount();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -193,13 +186,6 @@ public class PlotlineTest extends TestCase
      */
     public void testTotalEventCount()
     {
-        System.out.println("totalEventCount");
-        Plotline instance = null;
-        int expResult = 0;
-        int result = instance.totalEventCount();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -207,13 +193,6 @@ public class PlotlineTest extends TestCase
      */
     public void testToXML()
     {
-        System.out.println("toXML");
-        Plotline instance = null;
-        String expResult = "";
-        String result = instance.toXML();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -221,13 +200,6 @@ public class PlotlineTest extends TestCase
      */
     public void testToString()
     {
-        System.out.println("toString");
-        Plotline instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }

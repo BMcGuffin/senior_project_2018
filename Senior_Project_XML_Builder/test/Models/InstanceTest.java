@@ -18,7 +18,7 @@ public class InstanceTest extends TestCase
     /**
      * Test of addEvent method, of class Instance.
      */
-    public void testAddEvent()
+    public void testAddEvent_0Args()
     {
         System.out.println("addEvent");
         Plotline mPlot = Mockito.mock(Plotline.class);
@@ -52,13 +52,6 @@ public class InstanceTest extends TestCase
      */
     public void testAddEvent_0args()
     {
-        System.out.println("addEvent");
-        Instance instance = null;
-        Event expResult = null;
-        Event result = instance.addEvent();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -66,14 +59,6 @@ public class InstanceTest extends TestCase
      */
     public void testAddEvent_Event()
     {
-        System.out.println("addEvent");
-        Event e = null;
-        Instance instance = null;
-        Event expResult = null;
-        Event result = instance.addEvent(e);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -81,13 +66,6 @@ public class InstanceTest extends TestCase
      */
     public void testToString()
     {
-        System.out.println("toString");
-        Instance instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -95,12 +73,6 @@ public class InstanceTest extends TestCase
      */
     public void testToXML()
     {
-        System.out.println("toXML");
-        Instance instance = null;
-        String expResult = "";
-        String result = instance.toXML();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
+
 }

@@ -1,6 +1,5 @@
 package Views;
 
-import java.util.Observable;
 import junit.framework.TestCase;
 
 /**
@@ -18,12 +17,6 @@ public class TerminalViewTest extends TestCase {
      */
     public void testSetVisible()
     {
-        System.out.println("setVisible");
-        boolean visible = false;
-        TerminalView instance = null;
-        instance.setVisible(visible);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -31,11 +24,6 @@ public class TerminalViewTest extends TestCase {
      */
     public void testGetNextInput()
     {
-        System.out.println("getNextInput");
-        TerminalView instance = null;
-        instance.getNextInput();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -43,12 +31,6 @@ public class TerminalViewTest extends TestCase {
      */
     public void testProcessCommand()
     {
-        System.out.println("processCommand");
-        String option = "";
-        TerminalView instance = null;
-        instance.processCommand(option);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -56,13 +38,6 @@ public class TerminalViewTest extends TestCase {
      */
     public void testUpdate()
     {
-        System.out.println("update");
-        Observable o = null;
-        Object arg = null;
-        TerminalView instance = null;
-        instance.update(o, arg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -70,11 +45,6 @@ public class TerminalViewTest extends TestCase {
      */
     public void testUpdateTerminal()
     {
-        System.out.println("updateTerminal");
-        TerminalView instance = null;
-        instance.updateTerminal();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }
