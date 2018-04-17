@@ -12,7 +12,8 @@ import java.io.File;
 import java.util.List;
 
 /**
- * The Controller portion of the MCV model. Accepts inputs from the view and subsequently manipulates the model.
+ * The Controller portion of the MCV model. Accepts inputs from the view and
+ * subsequently manipulates the model.
  *
  * @author Bryan McGuffin
  * @version Mar 10, 2018
@@ -53,6 +54,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -67,6 +69,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -87,6 +90,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -104,6 +108,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
 
@@ -124,6 +129,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -133,7 +139,7 @@ public class Coordinator implements I_Controller
                     try
                     {
                         String filename = args.get(0);
-                        if(!filename.endsWith(".xml"))
+                        if (!filename.endsWith(".xml"))
                         {
                             filename += ".xml";
                         }
@@ -143,6 +149,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -165,6 +172,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -192,6 +200,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -208,6 +217,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -227,6 +237,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -241,6 +252,7 @@ public class Coordinator implements I_Controller
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                     }
                 }
                 break;
