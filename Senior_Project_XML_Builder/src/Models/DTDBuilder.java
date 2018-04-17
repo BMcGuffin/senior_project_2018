@@ -50,7 +50,6 @@ public class DTDBuilder
         reserved.add("SCRIPT");
         reserved.add("PLOTLINE");
         reserved.add("INSTANT");
-        reserved.add("EVENT");
     }
 
     /**
@@ -237,9 +236,8 @@ public class DTDBuilder
         String output = "";
         output += elementWithSubs("SCRIPT", "PLOTLINE");
         output += elementWithSubs("PLOTLINE", "INSTANT");
-        output += elementWithSubs("INSTANT", "EVENT");
         String[] elementsArray = elements.toArray(new String[elements.size()]);
-        output += elementWithSubs("EVENT", elementsArray);
+        output += elementWithSubs("INSTANT", elementsArray);
         for (String element : elementsArray)
         {
             ArrayList<String> sublist = subelements.get(element);
@@ -268,11 +266,11 @@ public class DTDBuilder
                 output += subs[i];
                 if (i < subs.length - 1)
                 {
-                    output += ",";
+                    output += "|";
                 }
 
             }
-            output += ")";
+            output += ")*";
         }
         output += ">\n";
         return output;
