@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  * A complete script, which contains one or more plotlines. It has a running
@@ -184,10 +186,24 @@ public class Script extends Observable implements XML_Writable
 
     public void loadFromFile(File newFile)
     {
-        newFile();
-        saveFile = newFile;
-        //TODO implement this method.
-        throw new UnsupportedOperationException("Method not implemented.");
+        try
+        {
+            newFile();
+            saveFile = newFile;
+            System.out.println("Parsing file...");
+            XML_ParseHandler ph = new XML_ParseHandler();
+            SAXParserFactory.newInstance().newSAXParser().parse(newFile, ph);
+            System.out.println("Parsed file.");
+            Script newScript = ph.generateScript();
+            this.description = newScript.description;
+            this.saveFile = newScript.saveFile;
+            this.scriptTitle = newScript.scriptTitle;
+            this.plotlines = newScript.plotlines;   
+        }
+        catch (Exception ex)
+        {
+            System.out.println("Unable to read XML file "+newFile.getName());
+        }
     }
 
     public String toString()
