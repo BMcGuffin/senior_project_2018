@@ -9,15 +9,14 @@ package Views;
 
 import Controls.*;
 import java.util.Observable;
-import java.util.Observer;
 import java.util.Scanner;
 import Models.*;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A terminal interface for the program. Reads from, and writes to, the terminal.
+ * A terminal interface for the program. Reads from, and writes to, the
+ * terminal.
  *
  * @author Bryan McGuffin
  * @version Mar 5, 2018
@@ -121,7 +120,7 @@ public class TerminalView implements I_View
                         break;
                     case "p"://go to script settings menu
                         cmd = Command.NOTHING;
-                        currentMenu = menus.SCRIPTSETTINGS;
+                        currentMenu = menus.SCRIPTPREFERENCES;
                         break;
                     case "e"://go to edit plotline menu
                         cmd = Command.NOTHING;
@@ -132,7 +131,7 @@ public class TerminalView implements I_View
                         break;
                 }
                 break;
-            case SCRIPTSETTINGS:
+            case SCRIPTPREFERENCES:
                 switch (option.toLowerCase())
                 {
                     case "r"://rename script
@@ -239,6 +238,7 @@ public class TerminalView implements I_View
                         args.add("" + getIntFromInput("Enter index of event to remove:"));
                         break;
                     case "e"://Go to edit event menu
+                        currentMenu = menus.EDITEVENT;
                         break;
                     case "m"://Move event
                         cmd = Command.RELOCATE_EVENT;
@@ -261,6 +261,22 @@ public class TerminalView implements I_View
                     default:
                         break;
                 }
+                break;
+            case EDITEVENT:
+                //TODO write out this case
+                currentMenu = menus.EDITPLOTLINE;
+                break;
+            case EDITDATA_TEXTFIELD:
+                //TODO write out this case
+                break;
+            case EDITDATA_MEDIA:
+                //TODO write out this case
+                break;
+            case EDITDATA_MENU:
+                //TODO write out this case
+                break;
+            case EDITDATA_TRANSCRIPT:
+                //TODO write out this case
                 break;
             default:
                 break;
@@ -317,7 +333,7 @@ public class TerminalView implements I_View
                 output += String.format("Total run time: %d seconds", length);
                 System.out.println(output);
                 break;
-            case SCRIPTSETTINGS:
+            case SCRIPTPREFERENCES:
                 String path = "<None>";
                 if (scr.saveFile != null)
                 {
@@ -338,6 +354,21 @@ public class TerminalView implements I_View
                 output += String.format("(Ends %d seconds into script)", plt.length() + plt.startTime);
                 System.out.println(output);
                 break;
+            case EDITEVENT:
+                //TODO write out this case
+                break;
+            case EDITDATA_TEXTFIELD:
+                //TODO write out this case
+                break;
+            case EDITDATA_MEDIA:
+                //TODO write out this case
+                break;
+            case EDITDATA_MENU:
+                //TODO write out this case
+                break;
+            case EDITDATA_TRANSCRIPT:
+                //TODO write out this case
+                break;
 
             default:
                 System.out.println("Well, how did we get here?");
@@ -349,11 +380,11 @@ public class TerminalView implements I_View
     {
 
         MAINMENU("[A] Add Plotline | [R] Remove Plotline | [E] Edit Plotline | \n"
-                + "[P] Script Settings | [S] Save Script | [X] Exit", new String[]
+                + "[P] Script Preferences | [S] Save Script | [X] Exit", new String[]
                 {
                     "a", "r", "e", "s", "p", "x"
                 }),
-        SCRIPTSETTINGS("[R] Rename Script | [D] Change Script Description | [S] Save As | \n"
+        SCRIPTPREFERENCES("[R] Rename Script | [D] Change Script Description | [S] Save As | \n"
                 + "[L] Load File | [N] New File | [B] Go Back", new String[]
                 {
                     "r", "d", "s", "l", "n", "b"
@@ -363,6 +394,28 @@ public class TerminalView implements I_View
                 + "[E] Edit Event | [M] Move Event | [B] Go Back", new String[]
                 {
                     "n", "d", "t", "l", "a", "r", "e", "m", "b"
+                }),
+        EDITEVENT("[E] Edit Data Field | [B] Go Back", new String[]
+        {
+            "e", "b"
+        }),
+        EDITDATA_TEXTFIELD("[R] Replace Text | [B] Go Back", new String[]
+        {
+            "r", "b"
+        }),
+        EDITDATA_MEDIA("[C] Change Media File | [S] Change Start Time | \n"
+                + "[L] Change Playback Length | [B] Go Back", new String[]
+                {
+                    "c", "s", "l", "b"
+                }),
+        EDITDATA_MENU("[C] Change Selection | [B] Go Back", new String[]
+        {
+            "c", "b"
+        }),
+        EDITDATA_TRANSCRIPT("[A] Add Line | [R] Remove Line | \n"
+                + "[<] Move Line Earlier | [>] Move Line Later | [B] Go Back", new String[]
+                {
+                    "a", "r", "<", ">", "b"
                 });
 
         public String MENU_TEXT;
