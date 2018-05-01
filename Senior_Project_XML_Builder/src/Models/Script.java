@@ -35,12 +35,12 @@ public class Script extends Observable implements XML_Writable
     /**
      * The plotlines which make up this script.
      */
-    private List<Plotline> plotlines;
+    public List<Plotline> plotlines;
     public String scriptTitle;
     public String description;
     public File saveFile;
     private EventBuilder eb;
-    private DTDBuilder dtd;
+    public DTDBuilder dtd;
 
     /**
      * Constructor. Generates a new Script object.

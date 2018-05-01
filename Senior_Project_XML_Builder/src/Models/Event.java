@@ -39,8 +39,6 @@ public class Event implements XML_Writable
      */
     private List<String> labels;
     
-    private DTDBuilder dtd;
-
     /**
      * Constructor. Generate a new Event with no data.
      *
@@ -52,7 +50,6 @@ public class Event implements XML_Writable
         fields = new ArrayList<>();
         labels = new ArrayList<>();
         eventType = "Blank";
-        dtd = DTDBuilder.getDTDBuilder(null);
     }
 
     /**
@@ -211,7 +208,7 @@ public class Event implements XML_Writable
         output += XML_Writer.openTag(DTDBuilder.formatTag(eventType));
         for (Buildable b : fields)
         {
-            output += XML_Writer.SimpleTag(dtd.getElement(this, b), b.toString());
+            output += XML_Writer.SimpleTag(this.instance.plotline.script.dtd.getElement(this, b), b.toString());
         }
         output += XML_Writer.closeTag(DTDBuilder.formatTag(eventType));
         
