@@ -16,11 +16,13 @@ import java.util.List;
 public interface I_Controller
 {
 
-    /**
-     * Read in a command and any relevant data.
-     *
-     * @param cmd the command object.
-     * @param args the data values going along with this command.
-     */
-    public void readCommand(Command cmd, List<String> args);
+	/**
+	 * Read in a command and any relevant data.
+	 *
+	 * @param cmd
+	 *            the command object.
+	 * @param args
+	 *            the data values going along with this command.
+	 */
+	public void readCommand(Command cmd, List<String> args);
 }

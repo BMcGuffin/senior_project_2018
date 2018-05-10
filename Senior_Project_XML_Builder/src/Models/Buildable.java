@@ -14,12 +14,12 @@ package Models;
  */
 public interface Buildable
 {
-    /**
-     * Duplicate this object.
-     * 
-     * @return a deep copy of the buildable object
-     */
-    Buildable duplicate();
-    
-    String elementName();
+	/**
+	 * Duplicate this object.
+	 * 
+	 * @return a deep copy of the buildable object
+	 */
+	Buildable duplicate();
+
+	String elementName();
 }

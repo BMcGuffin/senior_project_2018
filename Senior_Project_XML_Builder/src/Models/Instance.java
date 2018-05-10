@@ -21,88 +21,90 @@ import java.util.List;
 public class Instance implements XML_Writable
 {
 
-    /**
-     * All the events which occur at this moment in time.
-     */
-    public List<Event> events;
+	/**
+	 * All the events which occur at this moment in time.
+	 */
+	public List<Event> events;
 
-    /**
-     * The plotline to which this event belongs.
-     */
-    public Plotline plotline;
+	/**
+	 * The plotline to which this event belongs.
+	 */
+	public Plotline plotline;
 
-    /**
-     * The time at which this instance occurs.
-     */
-    public Integer time;
+	/**
+	 * The time at which this instance occurs.
+	 */
+	public Integer time;
 
-    /**
-     * Constructor. Generates a new instance.
-     *
-     * @param parent the plotline to which this instance belongs.
-     */
-    public Instance(Plotline parent, int t)
-    {
-        events = new ArrayList<>();
-        plotline = parent;
-        time = t;
-    }
+	/**
+	 * Constructor. Generates a new instance.
+	 *
+	 * @param parent
+	 *            the plotline to which this instance belongs.
+	 */
+	public Instance(Plotline parent, int t)
+	{
+		events = new ArrayList<>();
+		plotline = parent;
+		time = t;
+	}
 
-    /**
-     * Add a new blank event to this instance.
-     *
-     * @return the new event.
-     */
-    public Event addEvent()
-    {
-        Event e = new Event(this);
-        events.add(e);
-        return e;
-    }
+	/**
+	 * Add a new blank event to this instance.
+	 *
+	 * @return the new event.
+	 */
+	public Event addEvent()
+	{
+		Event e = new Event(this);
+		events.add(e);
+		return e;
+	}
 
-    /**
-     * Add a new, preformatted event to this instance.
-     *
-     * @return the new event.
-     */
-    public Event addEvent(Event e)
-    {
-        events.add(e);
-        e.setParentInstance(this);
-        return e;
-    }
+	/**
+	 * Add a new, preformatted event to this instance.
+	 *
+	 * @return the new event.
+	 */
+	public Event addEvent(Event e)
+	{
+		events.add(e);
+		e.setParentInstance(this);
+		return e;
+	}
 
-    /**
-     * Remove an event from this instance.
-     *
-     * @param evt the event to be removed.
-     * @return true if the event was removed.
-     */
-    public boolean removeEvent(Event evt)
-    {
-        return events.remove(evt);
-    }
+	/**
+	 * Remove an event from this instance.
+	 *
+	 * @param evt
+	 *            the event to be removed.
+	 * @return true if the event was removed.
+	 */
+	public boolean removeEvent(Event evt)
+	{
+		return events.remove(evt);
+	}
 
-    @Override
-    public String toString()
-    {
-        return "Instance occurring at t=" + time + " seconds, in:\n" + plotline.toString();
-    }
+	@Override
+	public String toString()
+	{
+		return "Instance occurring at t=" + time + " seconds, in:\n" + plotline.toString();
+	}
 
-    @Override
-    public String toXML()
-    {
-        String output = "";
+	@Override
+	public String toXML()
+	{
+		String output = "";
 
-        output += XML_Writer.openTag("INSTANT");
+		output += XML_Writer.openTag("INSTANT");
 
-        for (Event evt : events)
-        {
-            output += evt.toXML();
-        }
+		for (Event evt : events)
+		{
+			output += evt.toXML();
+		}
 
-        output += XML_Writer.closeTag("INSTANT");
-        return output;
-    }
+		output += XML_Writer.closeTag("INSTANT");
+		return output;
+	}
 
 }

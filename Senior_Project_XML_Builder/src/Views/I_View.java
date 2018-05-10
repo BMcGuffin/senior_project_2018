@@ -16,10 +16,11 @@ import java.util.Observer;
  */
 public interface I_View extends Observer
 {
-    /**
-     * Turn on this view.
-     * 
-     * @param visible whether or not to display this view
-     */
-    void setVisible(boolean visible);
+	/**
+	 * Turn on this view.
+	 * 
+	 * @param visible
+	 *            whether or not to display this view
+	 */
+	void setVisible(boolean visible);
 }

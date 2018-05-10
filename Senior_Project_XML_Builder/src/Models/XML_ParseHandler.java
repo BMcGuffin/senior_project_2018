@@ -18,33 +18,33 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class XML_ParseHandler extends DefaultHandler
 {
-    public XML_ParseHandler()
-    {
-        System.out.println("Constructor for handler");
-    }
-    
-    @Override
-    public void startElement (String uri, String localName, String qName, Attributes attributes)
-    {
-        System.out.println("Start: " + qName);
-    }
-    
-    @Override
-    public void endElement (String uri, String localName, String qName) throws SAXException
-    {
-        System.out.println("End: " + qName);
-    }
-    
-    @Override
-    public void characters (char ch[], int start, int length) throws SAXException
-    {
-        System.out.println("Characters: " + ch);
-    }
-    
-    public Script generateScript()
-    {
-        Script newScript = new Script();
-        newScript.addPlotline("Hello world", 0);
-        return newScript;
-    }
+	public XML_ParseHandler()
+	{
+		System.out.println("Constructor for handler");
+	}
+
+	@Override
+	public void startElement(String uri, String localName, String qName, Attributes attributes)
+	{
+		System.out.println("Start: " + qName);
+	}
+
+	@Override
+	public void endElement(String uri, String localName, String qName) throws SAXException
+	{
+		System.out.println("End: " + qName);
+	}
+
+	@Override
+	public void characters(char ch[], int start, int length) throws SAXException
+	{
+		System.out.println("Characters: " + ch);
+	}
+
+	public Script generateScript()
+	{
+		Script newScript = new Script();
+		newScript.addPlotline("Hello world", 0);
+		return newScript;
+	}
 }

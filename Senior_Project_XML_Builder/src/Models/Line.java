@@ -16,25 +16,27 @@ package Models;
 class Line
 {
 
-    /**
-     * The person or entity speaking the line.
-     */
-    public String actor;
+	/**
+	 * The person or entity speaking the line.
+	 */
+	public String actor;
 
-    /**
-     * The dialog that is spoken during this line.
-     */
-    public String dialog;
+	/**
+	 * The dialog that is spoken during this line.
+	 */
+	public String dialog;
 
-    /**
-     * Constructor.
-     *
-     * @param a the actor for this line
-     * @param d the dialog for this line
-     */
-    public Line(String a, String d)
-    {
-        actor = a;
-        dialog = d;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param a
+	 *            the actor for this line
+	 * @param d
+	 *            the dialog for this line
+	 */
+	public Line(String a, String d)
+	{
+		actor = a;
+		dialog = d;
+	}
 }

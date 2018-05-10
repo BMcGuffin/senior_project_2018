@@ -22,116 +22,119 @@ import java.util.List;
 class Data_Menu implements Buildable
 {
 
-    /**
-     * The name of this particular data field.
-     */
-    public String elementName;
+	/**
+	 * The name of this particular data field.
+	 */
+	public String elementName;
 
-    /**
-     * The list of options. Ordering may not be arbitrarily changed by user.
-     */
-    private List<String> options;
+	/**
+	 * The list of options. Ordering may not be arbitrarily changed by user.
+	 */
+	private List<String> options;
 
-    /**
-     * The index for the currently selected option.
-     */
-    private int currentlySelected;
+	/**
+	 * The index for the currently selected option.
+	 */
+	private int currentlySelected;
 
-    /**
-     * Constructor.
-     */
-    public Data_Menu(String eName)
-    {
-        elementName = eName;
-        options = new ArrayList<>();
-        currentlySelected = 0;
-    }
+	/**
+	 * Constructor.
+	 */
+	public Data_Menu(String eName)
+	{
+		elementName = eName;
+		options = new ArrayList<>();
+		currentlySelected = 0;
+	}
 
-    /**
-     * The number of options in this menu.
-     *
-     * @return the size of the menu
-     */
-    public int menuSize()
-    {
-        return options.size();
-    }
+	/**
+	 * The number of options in this menu.
+	 *
+	 * @return the size of the menu
+	 */
+	public int menuSize()
+	{
+		return options.size();
+	}
 
-    /**
-     * Add a new String option to the end of the menu.
-     *
-     * @param newOp the new option to add to the menu.
-     * @return true if the new element was successfully added to the menu.
-     */
-    public boolean addOption(String newOp)
-    {
-        return options.add(newOp);
-    }
+	/**
+	 * Add a new String option to the end of the menu.
+	 *
+	 * @param newOp
+	 *            the new option to add to the menu.
+	 * @return true if the new element was successfully added to the menu.
+	 */
+	public boolean addOption(String newOp)
+	{
+		return options.add(newOp);
+	}
 
-    /**
-     * Remove an option from the menu.
-     *
-     * @param index the position of the option to be removed.
-     * @return true if the index was valid and the option was removed.
-     */
-    public boolean removeOption(int index)
-    {
-        if (index < options.size() && index >= 0)
-        {
-            options.remove(index);
-            return true;
-        }
-        return false;
-    }
+	/**
+	 * Remove an option from the menu.
+	 *
+	 * @param index
+	 *            the position of the option to be removed.
+	 * @return true if the index was valid and the option was removed.
+	 */
+	public boolean removeOption(int index)
+	{
+		if (index < options.size() && index >= 0)
+		{
+			options.remove(index);
+			return true;
+		}
+		return false;
+	}
 
-    /**
-     * Get the currently selected list item.
-     *
-     * @return the list item at the last selected position.
-     */
-    public String getSelected()
-    {
-        if (options.size() > 0)
-        {
-            return options.get(currentlySelected);
-        }
-        return null;
-    }
+	/**
+	 * Get the currently selected list item.
+	 *
+	 * @return the list item at the last selected position.
+	 */
+	public String getSelected()
+	{
+		if (options.size() > 0)
+		{
+			return options.get(currentlySelected);
+		}
+		return null;
+	}
 
-    /**
-     * Set the currently selected option to a different valid state.
-     *
-     * @param newIndex the index of an item in the menu.
-     * @return true if the new index is not out of bounds, and the current index
-     * was successfully changed.
-     */
-    public boolean setSelected(int newIndex)
-    {
-        if (newIndex < options.size() && newIndex >= 0)
-        {
-            currentlySelected = newIndex;
-            return true;
-        }
-        return false;
-    }
+	/**
+	 * Set the currently selected option to a different valid state.
+	 *
+	 * @param newIndex
+	 *            the index of an item in the menu.
+	 * @return true if the new index is not out of bounds, and the current index was
+	 *         successfully changed.
+	 */
+	public boolean setSelected(int newIndex)
+	{
+		if (newIndex < options.size() && newIndex >= 0)
+		{
+			currentlySelected = newIndex;
+			return true;
+		}
+		return false;
+	}
 
-    @Override
-    public Buildable duplicate()
-    {
-        Data_Menu dup = new Data_Menu(this.elementName);
+	@Override
+	public Buildable duplicate()
+	{
+		Data_Menu dup = new Data_Menu(this.elementName);
 
-        for (String op : options)
-        {
-            dup.addOption(op);
-        }
-        dup.setSelected(this.currentlySelected);
+		for (String op : options)
+		{
+			dup.addOption(op);
+		}
+		dup.setSelected(this.currentlySelected);
 
-        return dup;
-    }
+		return dup;
+	}
 
-    @Override
-    public String elementName()
-    {
-        return elementName;
-    }
+	@Override
+	public String elementName()
+	{
+		return elementName;
+	}
 }

@@ -16,8 +16,8 @@ package Models;
 public interface XML_Writable
 {
 
-    /**
-     * Convert the data in this object to XML.
-     */
-    String toXML();
+	/**
+	 * Convert the data in this object to XML.
+	 */
+	String toXML();
 }

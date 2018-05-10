@@ -16,57 +16,58 @@ package Models;
 class Data_Text implements Buildable
 {
 
-    /**
-     * The name of this text field.
-     */
-    public String elementName;
+	/**
+	 * The name of this text field.
+	 */
+	public String elementName;
 
-    /**
-     * The content of this text field.
-     */
-    private String text;
+	/**
+	 * The content of this text field.
+	 */
+	private String text;
 
-    /**
-     * Constructor.
-     */
-    public Data_Text(String eName)
-    {
-        text = "";
-        elementName = eName;
-    }
+	/**
+	 * Constructor.
+	 */
+	public Data_Text(String eName)
+	{
+		text = "";
+		elementName = eName;
+	}
 
-    /**
-     * Setter for the text field.
-     *
-     * @param str the text to be used.
-     */
-    public void setContent(String str)
-    {
-        text = str;
-    }
+	/**
+	 * Setter for the text field.
+	 *
+	 * @param str
+	 *            the text to be used.
+	 */
+	public void setContent(String str)
+	{
+		text = str;
+	}
 
-    /**
-     * Getter for the text field.
-     *
-     * @return the current text.
-     */
-    public String getContent()
-    {
-        return text;
-    }
+	/**
+	 * Getter for the text field.
+	 *
+	 * @return the current text.
+	 */
+	public String getContent()
+	{
+		return text;
+	}
 
-    @Override
-    public Buildable duplicate()
-    {
-        Data_Text dup = new Data_Text(this.elementName);
-        dup.setContent(this.text);
+	@Override
+	public Buildable duplicate()
+	{
+		Data_Text dup = new Data_Text(this.elementName);
+		dup.setContent(this.text);
 
-        return dup;
-    }
+		return dup;
+	}
 
-    @Override
-    public String elementName()
-    {
-        return elementName;
-    }
+	@Override
+	public String elementName()
+	{
+		return elementName;
+	}
 }

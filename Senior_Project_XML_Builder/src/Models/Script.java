@@ -32,183 +32,186 @@ import javax.xml.parsers.SAXParserFactory;
 public class Script extends Observable implements XML_Writable
 {
 
-    /**
-     * The plotlines which make up this script.
-     */
-    public List<Plotline> plotlines;
-    public String scriptTitle;
-    public String description;
-    public File saveFile;
-    private EventBuilder eb;
-    public DTDBuilder dtd;
+	/**
+	 * The plotlines which make up this script.
+	 */
+	public List<Plotline> plotlines;
+	public String scriptTitle;
+	public String description;
+	public File saveFile;
+	private EventBuilder eb;
+	public DTDBuilder dtd;
 
-    /**
-     * Constructor. Generates a new Script object.
-     */
-    public Script()
-    {
-        plotlines = new ArrayList<>();
-        scriptTitle = "untitled1";
-        description = "";
-        saveFile = null;
-        dtd = DTDBuilder.getDTDBuilder(this);
-        eb = EventBuilder.getBuilder(this);
-    }
+	/**
+	 * Constructor. Generates a new Script object.
+	 */
+	public Script()
+	{
+		plotlines = new ArrayList<>();
+		scriptTitle = "untitled1";
+		description = "";
+		saveFile = null;
+		dtd = DTDBuilder.getDTDBuilder(this);
+		eb = EventBuilder.getBuilder(this);
+	}
 
-    /**
-     * Generate a new plotline which starts at the given time, and add it to the
-     * list.
-     *
-     * @param start The number of seconds into the script that the plotline
-     * should begin.
-     * @return the index of the new plotline.
-     */
-    public int addPlotline(String title, int start)
-    {
-        Plotline p = new Plotline(title, start, this);
+	/**
+	 * Generate a new plotline which starts at the given time, and add it to the
+	 * list.
+	 *
+	 * @param start
+	 *            The number of seconds into the script that the plotline should
+	 *            begin.
+	 * @return the index of the new plotline.
+	 */
+	public int addPlotline(String title, int start)
+	{
+		Plotline p = new Plotline(title, start, this);
 
-        plotlines.add(p);
-        setChanged();
-        notifyObservers();
-        return plotlines.size() - 1;
-    }
+		plotlines.add(p);
+		setChanged();
+		notifyObservers();
+		return plotlines.size() - 1;
+	}
 
-    /**
-     * Get the plotline at the given index.
-     *
-     * @param index The index of the plotline.
-     * @return the plotline in question.
-     */
-    public Plotline getPlotLine(int index)
-    {
-        if (index < plotlines.size() && index >= 0)
-        {
-            return plotlines.get(index);
-        }
-        return null;
-    }
+	/**
+	 * Get the plotline at the given index.
+	 *
+	 * @param index
+	 *            The index of the plotline.
+	 * @return the plotline in question.
+	 */
+	public Plotline getPlotLine(int index)
+	{
+		if (index < plotlines.size() && index >= 0)
+		{
+			return plotlines.get(index);
+		}
+		return null;
+	}
 
-    /**
-     * Remove a plotline from the script.
-     *
-     * @param index the position of the plotline to be removed.
-     * @return true if that plotline was removed.
-     */
-    public boolean removePlotline(int index)
-    {
-        if (index < plotlines.size() && index >= 0)
-        {
-            plotlines.remove(index);
-            setChanged();
-            notifyObservers();
-            return true;
-        }
-        setChanged();
-        notifyObservers();
-        return false;
-    }
+	/**
+	 * Remove a plotline from the script.
+	 *
+	 * @param index
+	 *            the position of the plotline to be removed.
+	 * @return true if that plotline was removed.
+	 */
+	public boolean removePlotline(int index)
+	{
+		if (index < plotlines.size() && index >= 0)
+		{
+			plotlines.remove(index);
+			setChanged();
+			notifyObservers();
+			return true;
+		}
+		setChanged();
+		notifyObservers();
+		return false;
+	}
 
-    /**
-     * Get the number of plotlines in this script.
-     *
-     * @return the number of registered plotlines.
-     */
-    public int countPlotlines()
-    {
-        return plotlines.size();
-    }
+	/**
+	 * Get the number of plotlines in this script.
+	 *
+	 * @return the number of registered plotlines.
+	 */
+	public int countPlotlines()
+	{
+		return plotlines.size();
+	}
 
-    /**
-     * Send out the initial update so that all views have a connection.
-     */
-    public void spark()
-    {
-        setChanged();
-        notifyObservers();
-    }
+	/**
+	 * Send out the initial update so that all views have a connection.
+	 */
+	public void spark()
+	{
+		setChanged();
+		notifyObservers();
+	}
 
-    @Override
-    public String toXML()
-    {
-        String output = "";
-        //Preamble
-        output += "<?xml version=\"1.0\" standalone=\"no\"?>\n";
-        output += "<!DOCTYPE SCRIPT SYSTEM \"" + dtd.getDTDName() + "\">\n";
-        output += XML_Writer.openTag("SCRIPT");
-        for (Plotline plt : plotlines)
-        {
-            output += plt.toXML();
-        }
-        output += XML_Writer.closeTag("SCRIPT");
-        return output;
-    }
+	@Override
+	public String toXML()
+	{
+		String output = "";
+		// Preamble
+		output += "<?xml version=\"1.0\" standalone=\"no\"?>\n";
+		output += "<!DOCTYPE SCRIPT SYSTEM \"" + dtd.getDTDName() + "\">\n";
+		output += XML_Writer.openTag("SCRIPT");
+		for (Plotline plt : plotlines)
+		{
+			output += plt.toXML();
+		}
+		output += XML_Writer.closeTag("SCRIPT");
+		return output;
+	}
 
-    /**
-     * Write the current script out to a file.
-     */
-    public void saveToFile()
-    {
-        try
-        {
-            dtd.generateDTD();
-        }
-        catch (IOException ex)
-        {
-            System.out.println("Unable to generate DTD file " + dtd.getDTDName());
-        }
-        BufferedWriter bw;
-        try
-        {
-            bw = new BufferedWriter(new FileWriter(saveFile));
-            bw.write(this.toXML());
-            bw.flush();
-            bw.close();
-        }
-        catch (IOException ex)
-        {
-            System.out.println("Unable to generate XML file " + saveFile.getName());
-        }
+	/**
+	 * Write the current script out to a file.
+	 */
+	public void saveToFile()
+	{
+		try
+		{
+			dtd.generateDTD();
+		}
+		catch (IOException ex)
+		{
+			System.out.println("Unable to generate DTD file " + dtd.getDTDName());
+		}
+		BufferedWriter bw;
+		try
+		{
+			bw = new BufferedWriter(new FileWriter(saveFile));
+			bw.write(this.toXML());
+			bw.flush();
+			bw.close();
+		}
+		catch (IOException ex)
+		{
+			System.out.println("Unable to generate XML file " + saveFile.getName());
+		}
 
-    }
+	}
 
-    /**
-     * Start a new file.
-     */
-    public void newFile()
-    {
-        plotlines = new ArrayList<>();
-        scriptTitle = "untitled1";
-        description = "";
-        saveFile = null;
-        dtd.reset();
-        eb.reset();
-    }
+	/**
+	 * Start a new file.
+	 */
+	public void newFile()
+	{
+		plotlines = new ArrayList<>();
+		scriptTitle = "untitled1";
+		description = "";
+		saveFile = null;
+		dtd.reset();
+		eb.reset();
+	}
 
-    public void loadFromFile(File newFile)
-    {
-        try
-        {
-            newFile();
-            saveFile = newFile;
-            System.out.println("Parsing file...");
-            XML_ParseHandler ph = new XML_ParseHandler();
-            SAXParserFactory.newInstance().newSAXParser().parse(newFile, ph);
-            System.out.println("Parsed file.");
-            Script newScript = ph.generateScript();
-            this.description = newScript.description;
-            this.saveFile = newScript.saveFile;
-            this.scriptTitle = newScript.scriptTitle;
-            this.plotlines = newScript.plotlines;   
-        }
-        catch (Exception ex)
-        {
-            System.out.println("Unable to read XML file "+newFile.getName());
-        }
-    }
+	public void loadFromFile(File newFile)
+	{
+		try
+		{
+			newFile();
+			saveFile = newFile;
+			System.out.println("Parsing file...");
+			XML_ParseHandler ph = new XML_ParseHandler();
+			SAXParserFactory.newInstance().newSAXParser().parse(newFile, ph);
+			System.out.println("Parsed file.");
+			Script newScript = ph.generateScript();
+			this.description = newScript.description;
+			this.saveFile = newScript.saveFile;
+			this.scriptTitle = newScript.scriptTitle;
+			this.plotlines = newScript.plotlines;
+		}
+		catch (Exception ex)
+		{
+			System.out.println("Unable to read XML file " + newFile.getName());
+		}
+	}
 
-    public String toString()
-    {
-        return "Script \"" + this.scriptTitle + "\"";
-    }
+	public String toString()
+	{
+		return "Script \"" + this.scriptTitle + "\"";
+	}
 
 }
