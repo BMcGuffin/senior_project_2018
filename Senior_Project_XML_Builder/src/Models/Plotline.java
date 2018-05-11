@@ -148,7 +148,6 @@ public class Plotline implements XML_Writable
 	public Instance getInstance(int time)
 	{
 		return instances.get(time);
-
 	}
 
 	/**

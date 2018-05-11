@@ -19,7 +19,7 @@ import java.util.List;
  * @author Bryan McGuffin
  * @version Feb 20, 2018
  */
-class Data_Menu implements Buildable
+public class Data_Menu implements Buildable
 {
 
 	/**
@@ -136,5 +136,15 @@ class Data_Menu implements Buildable
 	public String elementName()
 	{
 		return elementName;
+	}
+	
+	public String[] getElements()
+	{
+		String[] elements = new String[options.size()];
+		for (int i = 0; i < elements.length; i++)
+		{
+			elements[i] = options.get(i);
+		}
+		return elements;
 	}
 }

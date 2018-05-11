@@ -226,4 +226,9 @@ public class Event implements XML_Writable
 
 		return output;
 	}
+	
+	public String getFieldLabel(int index)
+	{
+		return labels.get(index);
+	}
 }

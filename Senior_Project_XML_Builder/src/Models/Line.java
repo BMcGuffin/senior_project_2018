@@ -13,7 +13,7 @@ package Models;
  * @author Bryan McGuffin
  * @version Feb 26, 2018
  */
-class Line
+public class Line
 {
 
 	/**

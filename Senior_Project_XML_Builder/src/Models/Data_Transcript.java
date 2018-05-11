@@ -17,7 +17,7 @@ import java.util.List;
  * @author Bryan McGuffin
  * @version Feb 20, 2018
  */
-class Data_Transcript implements Buildable
+public class Data_Transcript implements Buildable
 {
 
 	/**

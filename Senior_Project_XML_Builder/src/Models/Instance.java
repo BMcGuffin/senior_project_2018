@@ -32,7 +32,8 @@ public class Instance implements XML_Writable
 	public Plotline plotline;
 
 	/**
-	 * The time at which this instance occurs.
+	 * The time at which this instance occurs, relative to the start of its
+	 * plotline.
 	 */
 	public Integer time;
 
@@ -71,6 +72,18 @@ public class Instance implements XML_Writable
 		events.add(e);
 		e.setParentInstance(this);
 		return e;
+	}
+
+	/**
+	 * Get the event at the specified index.
+	 * 
+	 * @param index
+	 *            the index of the event requested
+	 * @return a reference to an Event object
+	 */
+	public Event getEvent(int index)
+	{
+		return events.get(index);
 	}
 
 	/**

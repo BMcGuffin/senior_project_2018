@@ -52,6 +52,23 @@ public class DTDBuilder
 		reserved.add("INSTANT");
 	}
 
+	private boolean scriptContainsPlotlines()
+	{
+		return script.plotlines.size() > 0;
+	}
+
+	private boolean scriptContainsInstances()
+	{
+		for (Plotline plt : script.plotlines)
+		{
+			if (plt.instanceCount() > 0)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Access this DTDBuilder.
 	 *
@@ -237,8 +254,10 @@ public class DTDBuilder
 	private String formatExternalDTD()
 	{
 		String output = "";
-		output += elementWithSubs("SCRIPT", "PLOTLINE");
-		output += elementWithSubs("PLOTLINE", "INSTANT");
+
+		output += elementWithSubs("SCRIPT", "PLOTLINE*");
+
+		output += elementWithSubs("PLOTLINE", "INSTANT*");
 		String[] elementsArray = elements.toArray(new String[elements.size()]);
 		output += elementWithSubs("INSTANT", elementsArray);
 		for (String element : elementsArray)
@@ -254,6 +273,7 @@ public class DTDBuilder
 				}
 			}
 		}
+
 		return output;
 	}
 
@@ -273,6 +293,10 @@ public class DTDBuilder
 
 			}
 			output += ")*";
+		}
+		else
+		{
+			output += "EMPTY";
 		}
 		output += ">\n";
 		return output;

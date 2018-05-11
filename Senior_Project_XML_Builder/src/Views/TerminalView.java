@@ -10,6 +10,8 @@ package Views;
 import Controls.*;
 import java.util.Observable;
 import java.util.Scanner;
+import com.sun.media.sound.SF2Modulator;
+import com.sun.xml.internal.ws.util.NoCloseOutputStream;
 import Models.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,11 @@ public class TerminalView implements I_View
 
 	int currentPlotIndex;
 
+	int currentInstIndex;
+
 	int currentEventIndex;
+
+	int currentDataFieldIndex;
 
 	Script scr;
 
@@ -61,6 +67,9 @@ public class TerminalView implements I_View
 		}
 	}
 
+	/**
+	 * Print the current menu text and get the next input from the user.
+	 */
 	public void getNextInput()
 	{
 		while (true)
@@ -83,10 +92,19 @@ public class TerminalView implements I_View
 		}
 	}
 
+	/**
+	 * Change the menu based on the user's input. Also send commands to the
+	 * controller based on user input.
+	 * 
+	 * @param option
+	 *            the input given by the user.
+	 */
 	public void processCommand(String option)
 	{
 		Command cmd = Command.NOTHING;
 		List<String> args = new ArrayList<>();
+		Instance inst = null;
+		Event evt = null;
 
 		switch (currentMenu)
 		{
@@ -179,25 +197,22 @@ public class TerminalView implements I_View
 					case "n":// Rename plotline
 						cmd = Command.CHANGE_PLOTLINE_TITLE;
 						System.out.println("Enter new plotline title:");
-						args.add("" + currentPlotIndex);
 						args.add(in.nextLine());
 						break;
 					case "d":// Change plotline description
 						cmd = Command.CHANGE_PLOTLINE_DESCRIPTION;
 						System.out.println("Enter new plotline description:");
-						args.add("" + currentPlotIndex);
 						args.add(in.nextLine());
 						break;
 					case "t":// Change start time
 						cmd = Command.CHANGE_PLOTLINE_START;
-						args.add("" + currentPlotIndex);
 						args.add("" + getIntFromInput("Enter new start time in seconds:"));
 						break;
 					case "l":// Get list of events in this plotline
 						cmd = Command.NOTHING;
 						for (int i = 0; i < scr.getPlotLine(currentPlotIndex).length(); i++)
 						{
-							Instance inst = scr.getPlotLine(currentPlotIndex).getInstance(i);
+							inst = scr.getPlotLine(currentPlotIndex).getInstance(i);
 							if (inst != null)
 							{
 								for (Event e : inst.events)
@@ -210,7 +225,6 @@ public class TerminalView implements I_View
 						break;
 					case "a":// Add new event
 						cmd = Command.ADD_EVENT;
-						args.add("" + currentPlotIndex);
 						args.add("" + getIntFromInput("Enter time (in seconds) to add new event:"));
 						System.out.println("Available event types:");
 						ArrayList<String> types = bldr.getEventDeck();
@@ -225,10 +239,15 @@ public class TerminalView implements I_View
 						break;
 					case "r":// Remove event
 						cmd = Command.REMOVE_EVENT;
-						args.add("" + currentPlotIndex);
-						int instIndex = getIntFromInput("Enter time (in seconds) of event to be removed:");
-						args.add("" + instIndex);
-						Instance inst = scr.getPlotLine(currentPlotIndex).getInstance(instIndex);
+						int tempInstIndex = getIntFromInput("Enter time (in seconds) of event to be removed:");
+						if (scr.getPlotLine(currentPlotIndex).getInstance(tempInstIndex) == null)
+						{
+							System.out.println("No events at that time.");
+							cmd = Command.NOTHING;
+							break;
+						}
+						currentInstIndex = tempInstIndex;
+						inst = scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex);
 						System.out.println("Found " + inst.events.size() + " events at this time.");
 						for (int i = 0; i < inst.events.size(); i++)
 						{
@@ -238,14 +257,43 @@ public class TerminalView implements I_View
 						args.add("" + getIntFromInput("Enter index of event to remove:"));
 						break;
 					case "e":// Go to edit event menu
-						currentMenu = menus.EDITEVENT;
+						cmd = Command.NOTHING;
+						tempInstIndex = getIntFromInput("Enter time (in seconds) of event to be edited:");
+						if (scr.getPlotLine(currentPlotIndex).getInstance(tempInstIndex) == null)
+						{
+							System.out.println("No events at that time.");
+							break;
+						}
+						currentInstIndex = tempInstIndex;
+						inst = scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex);
+						System.out.println("Found " + inst.events.size() + " events at this time.");
+						for (int i = 0; i < inst.events.size(); i++)
+						{
+							String str = String.format("[%d] %s", i, inst.events.get(i).eventType);
+							System.out.println(str);
+						}
+						int evtIndex = getIntFromInput("Enter index of event to edit:");
+						if (evtIndex < inst.events.size())
+						{
+							currentEventIndex = evtIndex;
+							currentMenu = menus.EDITEVENT;
+						}
+						else
+						{
+							System.out.println("No event at that index.");
+						}
 						break;
 					case "m":// Move event
 						cmd = Command.RELOCATE_EVENT;
-						args.add("" + currentPlotIndex);
-						instIndex = getIntFromInput("Enter time (in seconds) of event to be moved:");
-						args.add("" + instIndex);
-						inst = scr.getPlotLine(currentPlotIndex).getInstance(instIndex);
+						tempInstIndex = getIntFromInput("Enter time (in seconds) of event to be moved:");
+						if (scr.getPlotLine(currentPlotIndex).getInstance(tempInstIndex) == null)
+						{
+							System.out.println("No events at that time.");
+							cmd = Command.NOTHING;
+							break;
+						}
+						currentInstIndex = tempInstIndex;
+						inst = scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex);
 						System.out.println("Found " + inst.events.size() + " events at this time.");
 						for (int i = 0; i < inst.events.size(); i++)
 						{
@@ -263,24 +311,152 @@ public class TerminalView implements I_View
 				}
 				break;
 			case EDITEVENT:
-				// TODO write out this case
-				currentMenu = menus.EDITPLOTLINE;
+				cmd = Command.NOTHING;
+				evt = scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex).getEvent(currentEventIndex);
+				switch (option.toLowerCase())
+				{
+
+					case "e": // Choose which data element in this event to edit.
+						int tempData = getIntFromInput("Enter index of data field to be edited:");
+						if (tempData >= evt.fieldCount())
+						{
+							System.out.println("No field at that index.");
+							break;
+						}
+						currentDataFieldIndex = tempData;
+
+						if (evt.getElement(currentDataFieldIndex) instanceof Data_Menu)
+						{
+							currentMenu = menus.EDITDATA_MENU;
+						}
+						else if (evt.getElement(currentDataFieldIndex) instanceof Data_Media)
+						{
+							currentMenu = menus.EDITDATA_MEDIA;
+						}
+						else if (evt.getElement(currentDataFieldIndex) instanceof Data_Text)
+						{
+							currentMenu = menus.EDITDATA_TEXTFIELD;
+						}
+						else if (evt.getElement(currentDataFieldIndex) instanceof Data_Transcript)
+						{
+							currentMenu = menus.EDITDATA_TRANSCRIPT;
+						}
+
+						break;
+					case "b": // Back to plotline editing menu
+						currentMenu = menus.EDITPLOTLINE;
+						break;
+					default:
+						break;
+				}
+
 				break;
 			case EDITDATA_TEXTFIELD:
-				// TODO write out this case
+				switch (option.toLowerCase())
+				{
+					case "r": // Replace the current text
+						cmd = Command.DATA_TEXTFIELD_REPLACE_TEXT;
+						System.out.println("Enter the new text for this text field:");
+						args.add(in.nextLine());
+						break;
+					case "b": // Back to event editing menu
+						currentMenu = menus.EDITEVENT;
+						break;
+					default:
+						break;
+				}
 				break;
 			case EDITDATA_MEDIA:
-				// TODO write out this case
+				switch (option.toLowerCase())
+				{
+					case "c": // Change the current media file
+						cmd = Command.DATA_MEDIA_CHANGE_FILE;
+						System.out.println("Enter the path to the new media file:");
+						args.add(in.nextLine());
+						break;
+					case "s": // Change start time
+						cmd = Command.DATA_MEDIA_START_TIME;
+						args.add("" + getIntFromInput("Enter the number of seconds into the file to begin playback:"));
+						break;
+					case "l": // Change playback length
+						cmd = Command.DATA_MEDIA_PLAYBACK_LENGTH;
+						args.add("" + getIntFromInput("Enter the length, in seconds, of playback:"));
+						break;
+					case "b": // Back to event editing menu
+						currentMenu = menus.EDITEVENT;
+						break;
+					default:
+						break;
+				}
 				break;
 			case EDITDATA_MENU:
-				// TODO write out this case
+				evt = scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex).getEvent(currentEventIndex);
+				Data_Menu data_menu = (Data_Menu) evt.getElement(currentDataFieldIndex);
+				switch (option.toLowerCase())
+				{
+					case "c": // Choose new option from the list
+						cmd = Command.DATA_MENU_OPTION_SELECT;
+						String[] options = data_menu.getElements();
+						System.out.println("Available options:");
+						for (int i = 0; i < options.length; i++)
+						{
+							System.out.println(i + ": " + options[i]);
+						}
+						args.add("" + getIntFromInput("Enter index of selected option:"));
+						break;
+					case "b": // Back to event editing menu
+						currentMenu = menus.EDITEVENT;
+						break;
+					default:
+						break;
+				}
 				break;
 			case EDITDATA_TRANSCRIPT:
-				// TODO write out this case
+				evt = scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex).getEvent(currentEventIndex);
+				Data_Transcript data_transcript = (Data_Transcript) evt.getElement(currentDataFieldIndex);
+				switch (option.toLowerCase())
+				{
+					case "a": // Add new line of dialogue
+						cmd = Command.DATA_TRANSCRIPT_NEW_LINE;
+						System.out.println("Enter the identifier for the speaker of this line:");
+						args.add(in.nextLine());
+						System.out.println("Enter the text for this line:");
+						args.add(in.nextLine());
+						break;
+					case "r": // Remove existing line of dialogue
+						cmd = Command.DATA_TRANSCRIPT_REMOVE_LINE;
+						args.add("" + getIntFromInput("Enter the index of the line to remove:"));
+						break;
+					case "e": // Edit existing line of dialogue
+						cmd = Command.DATA_TRANSCRIPT_EDIT_LINE;
+						args.add("" + getIntFromInput("Enter the index of the line to edit:"));
+						System.out.println("Enter the new identifier for the speaker of this line:");
+						args.add(in.nextLine());
+						System.out.println("Enter the new text for this line:");
+						args.add(in.nextLine());
+						break;
+					case "<": // Move a line earlier in the conversation
+						cmd = Command.DATA_TRANSCRIPT_LINE_BACK;
+						args.add("" + getIntFromInput("Enter the index of the line to move back:"));
+						break;
+					case ">": // Move a line later in the conversation
+						cmd = Command.DATA_TRANSCRIPT_LINE_FORWARD;
+						args.add("" + getIntFromInput("Enter the index of the line to move forward:"));
+						break;
+					case "b": // Back to event editing menu
+						currentMenu = menus.EDITEVENT;
+						break;
+					default:
+						break;
+				}
 				break;
 			default:
 				break;
 		}
+		ctrl.setPlotNum(currentPlotIndex);
+		ctrl.setInstNum(currentInstIndex);
+		ctrl.setEvtNum(currentEventIndex);
+		ctrl.setDataNum(currentDataFieldIndex);
 		ctrl.readCommand(cmd, args);
 
 	}
@@ -313,6 +489,10 @@ public class TerminalView implements I_View
 			return;
 		}
 
+		Plotline plt = null;
+		Instance inst = null;
+		Event evt = null;
+
 		switch (currentMenu)
 		{
 			case MAINMENU:
@@ -344,7 +524,7 @@ public class TerminalView implements I_View
 				System.out.println(output);
 				break;
 			case EDITPLOTLINE:
-				Plotline plt = scr.getPlotLine(currentPlotIndex);
+				plt = scr.getPlotLine(currentPlotIndex);
 				output = String.format("Plotline Name: %s\n", plt.title);
 				output += String.format("Plotline contains %d events across %d moments.\n", plt.totalEventCount(),
 						plt.instanceCount());
@@ -354,19 +534,54 @@ public class TerminalView implements I_View
 				System.out.println(output);
 				break;
 			case EDITEVENT:
-				// TODO write out this case
+				plt = scr.getPlotLine(currentPlotIndex);
+				inst = plt.getInstance(currentInstIndex);
+				evt = inst.getEvent(currentEventIndex);
+				output = String.format("Plotline Name: %s\n", plt.title);
+				output += String.format("Event Type: %s\n", evt.eventType);
+				output += String.format("Event start time: %d seconds into plotline\n", inst.time);
+				output += String.format("(%d seconds into script)\n", inst.time + plt.startTime);
+				output += String.format("%d data fields in this event:\n", evt.fieldCount());
+				for (int i = 0; i < evt.fieldCount(); i++)
+				{
+					output += String.format("%d: %s\n", i, evt.getFieldLabel(i));
+				}
+				System.out.println(output);
 				break;
 			case EDITDATA_TEXTFIELD:
-				// TODO write out this case
+				Data_Text dt = (Data_Text) scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
+						.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
+				output = String.format("Current Data Field: %s <Text Field>\n", dt.elementName());
+
+				output += String.format("Current Text:\n%s\n", dt.getContent());
+				System.out.println(output);
 				break;
 			case EDITDATA_MEDIA:
-				// TODO write out this case
+				Data_Media dm = (Data_Media) scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
+						.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
+				output = String.format("Current Data Field: %s <Media Element>\n", dm.elementName());
+				output += String.format("Playback starts %d seconds into file and lasts for %d seconds.\n",
+						dm.getStartTime(), dm.getPlayLength());
+				output += String.format("Media source file: %s\n", dm.getFileName());
+				System.out.println(output);
 				break;
 			case EDITDATA_MENU:
-				// TODO write out this case
+				Data_Menu de = (Data_Menu) scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
+						.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
+				output = String.format("Current Data Field: %s <Menu>\n", de.elementName());
+				output += String.format("Current selection: %s\n", de.getSelected());
+				System.out.println(output);
 				break;
 			case EDITDATA_TRANSCRIPT:
-				// TODO write out this case
+				Data_Transcript tr = (Data_Transcript) scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
+						.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
+				output = String.format("Current Data Field: %s <Transcript>\n", tr.elementName());
+				output += String.format("Line\tActor\t\tLine\n");
+				for (int i = 0; i < tr.length(); i++)
+				{
+					output += String.format("[%d]\t%s\t\t%s\n", i, tr.getLine(i).actor, tr.getLine(i).dialog);
+				}
+				System.out.println(output);
 				break;
 
 			default:
@@ -378,36 +593,87 @@ public class TerminalView implements I_View
 	/**
 	 * Enumeration of the different menus in the app. A menu has a string of options
 	 * to present on the terminal, and a matching array of acceptable inputs.
-	 * 
-	 * 
-	 * @author bryanmcguffin
-	 *
 	 */
 	public static enum menus
 	{
 
+		/**
+		 * The starting menu. From here, the user can add a new plotline, remove or edit
+		 * an existing plotline, save the script, change the script settings, or exit
+		 * the program.
+		 * 
+		 * Options: "a", "r", "e", "s", "p", "x"
+		 */
 		MAINMENU(
 				"[A] Add Plotline | [R] Remove Plotline | [E] Edit Plotline | \n"
 						+ "[P] Script Preferences | [S] Save Script | [X] Exit",
 				new String[] { "a", "r", "e", "s", "p", "x" }),
+		/**
+		 * The script preferences menu. From here, the user can rename the script,
+		 * change the script description, change the save file, load a different script
+		 * or start a new one, or go back to the main menu.
+		 * 
+		 * Options: "r", "d", "s", "l", "n", "b"
+		 */
 		SCRIPTPREFERENCES(
 				"[R] Rename Script | [D] Change Script Description | [S] Save As | \n"
 						+ "[L] Load File | [N] New File | [B] Go Back",
 				new String[] { "r", "d", "s", "l", "n", "b" }),
+		/**
+		 * The plotline editing menu. From here, the user can rename the plotline,
+		 * change its description, change its start time, check the events currently in
+		 * the plotline, add a new event, remove or edit an existing event, move an
+		 * event to a different time, or go back to the main menu.
+		 * 
+		 * Options: "n", "d", "t", "l", "a", "r", "e", "m", "b"
+		 */
 		EDITPLOTLINE(
 				"[N] Rename Plotline | [D] Change Description | [T] Change Start Time | \n"
 						+ "[L] Get Event List | [A] Add Event | [R] Remove Event | \n"
 						+ "[E] Edit Event | [M] Move Event | [B] Go Back",
 				new String[] { "n", "d", "t", "l", "a", "r", "e", "m", "b" }),
+		/**
+		 * The event editing menu. From here, the user can edit one of the event's data
+		 * fields, or go back to the plotline editing menu.
+		 * 
+		 * Options: "e", "b"
+		 */
 		EDITEVENT("[E] Edit Data Field | [B] Go Back", new String[] { "e", "b" }),
+		/**
+		 * The text field editing menu. From here, the user can replace the current
+		 * text, or go back to the event editing menu.
+		 * 
+		 * Options: "r", "b"
+		 */
 		EDITDATA_TEXTFIELD("[R] Replace Text | [B] Go Back", new String[] { "r", "b" }),
+		/**
+		 * The media editing menu. From here, the user can change the current media
+		 * file, change its start time or its playback length, or go back to the event
+		 * editing menu.
+		 * 
+		 * Options: "c", "s", "l", "b"
+		 */
 		EDITDATA_MEDIA(
 				"[C] Change Media File | [S] Change Start Time | \n" + "[L] Change Playback Length | [B] Go Back",
 				new String[] { "c", "s", "l", "b" }),
+		/**
+		 * The list editing menu. From here, the user can choose a new option on the
+		 * list, or go back to the event editing menu.
+		 * 
+		 * Options: "c", "b"
+		 */
 		EDITDATA_MENU("[C] Change Selection | [B] Go Back", new String[] { "c", "b" }),
+		/**
+		 * The transcript editing menu. From here, the user can add a new line of
+		 * dialogue, edit or remove an existing line of dialogue, move a line up or down
+		 * in order, or go back to the event editing menu.
+		 * 
+		 * Options: "a", "r", "e", "<", ">", "b"
+		 */
 		EDITDATA_TRANSCRIPT(
-				"[A] Add Line | [R] Remove Line | \n" + "[<] Move Line Earlier | [>] Move Line Later | [B] Go Back",
-				new String[] { "a", "r", "<", ">", "b" });
+				"[A] Add Line | [R] Remove Line | [E] Edit Line | \n"
+						+ "[<] Move Line Earlier | [>] Move Line Later | [B] Go Back",
+				new String[] { "a", "r", "e", "<", ">", "b" });
 
 		public String MENU_TEXT;
 		public String[] OPTIONS;

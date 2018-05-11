@@ -21,5 +21,9 @@ public interface Buildable
 	 */
 	Buildable duplicate();
 
+	/**
+	 * Get the name of this buildable element.
+	 * @return the title of the object.
+	 */
 	String elementName();
 }

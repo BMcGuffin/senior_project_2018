@@ -19,7 +19,7 @@ import javax.sound.sampled.*;
  * @author Bryan McGuffin
  * @version Feb 20, 2018
  */
-class Data_Media implements Buildable
+public class Data_Media implements Buildable
 {
 
 	/**

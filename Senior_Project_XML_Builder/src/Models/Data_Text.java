@@ -13,7 +13,7 @@ package Models;
  * @author Bryan McGuffin
  * @version Feb 20, 2018
  */
-class Data_Text implements Buildable
+public class Data_Text implements Buildable
 {
 
 	/**
