@@ -20,22 +20,14 @@ import java.util.List;
  */
 public class Instance implements XML_Writable
 {
-
 	/**
 	 * All the events which occur at this moment in time.
 	 */
 	public List<Event> events;
-
 	/**
 	 * The plotline to which this event belongs.
 	 */
 	public Plotline plotline;
-
-	/**
-	 * The time at which this instance occurs, relative to the start of its
-	 * plotline.
-	 */
-	public Integer time;
 
 	/**
 	 * Constructor. Generates a new instance.
@@ -43,11 +35,10 @@ public class Instance implements XML_Writable
 	 * @param parent
 	 *            the plotline to which this instance belongs.
 	 */
-	public Instance(Plotline parent, int t)
+	public Instance(Plotline parent)
 	{
 		events = new ArrayList<>();
 		plotline = parent;
-		time = t;
 	}
 
 	/**
@@ -69,6 +60,10 @@ public class Instance implements XML_Writable
 	 */
 	public Event addEvent(Event e)
 	{
+		if (e == null)
+		{
+			return addEvent();
+		}
 		events.add(e);
 		e.setParentInstance(this);
 		return e;
@@ -101,23 +96,19 @@ public class Instance implements XML_Writable
 	@Override
 	public String toString()
 	{
-		return "Instance occurring at t=" + time + " seconds, in:\n" + plotline.toString();
+		return "Instance occurring in:\n" + plotline.toString();
 	}
 
 	@Override
 	public String toXML()
 	{
 		String output = "";
-
 		output += XML_Writer.openTag("INSTANT");
-
 		for (Event evt : events)
 		{
 			output += evt.toXML();
 		}
-
 		output += XML_Writer.closeTag("INSTANT");
 		return output;
 	}
-
 }

@@ -12,7 +12,7 @@ package Models;
  *
  * @author Bryan McGuffin
  */
-public interface Buildable
+public interface Buildable extends XML_Writable
 {
 	/**
 	 * Duplicate this object.
@@ -26,4 +26,9 @@ public interface Buildable
 	 * @return the title of the object.
 	 */
 	String elementName();
+	
+	/**
+	 * Reset the data field to a blank state.
+	 */
+	void reset();
 }

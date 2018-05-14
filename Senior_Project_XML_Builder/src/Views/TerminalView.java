@@ -25,27 +25,16 @@ import java.util.List;
  */
 public class TerminalView implements I_View
 {
-
 	String demarcation = "================================================================================";
-
 	Scanner in;
-
 	I_Controller ctrl;
-
 	EventBuilder bldr;
-
 	boolean quitThis;
-
 	menus currentMenu;
-
 	int currentPlotIndex;
-
 	int currentInstIndex;
-
 	int currentEventIndex;
-
 	int currentDataFieldIndex;
-
 	Script scr;
 
 	public TerminalView(I_Controller c)
@@ -55,7 +44,7 @@ public class TerminalView implements I_View
 		currentMenu = menus.MAINMENU;
 		ctrl = c;
 		currentPlotIndex = 0;
-		bldr = EventBuilder.getBuilder(null);
+		bldr = EventBuilder.getBuilder();
 	}
 
 	@Override
@@ -79,7 +68,6 @@ public class TerminalView implements I_View
 			System.out.println(demarcation);
 			System.out.println(currentMenu.MENU_TEXT);
 			System.out.println(demarcation);
-
 			String input = in.nextLine();
 			for (String option : currentMenu.OPTIONS)
 			{
@@ -88,7 +76,6 @@ public class TerminalView implements I_View
 					processCommand(option);
 				}
 			}
-
 		}
 	}
 
@@ -105,7 +92,6 @@ public class TerminalView implements I_View
 		List<String> args = new ArrayList<>();
 		Instance inst = null;
 		Event evt = null;
-
 		switch (currentMenu)
 		{
 			case MAINMENU:
@@ -210,16 +196,13 @@ public class TerminalView implements I_View
 						break;
 					case "l":// Get list of events in this plotline
 						cmd = Command.NOTHING;
-						for (int i = 0; i < scr.getPlotLine(currentPlotIndex).length(); i++)
+						for (Integer i : scr.getPlotLine(currentPlotIndex).getPopulatedTimes())
 						{
 							inst = scr.getPlotLine(currentPlotIndex).getInstance(i);
-							if (inst != null)
+							for (Event e : inst.events)
 							{
-								for (Event e : inst.events)
-								{
-									String str = String.format("(%d) %s", inst.time, e.toString());
-									System.out.println(str);
-								}
+								String str = String.format("(%d) %s", i, e.toString());
+								System.out.println(str);
 							}
 						}
 						break;
@@ -228,11 +211,9 @@ public class TerminalView implements I_View
 						args.add("" + getIntFromInput("Enter time (in seconds) to add new event:"));
 						System.out.println("Available event types:");
 						ArrayList<String> types = bldr.getEventDeck();
-
 						for (int i = 0; i < types.size(); i++)
 						{
 							System.out.println(i + ": " + types.get(i));
-
 						}
 						System.out.println("Choose an event type:");
 						args.add(in.nextLine());
@@ -315,7 +296,6 @@ public class TerminalView implements I_View
 				evt = scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex).getEvent(currentEventIndex);
 				switch (option.toLowerCase())
 				{
-
 					case "e": // Choose which data element in this event to edit.
 						int tempData = getIntFromInput("Enter index of data field to be edited:");
 						if (tempData >= evt.fieldCount())
@@ -324,7 +304,6 @@ public class TerminalView implements I_View
 							break;
 						}
 						currentDataFieldIndex = tempData;
-
 						if (evt.getElement(currentDataFieldIndex) instanceof Data_Menu)
 						{
 							currentMenu = menus.EDITDATA_MENU;
@@ -341,7 +320,6 @@ public class TerminalView implements I_View
 						{
 							currentMenu = menus.EDITDATA_TRANSCRIPT;
 						}
-
 						break;
 					case "b": // Back to plotline editing menu
 						currentMenu = menus.EDITPLOTLINE;
@@ -349,7 +327,6 @@ public class TerminalView implements I_View
 					default:
 						break;
 				}
-
 				break;
 			case EDITDATA_TEXTFIELD:
 				switch (option.toLowerCase())
@@ -458,7 +435,6 @@ public class TerminalView implements I_View
 		ctrl.setEvtNum(currentEventIndex);
 		ctrl.setDataNum(currentDataFieldIndex);
 		ctrl.readCommand(cmd, args);
-
 	}
 
 	/**
@@ -488,11 +464,9 @@ public class TerminalView implements I_View
 			System.out.println("<No script data>");
 			return;
 		}
-
 		Plotline plt = null;
 		Instance inst = null;
 		Event evt = null;
-
 		switch (currentMenu)
 		{
 			case MAINMENU:
@@ -539,8 +513,8 @@ public class TerminalView implements I_View
 				evt = inst.getEvent(currentEventIndex);
 				output = String.format("Plotline Name: %s\n", plt.title);
 				output += String.format("Event Type: %s\n", evt.eventType);
-				output += String.format("Event start time: %d seconds into plotline\n", inst.time);
-				output += String.format("(%d seconds into script)\n", inst.time + plt.startTime);
+				output += String.format("Event start time: %d seconds into plotline\n", currentInstIndex);
+				output += String.format("(%d seconds into script)\n", currentInstIndex + plt.startTime);
 				output += String.format("%d data fields in this event:\n", evt.fieldCount());
 				for (int i = 0; i < evt.fieldCount(); i++)
 				{
@@ -552,7 +526,6 @@ public class TerminalView implements I_View
 				Data_Text dt = (Data_Text) scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
 						.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
 				output = String.format("Current Data Field: %s <Text Field>\n", dt.elementName());
-
 				output += String.format("Current Text:\n%s\n", dt.getContent());
 				System.out.println(output);
 				break;
@@ -583,7 +556,6 @@ public class TerminalView implements I_View
 				}
 				System.out.println(output);
 				break;
-
 			default:
 				System.out.println("Well, how did we get here?");
 				break;
@@ -596,7 +568,6 @@ public class TerminalView implements I_View
 	 */
 	public static enum menus
 	{
-
 		/**
 		 * The starting menu. From here, the user can add a new plotline, remove or edit
 		 * an existing plotline, save the script, change the script settings, or exit
@@ -674,7 +645,6 @@ public class TerminalView implements I_View
 				"[A] Add Line | [R] Remove Line | [E] Edit Line | \n"
 						+ "[<] Move Line Earlier | [>] Move Line Later | [B] Go Back",
 				new String[] { "a", "r", "e", "<", ">", "b" });
-
 		public String MENU_TEXT;
 		public String[] OPTIONS;
 
@@ -706,5 +676,4 @@ public class TerminalView implements I_View
 		}
 		return number;
 	}
-
 }

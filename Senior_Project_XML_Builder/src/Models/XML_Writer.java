@@ -17,7 +17,6 @@ package Models;
  */
 public abstract class XML_Writer
 {
-
 	public static String openTag(String s)
 	{
 		return "<" + s + ">\n";
@@ -36,5 +35,32 @@ public abstract class XML_Writer
 	public static String SimpleTag(String s, String body)
 	{
 		return openTag(s) + body + closeTag(s);
+	}
+
+	public static enum tags
+	{
+		SCRIPT,
+		PLOTLINE,
+		INSTANT,
+		TEXT_FIELD,
+		TS_DIALOG_LINE,
+		TS_LINE_ACTOR,
+		TS_LINE_SPEECH,
+		MEDIA_SRC_FILE,
+		MEDIA_PLAYBACK,
+		MEDIA_START,
+		MENU_OPTION,
+		MENU_SELECTED;
+		public static tags fromString(String str)
+		{
+			for (tags t : tags.values())
+			{
+				if (t.name().equalsIgnoreCase(str))
+				{
+					return t;
+				}
+			}
+			return null;
+		}
 	}
 }

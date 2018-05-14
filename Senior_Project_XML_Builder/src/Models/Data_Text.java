@@ -7,6 +7,8 @@
  */
 package Models;
 
+import com.sun.xml.internal.ws.spi.db.XMLBridge;
+
 /**
  * Represents a text field.
  *
@@ -15,12 +17,10 @@ package Models;
  */
 public class Data_Text implements Buildable
 {
-
 	/**
 	 * The name of this text field.
 	 */
 	public String elementName;
-
 	/**
 	 * The content of this text field.
 	 */
@@ -61,7 +61,6 @@ public class Data_Text implements Buildable
 	{
 		Data_Text dup = new Data_Text(this.elementName);
 		dup.setContent(this.text);
-
 		return dup;
 	}
 
@@ -69,5 +68,23 @@ public class Data_Text implements Buildable
 	public String elementName()
 	{
 		return elementName;
+	}
+
+	/**
+	 * {@inheritDoc} This class uses the following tags: TEXT (Holds the text from
+	 * this text field).
+	 */
+	@Override
+	public String toXML()
+	{
+		String output = "";
+		output += XML_Writer.SimpleTag(XML_Writer.tags.TEXT_FIELD.name(), text);
+		return output;
+	}
+
+	@Override
+	public void reset()
+	{
+		text = "";
 	}
 }

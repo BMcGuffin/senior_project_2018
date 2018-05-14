@@ -48,9 +48,9 @@ public class EventBuilder
 	 * Constructor. Builds prototypes for each event. This will be a singleton
 	 * class.
 	 */
-	private EventBuilder(Script scr)
+	private EventBuilder()
 	{
-		dtd = DTDBuilder.getDTDBuilder(scr);
+		dtd = DTDBuilder.getDTDBuilder();
 		prototypes = new TreeMap<>();
 		templatesFolder = new File("src/Templates");
 		inScript = new ArrayList<>();
@@ -59,7 +59,7 @@ public class EventBuilder
 		{
 			try
 			{
-				buildPrototype(f);
+				buildPrototypesFromFile(f);
 			}
 			catch (Exception ex)
 			{
@@ -74,11 +74,11 @@ public class EventBuilder
 	 *
 	 * @return the event builder
 	 */
-	public static EventBuilder getBuilder(Script scr)
+	public static EventBuilder getBuilder()
 	{
 		if (singleton == null)
 		{
-			singleton = new EventBuilder(scr);
+			singleton = new EventBuilder();
 		}
 		return singleton;
 	}
@@ -93,6 +93,12 @@ public class EventBuilder
 	public Event generateEvent(String eventType)
 	{
 		Event prototype = prototypes.get(eventType);
+
+		// Return null if we don't have a prototype matching that event type
+		if (prototype == null)
+		{
+			return null;
+		}
 
 		// If this type of event is being added to the script for the first time, add it
 		// to the dtd
@@ -163,7 +169,7 @@ public class EventBuilder
 		try
 		{
 			bw = new BufferedWriter(new FileWriter(newEvent));
-			bw.write(this.asECF(evt));
+			bw.write(this.writeEventToConfigFile(evt));
 			bw.flush();
 			bw.close();
 		}
@@ -190,7 +196,7 @@ public class EventBuilder
 	 *            the type of the event.
 	 * @return a prototype event.
 	 */
-	private Event buildPrototype(File conf) throws FileNotFoundException, IOException
+	private Event buildPrototypesFromFile(File conf) throws FileNotFoundException, IOException
 	{
 		FileReader fr = null;
 		fr = new FileReader(conf);
@@ -263,7 +269,7 @@ public class EventBuilder
 		}
 		in.close();
 
-		prototypes.put(evt.eventType, evt);
+		prototypes.put(DTDBuilder.formatTag(evt.eventType), evt);
 		return evt;
 	}
 
@@ -272,7 +278,7 @@ public class EventBuilder
 		inScript = new ArrayList<>();
 	}
 
-	private String asECF(Event evt)
+	private String writeEventToConfigFile(Event evt)
 	{
 		String output = "";
 		// First line is event type

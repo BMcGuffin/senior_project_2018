@@ -51,8 +51,8 @@ public class Script extends Observable implements XML_Writable
 		scriptTitle = "untitled1";
 		description = "";
 		saveFile = null;
-		dtd = DTDBuilder.getDTDBuilder(this);
-		eb = EventBuilder.getBuilder(this);
+		dtd = DTDBuilder.getDTDBuilder();
+		eb = EventBuilder.getBuilder();
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class Script extends Observable implements XML_Writable
 		String output = "";
 		// Preamble
 		output += "<?xml version=\"1.0\" standalone=\"no\"?>\n";
-		output += "<!DOCTYPE SCRIPT SYSTEM \"" + dtd.getDTDName() + "\">\n";
+		output += "<!DOCTYPE SCRIPT SYSTEM \"" + dtd.getDTDName(this.scriptTitle) + "\">\n";
 		output += XML_Writer.openTag("SCRIPT");
 		for (Plotline plt : plotlines)
 		{
@@ -153,11 +153,12 @@ public class Script extends Observable implements XML_Writable
 	{
 		try
 		{
-			dtd.generateDTD();
+			dtd.generateDTD(this.scriptTitle);
 		}
-		catch (IOException ex)
+		catch (Exception ex)
 		{
-			System.out.println("Unable to generate DTD file " + dtd.getDTDName());
+			System.out.println("Unable to generate DTD file " + dtd.getDTDName(this.scriptTitle));
+			ex.printStackTrace();
 		}
 		BufferedWriter bw;
 		try

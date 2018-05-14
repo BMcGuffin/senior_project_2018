@@ -19,17 +19,14 @@ import java.util.List;
  */
 public class Data_Transcript implements Buildable
 {
-
 	/**
 	 * The name of this text field.
 	 */
 	public String elementName;
-
 	/**
 	 * A list of the actors in this conversation.
 	 */
 	private List<String> actors;
-
 	/**
 	 * A list of the lines spoken in this conversation.
 	 */
@@ -169,4 +166,29 @@ public class Data_Transcript implements Buildable
 		return elementName;
 	}
 
+	/**
+	 * {@inheritDoc} This class uses the following tags: DIALOG_LINE (holds one line
+	 * of dialog), LINE_ACTOR (holds the identifier for this line), LINE_SPEECH
+	 * (holds the dialog spoken on this line).
+	 */
+	@Override
+	public String toXML()
+	{
+		String output = "";
+		for (Line l : lines)
+		{
+			output += XML_Writer.openTag(XML_Writer.tags.TS_DIALOG_LINE.name());
+			output += XML_Writer.SimpleTag(XML_Writer.tags.TS_LINE_ACTOR.name(), l.actor);
+			output += XML_Writer.SimpleTag(XML_Writer.tags.TS_LINE_SPEECH.name(), l.dialog);
+			output += XML_Writer.closeTag(XML_Writer.tags.TS_DIALOG_LINE.name());
+		}
+		return output;
+	}
+
+	@Override
+	public void reset()
+	{
+		actors = new ArrayList<>();
+		lines = new ArrayList<>();
+	}
 }

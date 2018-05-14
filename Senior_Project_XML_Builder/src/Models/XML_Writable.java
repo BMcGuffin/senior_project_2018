@@ -7,6 +7,8 @@
  */
 package Models;
 
+import java.util.ArrayList;
+
 /**
  * A class which implements XML_Writable can have its data converted to XML.
  *
@@ -17,7 +19,7 @@ public interface XML_Writable
 {
 
 	/**
-	 * Convert the data in this object to XML.
+	 * Convert the data in this object to XML format.
 	 */
 	String toXML();
 }

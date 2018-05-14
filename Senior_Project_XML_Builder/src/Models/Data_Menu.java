@@ -21,17 +21,14 @@ import java.util.List;
  */
 public class Data_Menu implements Buildable
 {
-
 	/**
 	 * The name of this particular data field.
 	 */
 	public String elementName;
-
 	/**
 	 * The list of options. Ordering may not be arbitrarily changed by user.
 	 */
 	private List<String> options;
-
 	/**
 	 * The index for the currently selected option.
 	 */
@@ -122,13 +119,11 @@ public class Data_Menu implements Buildable
 	public Buildable duplicate()
 	{
 		Data_Menu dup = new Data_Menu(this.elementName);
-
 		for (String op : options)
 		{
 			dup.addOption(op);
 		}
 		dup.setSelected(this.currentlySelected);
-
 		return dup;
 	}
 
@@ -137,7 +132,7 @@ public class Data_Menu implements Buildable
 	{
 		return elementName;
 	}
-	
+
 	public String[] getElements()
 	{
 		String[] elements = new String[options.size()];
@@ -146,5 +141,28 @@ public class Data_Menu implements Buildable
 			elements[i] = options.get(i);
 		}
 		return elements;
+	}
+
+	/**
+	 * {@inheritDoc} This class uses the following tags: OPTION (holds one entry
+	 * from the list), SELECTED_OPTION (holds index of the selected option).
+	 */
+	@Override
+	public String toXML()
+	{
+		String output = "";
+		for (String opt : options)
+		{
+			output += XML_Writer.SimpleTag(XML_Writer.tags.MENU_OPTION.name(), opt);
+		}
+		output += XML_Writer.SimpleTag(XML_Writer.tags.MENU_SELECTED.name(), "" + currentlySelected);
+		return output;
+	}
+
+	@Override
+	public void reset()
+	{
+		options = new ArrayList<>();
+		currentlySelected = 0;
 	}
 }

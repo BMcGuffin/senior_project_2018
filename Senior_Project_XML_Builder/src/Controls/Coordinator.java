@@ -40,7 +40,7 @@ public class Coordinator implements I_Controller
 	public Coordinator(Script script)
 	{
 		sc = script;
-		builder = EventBuilder.getBuilder(sc);
+		builder = EventBuilder.getBuilder();
 		currentPlotIndex = 0;
 
 		currentInstIndex = 0;
@@ -438,7 +438,6 @@ public class Coordinator implements I_Controller
 						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
 								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
 						int index = Integer.parseInt(args.get(0));
-						// TODO make sure this works
 						Line l = dt.getLine(index);
 						l.actor = args.get(1);
 						l.dialog = args.get(2);

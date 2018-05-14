@@ -21,22 +21,18 @@ import java.util.List;
  */
 public class Event implements XML_Writable
 {
-
 	/**
 	 * The type of event that this is.
 	 */
 	public String eventType;
-
 	/**
 	 * The instance to which this event belongs.
 	 */
 	private Instance instance;
-
 	/**
 	 * Contains the data fields for this event.
 	 */
 	private List<Buildable> fields;
-
 	/**
 	 * Contains the labels for each field in this event.
 	 */
@@ -69,7 +65,6 @@ public class Event implements XML_Writable
 	{
 		fields.add(b);
 		labels.add(label);
-
 		return b;
 	}
 
@@ -155,11 +150,9 @@ public class Event implements XML_Writable
 		Buildable temp = fields.get(index - 1);
 		fields.set(index - 1, fields.get(index));
 		fields.set(index, temp);
-
 		String tempStr = labels.get(index - 1);
 		labels.set(index - 1, labels.get(index));
 		labels.set(index, tempStr);
-
 		return true;
 	}
 
@@ -179,11 +172,9 @@ public class Event implements XML_Writable
 		Buildable temp = fields.get(index + 1);
 		fields.set(index + 1, fields.get(index));
 		fields.set(index, temp);
-
 		String tempStr = labels.get(index + 1);
 		labels.set(index + 1, labels.get(index));
 		labels.set(index, tempStr);
-
 		return true;
 	}
 
@@ -216,17 +207,15 @@ public class Event implements XML_Writable
 	public String toXML()
 	{
 		String output = "";
-
 		output += XML_Writer.openTag(DTDBuilder.formatTag(eventType));
 		for (Buildable b : fields)
 		{
-			output += XML_Writer.SimpleTag(this.instance.plotline.script.dtd.getElement(this, b), b.toString());
+			output += XML_Writer.SimpleTag(DTDBuilder.formatTag(b.elementName()), b.toXML());
 		}
 		output += XML_Writer.closeTag(DTDBuilder.formatTag(eventType));
-
 		return output;
 	}
-	
+
 	public String getFieldLabel(int index)
 	{
 		return labels.get(index);

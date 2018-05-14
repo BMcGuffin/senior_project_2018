@@ -7,6 +7,7 @@
  */
 package Models;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
@@ -24,7 +25,6 @@ import java.util.TreeMap;
  */
 public class Plotline implements XML_Writable
 {
-
 	/**
 	 * Mapping of each instance by the number of seconds into the plotline that it
 	 * starts. Instances are chronologically distinct. Key: Number of seconds into
@@ -33,23 +33,19 @@ public class Plotline implements XML_Writable
 	 * time.
 	 */
 	private TreeMap<Integer, Instance> instances;
-
 	/**
 	 * Number of seconds into the script that this plotline starts. Not relevant to
 	 * length of plotline.
 	 */
 	public int startTime;
-
 	/**
 	 * The description of this plotline.
 	 */
 	public String description;
-
 	/**
 	 * Name of this plotline.
 	 */
 	public String title;
-
 	/**
 	 * The script that this plotline belongs to.
 	 */
@@ -87,7 +83,7 @@ public class Plotline implements XML_Writable
 		{
 			return instances.get(time);
 		}
-		Instance inst = new Instance(this, time);
+		Instance inst = new Instance(this);
 		instances.put(time, inst);
 		assertOrder();
 		return inst;
@@ -129,7 +125,6 @@ public class Plotline implements XML_Writable
 		if (instances.containsKey(from) && !instances.containsKey(to))
 		{
 			Instance ins = instances.remove(from);
-			ins.time = to;
 			instances.put(to, ins);
 			assertOrder();
 			return true;
@@ -194,7 +189,6 @@ public class Plotline implements XML_Writable
 			output += inst.toXML();
 		}
 		output += XML_Writer.closeTag("PLOTLINE");
-
 		return output;
 	}
 
@@ -209,25 +203,20 @@ public class Plotline implements XML_Writable
 		if (start > 0)
 		{
 			TreeMap<Integer, Instance> instances2 = new TreeMap<>();
-
 			for (int i : instances.keySet())
 			{
 				Instance ins = instances.get(i);
-				ins.time -= start;
 				instances2.put(i - start, ins);
 			}
 			instances = instances2;
 		}
-
 		// If earliest event is before t=0, pull all events forwards
 		else if (start < 0)
 		{
 			TreeMap<Integer, Instance> instances2 = new TreeMap<>();
-
 			for (int i : instances.descendingKeySet())
 			{
 				Instance ins = instances.get(i);
-				ins.time -= start;
 				instances2.put(i - start, ins);
 			}
 			instances = instances2;
@@ -239,4 +228,8 @@ public class Plotline implements XML_Writable
 		return "Plotline \"" + title + "\", starting at time t=" + startTime + " seconds, in:\n" + script.toString();
 	}
 
+	public ArrayList<Integer> getPopulatedTimes()
+	{
+		return new ArrayList<Integer>(instances.navigableKeySet());
+	}
 }

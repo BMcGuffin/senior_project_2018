@@ -21,37 +21,30 @@ import javax.sound.sampled.*;
  */
 public class Data_Media implements Buildable
 {
-
 	/**
 	 * The name of this particular data field.
 	 */
 	public String elementName;
-
 	/**
 	 *
 	 */
 	private File mediaFile;
-
 	/**
 	 * The name of the data file.
 	 */
 	private String fileName;
-
 	/**
 	 * Type of media: Still image, audio only, or video.
 	 */
 	private boolean isImage, isAudio, isVideo;
-
 	/**
 	 * How many seconds into the media file playback should begin. Defaults to 0.
 	 */
 	private int startTime;
-
 	/**
 	 * How long playback should last. Defaults to length of file.
 	 */
 	private int playbackLength;
-
 	private int fileLength;
 
 	/**
@@ -179,11 +172,9 @@ public class Data_Media implements Buildable
 	public Buildable duplicate()
 	{
 		Data_Media dup = new Data_Media(this.elementName);
-
 		dup.setMediaFile(this.mediaFile);
 		dup.setPlayLength(this.fileLength);
 		dup.setStartTime(this.startTime);
-
 		return dup;
 	}
 
@@ -205,13 +196,11 @@ public class Data_Media implements Buildable
 	{
 		mediaFile = f;
 		fileName = f.getName();
-
 		if (isVideo)
 		{
 			// TODO Add code for determining duration of a video file.
 			throw new UnsupportedOperationException("Not supported yet.");
 		}
-
 		if (isAudio)
 		{
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(f);
@@ -224,7 +213,6 @@ public class Data_Media implements Buildable
 			playbackLength = fileLength;
 			startTime = 0;
 		}
-
 		if (isImage)
 		{
 			fileLength = 1;
@@ -233,4 +221,29 @@ public class Data_Media implements Buildable
 		}
 	}
 
+	/**
+	 * {@inheritDoc} This class uses the following tags: SRC_FILE (Holds the file
+	 * path), PLAYBACK (holds length of playback in seconds), START (holds start
+	 * time in seconds).
+	 */
+	@Override
+	public String toXML()
+	{
+		String output = "";
+		output += XML_Writer.SimpleTag(XML_Writer.tags.MEDIA_SRC_FILE.name(),
+				(fileName.isEmpty() ? "No File" : fileName));
+		output += XML_Writer.SimpleTag(XML_Writer.tags.MEDIA_PLAYBACK.name(), "" + playbackLength);
+		output += XML_Writer.SimpleTag(XML_Writer.tags.MEDIA_START.name(), "" + startTime);
+		return output;
+	}
+
+	@Override
+	public void reset()
+	{
+		mediaFile = null;
+		fileName = "";
+		isImage = isAudio = isVideo = false;
+		startTime = 0;
+		playbackLength = 0;
+	}
 }
