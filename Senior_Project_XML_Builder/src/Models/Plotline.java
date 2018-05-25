@@ -83,7 +83,7 @@ public class Plotline implements XML_Writable
 		{
 			return instances.get(time);
 		}
-		Instance inst = new Instance(this);
+		Instance inst = new Instance(this, time);
 		instances.put(time, inst);
 		assertOrder();
 		return inst;
@@ -126,6 +126,7 @@ public class Plotline implements XML_Writable
 		{
 			Instance ins = instances.remove(from);
 			instances.put(to, ins);
+			ins.time = to;
 			assertOrder();
 			return true;
 		}
@@ -183,12 +184,19 @@ public class Plotline implements XML_Writable
 	public String toXML()
 	{
 		String output = "";
-		output += XML_Writer.openTag("PLOTLINE");
+		ArrayList<XML_Writer.attributes> attrs = new ArrayList<>();
+		ArrayList<String> values = new ArrayList<>();
+		String elementName = XML_Writer.tags.PLOTLINE.name();
+		attrs.add(XML_Writer.attributes.Title);
+		attrs.add(XML_Writer.attributes.Time);
+		values.add(title);
+		values.add("" + startTime);
+		output += XML_Writer.openTag(XML_Writer.tagWithAttributes(elementName, attrs, values));
 		for (Instance inst : instances.values())
 		{
 			output += inst.toXML();
 		}
-		output += XML_Writer.closeTag("PLOTLINE");
+		output += XML_Writer.closeTag(elementName);
 		return output;
 	}
 

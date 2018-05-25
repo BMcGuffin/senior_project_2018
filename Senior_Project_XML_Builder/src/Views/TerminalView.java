@@ -208,7 +208,15 @@ public class TerminalView implements I_View
 						break;
 					case "a":// Add new event
 						cmd = Command.ADD_EVENT;
-						args.add("" + getIntFromInput("Enter time (in seconds) to add new event:"));
+						if (scr.getPlotLine(currentPlotIndex).instanceCount() == 0)
+						{
+							System.out.println("First event in this plotline will be added to time T = 0.");
+							args.add("" + 0);
+						}
+						else
+						{
+							args.add("" + getIntFromInput("Enter time (in seconds) to add new event:"));
+						}
 						System.out.println("Available event types:");
 						ArrayList<String> types = bldr.getEventDeck();
 						for (int i = 0; i < types.size(); i++)

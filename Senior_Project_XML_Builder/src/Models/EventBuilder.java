@@ -94,20 +94,23 @@ public class EventBuilder
 	{
 		Event prototype = prototypes.get(eventType);
 
-		// Return null if we don't have a prototype matching that event type
+		// Return a blank event if we don't have a prototype matching that event type
 		if (prototype == null)
 		{
-			return null;
+			prototype = new Event(null);
 		}
 
+		System.out.println("Requested a prototype of event of type "+prototype.eventType);
 		// If this type of event is being added to the script for the first time, add it
 		// to the dtd
 		if (!inScript.contains(prototype))
 		{
+			System.out.println("Adding reference to "+eventType+" to DTD");
 			inScript.add(prototype);
 			dtd.digestEvent(prototype);
 		}
 
+		System.out.println("Building new event...");
 		Event newEvent = new Event(null);
 
 		newEvent.eventType = prototype.eventType;
@@ -117,6 +120,7 @@ public class EventBuilder
 			newEvent.addElement(prototype.getElement(i).duplicate(), prototype.getLabel(i));
 		}
 
+		System.out.println("Built new event of type "+ newEvent.eventType);
 		return newEvent;
 
 	}
@@ -269,7 +273,7 @@ public class EventBuilder
 		}
 		in.close();
 
-		prototypes.put(DTDBuilder.formatTag(evt.eventType), evt);
+		prototypes.put(evt.eventType, evt);
 		return evt;
 	}
 

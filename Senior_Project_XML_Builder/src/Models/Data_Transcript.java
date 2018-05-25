@@ -175,13 +175,20 @@ public class Data_Transcript implements Buildable
 	public String toXML()
 	{
 		String output = "";
+		ArrayList<XML_Writer.attributes> attrs = new ArrayList<>();
+		ArrayList<String> values = new ArrayList<>();
+		attrs.add(XML_Writer.attributes.Data_Type);
+		values.add("Transcript");
+		output += XML_Writer.openTag(XML_Writer.tagWithAttributes(elementName, attrs, values));
 		for (Line l : lines)
 		{
-			output += XML_Writer.openTag(XML_Writer.tags.TS_DIALOG_LINE.name());
-			output += XML_Writer.SimpleTag(XML_Writer.tags.TS_LINE_ACTOR.name(), l.actor);
-			output += XML_Writer.SimpleTag(XML_Writer.tags.TS_LINE_SPEECH.name(), l.dialog);
-			output += XML_Writer.closeTag(XML_Writer.tags.TS_DIALOG_LINE.name());
+			XML_Writer.tags tag = XML_Writer.tags.TS_DIALOG_LINE;
+			ArrayList<String> vals = new ArrayList<>();
+			vals.add(l.actor);
+			vals.add(l.dialog);
+			output += XML_Writer.emptyTag(XML_Writer.tagWithAttributes(tag.name(), tag.ATTRS, vals));
 		}
+		output += XML_Writer.closeTag(elementName);
 		return output;
 	}
 

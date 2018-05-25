@@ -22,7 +22,7 @@ public class InstanceTest extends TestCase
     {
         System.out.println("addEvent");
         Plotline mPlot = Mockito.mock(Plotline.class);
-        Instance instance = new Instance(mPlot);
+        Instance instance = new Instance(mPlot, 0);
         assertEquals(0, instance.events.size());
         Event e = instance.addEvent();
         assertEquals(1, instance.events.size());
@@ -37,7 +37,7 @@ public class InstanceTest extends TestCase
     {
         System.out.println("removeEvent");
         Plotline mPlot = Mockito.mock(Plotline.class);
-        Instance instance = new Instance(mPlot);
+        Instance instance = new Instance(mPlot, 0);
         assertEquals(0, instance.events.size());
         Event e = instance.addEvent();
         assertEquals(1, instance.events.size());

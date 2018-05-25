@@ -206,13 +206,19 @@ public class Event implements XML_Writable
 	@Override
 	public String toXML()
 	{
+		if (fields.isEmpty())
+		{
+			return XML_Writer.emptyTag(eventType);
+		}
 		String output = "";
-		output += XML_Writer.openTag(DTDBuilder.formatTag(eventType));
+		ArrayList<XML_Writer.attributes> attrs = new ArrayList<>();
+		ArrayList<String> vals = new ArrayList<>();
+		output += XML_Writer.openTag(eventType);
 		for (Buildable b : fields)
 		{
-			output += XML_Writer.SimpleTag(DTDBuilder.formatTag(b.elementName()), b.toXML());
+			output += b.toXML();
 		}
-		output += XML_Writer.closeTag(DTDBuilder.formatTag(eventType));
+		output += XML_Writer.closeTag(eventType);
 		return output;
 	}
 

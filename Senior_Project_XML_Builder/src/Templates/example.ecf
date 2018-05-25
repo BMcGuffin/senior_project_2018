@@ -1,11 +1,11 @@
 Example
 5
-My Media 1
+My_Media_1
 type_media
 src/Resources/Media
 0
 25
-My Menu 1
+My_Menu_1
 type_menu
 4
 opt_1
@@ -13,10 +13,10 @@ opt_2
 opt_3
 opt_4
 2
-My Text 1
+My_Text_1
 type_text
 0
-My Transcript 1
+My_Transcript_1
 type_transcript
 7
 actor_1
@@ -33,7 +33,7 @@ actor_1
 We're demonstrating how a transcript works!
 actor_3
 Wow! That's so neat!
-My Text 2
+My_Text_2
 type_text
 1
 Here is some sample text. It will show up in the text field.

@@ -21,8 +21,6 @@ import jdk.nashorn.internal.objects.annotations.SpecializedFunction;
  */
 public class XML_ParseHandler extends DefaultHandler
 {
-	private final int placeholder_time = 0;
-	private final String placeholder_buildable_type = "Transcript";
 	private Script generatedScript;
 	private Plotline generatedPlotline;
 	private Instance generatedInstance;
@@ -37,7 +35,7 @@ public class XML_ParseHandler extends DefaultHandler
 	private boolean eventHasExistingPrototype;
 	private EventBuilder eb;
 	private String characterData;
-	
+
 	public XML_ParseHandler()
 	{
 		System.out.println("Constructor for handler");
@@ -55,6 +53,11 @@ public class XML_ParseHandler extends DefaultHandler
 	public void startElement(String uri, String localName, String qName, Attributes attributes)
 	{
 		System.out.println(String.format("START: %s", qName));
+		System.out.println("Attributes:");
+		for (int i = 0; i < attributes.getLength(); i++)
+		{
+			System.out.println(attributes.getValue(i));
+		}
 		XML_Writer.tags elementTag = XML_Writer.tags.fromString(qName);
 		// If elementTag is null, then this is either a user-defined event or a
 		// user-defined buildable
@@ -82,11 +85,16 @@ public class XML_ParseHandler extends DefaultHandler
 					else
 					{
 						// Switch based on value of element's data_type attribute
-						// TODO: add "data_type" attribute to buildable classes
-						String data_type = placeholder_buildable_type;
+						String data_type = attributes.getValue(XML_Writer.attributes.Data_Type.name());
 						if (data_type.equalsIgnoreCase("Media"))
 						{
 							generatedBuildable = generatedEvent.addElement(new Data_Media(qName), qName);
+							((Data_Media) generatedBuildable)
+									.setMediaFile(new File(attributes.getValue(XML_Writer.attributes.Src_File.name())));
+							((Data_Media) generatedBuildable).setPlayLength(
+									Integer.parseInt(attributes.getValue(XML_Writer.attributes.Playback.name())));
+							((Data_Media) generatedBuildable).setStartTime(
+									Integer.parseInt(attributes.getValue(XML_Writer.attributes.Start.name())));
 						}
 						else if (data_type.equalsIgnoreCase("Menu"))
 						{
@@ -137,51 +145,19 @@ public class XML_ParseHandler extends DefaultHandler
 			{
 				case INSTANT:
 					// Start of a new instance. Generate a new instance from the current plotline,
-					// at
-					// the time attached to this instance's time attribute.
-					// TODO: add "time" attribute to INSTANT tag
-					currentInstIndex = placeholder_time;
+					// at the time attached to this instance's time attribute.
+					currentInstIndex = Integer.parseInt(attributes.getValue(XML_Writer.attributes.Time.name()));
 					generatedInstance = generatedPlotline.addInstance(currentInstIndex);
 					// Now that we've moved the instance index, reset the event and data indices
 					currentEventIndex = currentDataFieldIndex = 0;
-					break;
-				case MEDIA_PLAYBACK:
-					if (!(generatedBuildable instanceof Data_Media))
-					{
-						System.out.println("ERROR: Type of current buildable is incorrect.");
-					}
-					break;
-				case MEDIA_SRC_FILE:
-					if (!(generatedBuildable instanceof Data_Media))
-					{
-						System.out.println("ERROR: Type of current buildable is incorrect.");
-					}
-					break;
-				case MEDIA_START:
-					if (!(generatedBuildable instanceof Data_Media))
-					{
-						System.out.println("ERROR: Type of current buildable is incorrect.");
-					}
-					break;
-				case MENU_OPTION:
-					if (!(generatedBuildable instanceof Data_Menu))
-					{
-						System.out.println("ERROR: Type of current buildable is incorrect.");
-					}
-					break;
-				case MENU_SELECTED:
-					if (!(generatedBuildable instanceof Data_Menu))
-					{
-						System.out.println("ERROR: Type of current buildable is incorrect.");
-					}
 					break;
 				case PLOTLINE:
 					// Start of a new plotline. Generate a new plotline from the current script,
 					// starting at the time attached to this plotline's time attribute, with the
 					// title given by this plotline's title attribute.
-					// TODO: add "time" attribute to PLOTLINE tag
-					// TODO: add "title" attribute to PLOTLINE tag
-					currentPlotIndex = generatedScript.addPlotline("Placeholder text", placeholder_time);
+					String plotTitle = attributes.getValue(XML_Writer.attributes.Title.name());
+					int startTime = Integer.parseInt(attributes.getValue(XML_Writer.attributes.Time.name()));
+					currentPlotIndex = generatedScript.addPlotline(plotTitle, startTime);
 					generatedPlotline = generatedScript.getPlotLine(currentPlotIndex);
 					// Now that we've moved the plot index, reset the instance, event and data
 					// indices
@@ -190,16 +166,8 @@ public class XML_ParseHandler extends DefaultHandler
 				case SCRIPT:
 					// Start of a new script.
 					generatedScript = new Script();
-					generatedScript.scriptTitle = "Placeholder text";
-					generatedScript.saveFile = null;
-					// TODO: add "title" attribute to SCRIPT tag
-					// TODO: find a way to set the save file for the script as it's being loaded
-					break;
-				case TEXT_FIELD:
-					if (!(generatedBuildable instanceof Data_Text))
-					{
-						System.out.println("ERROR: Type of current buildable is incorrect.");
-					}
+					String scrTitle = attributes.getValue(XML_Writer.attributes.Title.name());
+					generatedScript.scriptTitle = scrTitle;
 					break;
 				case TS_DIALOG_LINE:
 					if (!(generatedBuildable instanceof Data_Transcript))
@@ -208,23 +176,23 @@ public class XML_ParseHandler extends DefaultHandler
 					}
 					else
 					{
-						System.out.println("Length before: " + ((Data_Transcript) generatedBuildable).length());
-						((Data_Transcript) generatedBuildable).addLine("actor_text", "speech_text");
-						System.out.println("Length after: " + ((Data_Transcript) generatedBuildable).length());
+						String actor_text = attributes.getValue(XML_Writer.attributes.Actor.name());
+						String speech_text = attributes.getValue(XML_Writer.attributes.Text.name());
+						((Data_Transcript) generatedBuildable).addLine(actor_text, speech_text);
 					}
 					break;
-				case TS_LINE_ACTOR:
-					if (!(generatedBuildable instanceof Data_Transcript))
+				case MENU_OPTION:
+				{
+					((Data_Menu) generatedBuildable).addOption(attributes.getValue(XML_Writer.attributes.Title.name()));
+					boolean isSelected = Boolean
+							.parseBoolean(attributes.getValue(XML_Writer.attributes.Selected.name()));
+					if (isSelected)
 					{
-						System.out.println("ERROR: Type of current buildable is incorrect.");
+						int menuIndex = ((Data_Menu) generatedBuildable).menuSize() - 1;
+						((Data_Menu) generatedBuildable).setSelected(menuIndex);
 					}
 					break;
-				case TS_LINE_SPEECH:
-					if (!(generatedBuildable instanceof Data_Transcript))
-					{
-						System.out.println("ERROR: Type of current buildable is incorrect.");
-					}
-					break;
+				}
 				default:
 					// This won't run because tags is fully enumerated here
 					break;
@@ -260,6 +228,10 @@ public class XML_ParseHandler extends DefaultHandler
 				{
 					currentlyDefiningBuildable = false;
 					System.out.println("Finished a user-defined buildable.");
+					if (generatedBuildable instanceof Data_Text)
+					{
+						((Data_Text) generatedBuildable).setContent(characterData);
+					}
 					currentDataFieldIndex++;
 				}
 				// If we weren't already defining a buildable, this custom element is an event.
@@ -285,38 +257,8 @@ public class XML_ParseHandler extends DefaultHandler
 				case INSTANT:
 					// TODO: Fill out this switch case
 					break;
-				case MEDIA_PLAYBACK:
-					if (generatedBuildable instanceof Data_Media)
-					{
-						int newLength = Integer.parseInt(characterData);
-						((Data_Media) generatedBuildable).setPlayLength(newLength);
-					}
-					break;
-				case MEDIA_SRC_FILE:
-					if (generatedBuildable instanceof Data_Media)
-					{
-						((Data_Media) generatedBuildable).setMediaFile(new File(characterData));
-					}
-					break;
-				case MEDIA_START:
-					if (generatedBuildable instanceof Data_Media)
-					{
-						int newStart = Integer.parseInt(characterData);
-						((Data_Media) generatedBuildable).setStartTime(newStart);
-					}
-					break;
 				case MENU_OPTION:
-					if (generatedBuildable instanceof Data_Menu)
-					{
-						((Data_Menu) generatedBuildable).addOption(characterData);
-					}
-					break;
-				case MENU_SELECTED:
-					if (generatedBuildable instanceof Data_Menu)
-					{
-						int newIndex = Integer.parseInt(characterData);
-						((Data_Menu) generatedBuildable).setSelected(newIndex);
-					}
+					// MENU_OPTION is an empty tag
 					break;
 				case PLOTLINE:
 					// TODO: Fill out this switch case
@@ -324,34 +266,8 @@ public class XML_ParseHandler extends DefaultHandler
 				case SCRIPT:
 					// TODO: Fill out this switch case
 					break;
-				case TEXT_FIELD:
-					if (generatedBuildable instanceof Data_Text)
-					{
-						((Data_Text) generatedBuildable).setContent(characterData);
-					}
-					break;
 				case TS_DIALOG_LINE:
-					if (generatedBuildable instanceof Data_Transcript)
-					{}
-					break;
-				case TS_LINE_ACTOR:
-					if (generatedBuildable instanceof Data_Transcript)
-					{
-						System.out.println("Actor is " + characterData);
-						// Index of this line is the last new dialog line added
-						int index = ((Data_Transcript) generatedBuildable).length() - 1;
-						System.out.println("Current index is " + index);
-						((Data_Transcript) generatedBuildable).getLine(index).actor = characterData;
-					}
-					break;
-				case TS_LINE_SPEECH:
-					if (generatedBuildable instanceof Data_Transcript)
-					{
-						// Index of this line is the last new dialog line added
-						int index = ((Data_Transcript) generatedBuildable).length() - 1;
-						((Data_Transcript) generatedBuildable).getLine(index).dialog = characterData;
-					}
-					break;
+					// MENU_OPTION is an empty tag
 				default:
 					// This won't run because tags is fully enumerated here
 					break;

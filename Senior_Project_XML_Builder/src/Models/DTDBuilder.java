@@ -25,29 +25,50 @@ import java.util.TreeMap;
  */
 public class DTDBuilder
 {
+	/**
+	 * Reference to this object. All classes that utilize DTDBuilder need a
+	 * consistent reference to the same instance.
+	 */
 	private static DTDBuilder singleton;
-
 	private ArrayList<String> reserved;
-
+	/**
+	 * Key is the name of an element. Value is a list of sub-elements of that
+	 * element.
+	 */
 	private TreeMap<String, ArrayList<String>> subelements;
+	/**
+	 * Key is the name of an element. Value is a list of attributes of that element.
+	 */
+	private TreeMap<String, ArrayList<String>> attributes;
 
 	private DTDBuilder()
 	{
 		reserved = new ArrayList<>();
 		subelements = new TreeMap<>();
+		attributes = new TreeMap<>();
 		addReservedTags();
 	}
 
+	/**
+	 * Reserved tags that are defined by the system and are unavailable for use by
+	 * users.
+	 */
 	private void addReservedTags()
 	{
 		for (XML_Writer.tags tag : XML_Writer.tags.values())
 		{
 			reserved.add(tag.name());
+			for (XML_Writer.attributes attr : tag.ATTRS)
+			{
+				addNewAttribute(tag.name(), attr.name());
+			}
 		}
 	}
 
 	/**
-	 * Access this DTDBuilder.
+	 * Access this DTDBuilder. Generates a singleton reference to the DTDBuilder
+	 * object such that all classes which utilize this class have a reference to the
+	 * same instance of the class.
 	 *
 	 * @param scr
 	 *            the current script
@@ -69,14 +90,11 @@ public class DTDBuilder
 	{
 		String filename = getDTDName(scriptTitle);
 		File file = new File(filename);
-
 		file.createNewFile();
-
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 		bw.write(formatExternalDTD());
 		bw.flush();
 		bw.close();
-
 	}
 
 	public String getDTDName(String title)
@@ -96,22 +114,25 @@ public class DTDBuilder
 	public boolean digestEvent(Event evt)
 	{
 		// Check to make sure event name is not reserved keyword.
-		if (reserved.contains(formatTag(evt.eventType)))
+		if (reserved.contains(evt.eventType))
 		{
+			System.out.println("ERROR: Event name is reserved keyword");
 			return false;
 		}
-
 		// Check to make sure event name is not already in list of known elements.
-		if (subelements.containsKey(formatTag(evt.eventType)))
+		if (subelements.containsKey(evt.eventType))
 		{
+			System.out.println("ERROR: Event name is in list of known elements");
+
 			return false;
 		}
 		// Check to make sure the event name doesn't contain an invalid character.
-		if (evt.eventType.contains(".") || evt.eventType.contains("_"))
+		if (evt.eventType.contains("."))
 		{
+			System.out.println("ERROR: Event name contains invalid characters");
+
 			return false;
 		}
-
 		// Check data field names for uniqueness.
 		ArrayList<String> fieldNames = new ArrayList<>();
 		for (int i = 0; i < evt.fieldCount(); i++)
@@ -122,41 +143,42 @@ public class DTDBuilder
 			}
 			fieldNames.add(evt.getElement(i).elementName());
 		}
-
 		// If we get here, we can safely add all elements to the DTD.
+		addEvent(evt);
+		return true;
+	}
+
+	public void addEvent(Event evt)
+	{
 		ArrayList<Buildable> fields = new ArrayList<>();
 		for (int i = 0; i < evt.fieldCount(); i++)
 		{
 			fields.add(evt.getElement(i));
 		}
-		addNewSubElement(XML_Writer.tags.INSTANT.name(), formatTag(evt.eventType));
+		addNewSubElement(XML_Writer.tags.INSTANT.name(), evt.eventType);
 		for (Buildable field : fields)
 		{
 			addNewSubElement(evt.eventType, field.elementName());
+			addNewAttribute(field.elementName(), XML_Writer.attributes.Data_Type.name());
 			if (field instanceof Data_Media)
 			{
-				addNewSubElement(field.elementName(), XML_Writer.tags.MEDIA_SRC_FILE.name());
-				addNewSubElement(field.elementName(), XML_Writer.tags.MEDIA_PLAYBACK.name());
-				addNewSubElement(field.elementName(), XML_Writer.tags.MEDIA_START.name());
+				addNewAttribute(field.elementName(), XML_Writer.attributes.Src_File.name());
+				addNewAttribute(field.elementName(), XML_Writer.attributes.Playback.name());
+				addNewAttribute(field.elementName(), XML_Writer.attributes.Start.name());
 			}
 			if (field instanceof Data_Text)
 			{
-				addNewSubElement(field.elementName(), XML_Writer.tags.TEXT_FIELD.name());
+				subelements.put(field.elementName(), new ArrayList<String>());
 			}
 			if (field instanceof Data_Transcript)
 			{
 				addNewSubElement(field.elementName(), XML_Writer.tags.TS_DIALOG_LINE.name());
-				addNewSubElement(XML_Writer.tags.TS_DIALOG_LINE.name(), XML_Writer.tags.TS_LINE_ACTOR.name());
-				addNewSubElement(XML_Writer.tags.TS_DIALOG_LINE.name(), XML_Writer.tags.TS_LINE_SPEECH.name());
 			}
 			if (field instanceof Data_Menu)
 			{
 				addNewSubElement(field.elementName(), XML_Writer.tags.MENU_OPTION.name());
-				addNewSubElement(field.elementName(), XML_Writer.tags.MENU_SELECTED.name());
 			}
 		}
-
-		return true;
 	}
 
 	/**
@@ -173,49 +195,16 @@ public class DTDBuilder
 		ArrayList<String> fieldNames = new ArrayList<>();
 		for (int i = 0; i < evt.fieldCount(); i++)
 		{
-			if (fieldNames.contains(formatTag(evt.getElement(i).elementName())))
+			if (fieldNames.contains(evt.getElement(i).elementName()))
 			{
 				return false;
 			}
 			fieldNames.add(evt.getElement(i).elementName());
 		}
-
 		// Remove data field names relevant to this event.
 		subelements.remove(evt.eventType);
-
 		// If we get here, we can safely add all elements to the DTD.
-		ArrayList<Buildable> fields = new ArrayList<>();
-		for (int i = 0; i < evt.fieldCount(); i++)
-		{
-			fields.add(evt.getElement(i));
-		}
-		addNewSubElement(XML_Writer.tags.INSTANT.name(), formatTag(evt.eventType));
-		for (Buildable field : fields)
-		{
-			addNewSubElement(evt.eventType, field.elementName());
-			if (field instanceof Data_Media)
-			{
-				addNewSubElement(field.elementName(), XML_Writer.tags.MEDIA_SRC_FILE.name());
-				addNewSubElement(field.elementName(), XML_Writer.tags.MEDIA_PLAYBACK.name());
-				addNewSubElement(field.elementName(), XML_Writer.tags.MEDIA_START.name());
-			}
-			if (field instanceof Data_Text)
-			{
-				addNewSubElement(field.elementName(), XML_Writer.tags.TEXT_FIELD.name());
-			}
-			if (field instanceof Data_Transcript)
-			{
-				addNewSubElement(field.elementName(), XML_Writer.tags.TS_DIALOG_LINE.name());
-				addNewSubElement(XML_Writer.tags.TS_DIALOG_LINE.name(), XML_Writer.tags.TS_LINE_ACTOR.name());
-				addNewSubElement(XML_Writer.tags.TS_DIALOG_LINE.name(), XML_Writer.tags.TS_LINE_SPEECH.name());
-			}
-			if (field instanceof Data_Menu)
-			{
-				addNewSubElement(field.elementName(), XML_Writer.tags.MENU_OPTION.name());
-				addNewSubElement(field.elementName(), XML_Writer.tags.MENU_SELECTED.name());
-			}
-		}
-
+		addEvent(evt);
 		return true;
 	}
 
@@ -234,44 +223,44 @@ public class DTDBuilder
 
 	private void addNewSubElement(String superElement, String element)
 	{
-		if (subelements.get(formatTag(superElement)) == null)
+		if (subelements.get(superElement) == null)
 		{
-			subelements.put(formatTag(superElement), new ArrayList<String>());
+			subelements.put(superElement, new ArrayList<String>());
 		}
-		subelements.get(formatTag(superElement)).add(formatTag(element));
+		subelements.get(superElement).add(element);
 	}
 
-	public static String formatTag(String tag)
+	private void addNewAttribute(String element, String attribute)
 	{
-		String upper = tag.toUpperCase();
-		String underscores = upper.replace(" ", "_");
-		return underscores;
+		if (attributes.get(element) == null)
+		{
+			attributes.put(element, new ArrayList<String>());
+		}
+		attributes.get(element).add(attribute);
 	}
 
 	private String formatExternalDTD()
 	{
 		String output = "";
-		
 		ArrayDeque<String> elementQueue = new ArrayDeque<String>();
 		ArrayList<String> alreadyAdded = new ArrayList<>();
-
-		output += elementWithSubs(XML_Writer.tags.SCRIPT.name(), XML_Writer.tags.PLOTLINE.name() + "*");
-
-		output += elementWithSubs(XML_Writer.tags.PLOTLINE.name(), XML_Writer.tags.INSTANT.name() + "*");
-		
+		ArrayList<String> tempList = new ArrayList<>();
+		tempList.add(XML_Writer.tags.PLOTLINE.name() + "*");
+		output += elementWithSubs(XML_Writer.tags.SCRIPT.name(), tempList);
+		tempList.clear();
+		tempList.add(XML_Writer.tags.INSTANT.name() + "*");
+		output += elementWithSubs(XML_Writer.tags.PLOTLINE.name(), tempList);
 		elementQueue.add(XML_Writer.tags.INSTANT.name());
 		alreadyAdded.add(XML_Writer.tags.INSTANT.name());
-		
-		while(!elementQueue.isEmpty())
+		while (!elementQueue.isEmpty())
 		{
 			String nextElement = elementQueue.poll();
 			ArrayList<String> sublist = subelements.get(nextElement);
-			
 			if (sublist != null)
 			{
 				for (String subElement : sublist)
 				{
-					if(!alreadyAdded.contains(subElement))
+					if (!alreadyAdded.contains(subElement))
 					{
 						elementQueue.add(subElement);
 						alreadyAdded.add(subElement);
@@ -279,11 +268,8 @@ public class DTDBuilder
 				}
 			}
 			output += elementWithSubs(nextElement, sublist);
-			
 		}
-
 		return output;
-
 	}
 
 	private String elementWithSubs(String element, ArrayList<String> subs)
@@ -299,40 +285,20 @@ public class DTDBuilder
 				{
 					output += "|";
 				}
-
 			}
 			output += ")*";
 		}
-		else
+		else if (subs != null && subs.isEmpty())// Subs is empty if subElements does contain an entry for this element,
+												// but no subelements were added
 		{
 			output += "(#PCDATA)";
 		}
-		output += ">\n";
-		return output;
-	}
-
-	private String elementWithSubs(String element, String...subs)
-	{
-		String output = elementOpen(element);
-		if (subs.length > 0)
-		{
-			output += "(";
-			for (int i = 0; i < subs.length; i++)
-			{
-				output += subs[i];
-				if (i < subs.length - 1)
-				{
-					output += "|";
-				}
-
-			}
-			output += ")*";
-		}
-		else
+		else if (subs == null)// Subs is null if subElements does NOT contain an entry for this element
 		{
 			output += "EMPTY";
 		}
 		output += ">\n";
+		output += attributes(element);
 		return output;
 	}
 
@@ -341,9 +307,22 @@ public class DTDBuilder
 		return "<!ELEMENT " + tag + " ";
 	}
 
-	private String attListOpen(String element, String attName)
+	private String attributes(String element)
 	{
-		return "<!ATTLIST " + element + " " + attName + " ";
+		String output = "";
+		if (attributes.get(element) != null)
+		{
+			for (String attr : attributes.get(element))
+			{
+				output += singleAttribute(element, attr);
+			}
+		}
+		return output;
+	}
+
+	private String singleAttribute(String element, String attName)
+	{
+		return "<!ATTLIST " + element + " " + attName + " CDATA #REQUIRED>\n";
 	}
 
 	public void reset()
@@ -352,5 +331,4 @@ public class DTDBuilder
 		subelements = new TreeMap<>();
 		addReservedTags();
 	}
-
 }

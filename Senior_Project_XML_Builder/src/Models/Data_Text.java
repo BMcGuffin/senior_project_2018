@@ -7,6 +7,7 @@
  */
 package Models;
 
+import java.util.ArrayList;
 import com.sun.xml.internal.ws.spi.db.XMLBridge;
 
 /**
@@ -78,7 +79,15 @@ public class Data_Text implements Buildable
 	public String toXML()
 	{
 		String output = "";
-		output += XML_Writer.SimpleTag(XML_Writer.tags.TEXT_FIELD.name(), text);
+		ArrayList<XML_Writer.attributes> attrs = new ArrayList<>();
+		ArrayList<String> values = new ArrayList<>();
+		
+		attrs.add(XML_Writer.attributes.Data_Type);
+		
+		values.add("Text");
+		output += XML_Writer.openTag(XML_Writer.tagWithAttributes(elementName, attrs, values));
+		output += text;
+		output += XML_Writer.closeTag(elementName);
 		return output;
 	}
 

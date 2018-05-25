@@ -10,6 +10,7 @@ package Models;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import javax.sound.sampled.*;
 
 /**
@@ -230,10 +231,17 @@ public class Data_Media implements Buildable
 	public String toXML()
 	{
 		String output = "";
-		output += XML_Writer.SimpleTag(XML_Writer.tags.MEDIA_SRC_FILE.name(),
-				(fileName.isEmpty() ? "No File" : fileName));
-		output += XML_Writer.SimpleTag(XML_Writer.tags.MEDIA_PLAYBACK.name(), "" + playbackLength);
-		output += XML_Writer.SimpleTag(XML_Writer.tags.MEDIA_START.name(), "" + startTime);
+		ArrayList<XML_Writer.attributes> attrs = new ArrayList<>();
+		ArrayList<String> values = new ArrayList<>();
+		attrs.add(XML_Writer.attributes.Data_Type);
+		attrs.add(XML_Writer.attributes.Src_File);
+		attrs.add(XML_Writer.attributes.Playback);
+		attrs.add(XML_Writer.attributes.Start);
+		values.add("Media");
+		values.add(fileName);
+		values.add("" + playbackLength);
+		values.add("" + startTime);
+		output += XML_Writer.emptyTag(XML_Writer.tagWithAttributes(elementName, attrs, values));
 		return output;
 	}
 

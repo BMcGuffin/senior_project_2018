@@ -28,17 +28,23 @@ public class Instance implements XML_Writable
 	 * The plotline to which this event belongs.
 	 */
 	public Plotline plotline;
+	/**
+	 * The number of seconds into the plotline that this instance occurs.
+	 */
+	public int time;
 
 	/**
 	 * Constructor. Generates a new instance.
 	 *
 	 * @param parent
 	 *            the plotline to which this instance belongs.
+	 * 
 	 */
-	public Instance(Plotline parent)
+	public Instance(Plotline parent, int t)
 	{
 		events = new ArrayList<>();
 		plotline = parent;
+		time = t;
 	}
 
 	/**
@@ -103,12 +109,17 @@ public class Instance implements XML_Writable
 	public String toXML()
 	{
 		String output = "";
-		output += XML_Writer.openTag("INSTANT");
+		ArrayList<XML_Writer.attributes> attrs = new ArrayList<>();
+		ArrayList<String> values = new ArrayList<>();
+		String elementName = XML_Writer.tags.INSTANT.name();
+		attrs.add(XML_Writer.attributes.Time);
+		values.add("" + time);
+		output += XML_Writer.openTag(XML_Writer.tagWithAttributes(elementName, attrs, values));
 		for (Event evt : events)
 		{
 			output += evt.toXML();
 		}
-		output += XML_Writer.closeTag("INSTANT");
+		output += XML_Writer.closeTag(elementName);
 		return output;
 	}
 }

@@ -137,12 +137,19 @@ public class Script extends Observable implements XML_Writable
 		// Preamble
 		output += "<?xml version=\"1.0\" standalone=\"no\"?>\n";
 		output += "<!DOCTYPE SCRIPT SYSTEM \"" + dtd.getDTDName(this.scriptTitle) + "\">\n";
-		output += XML_Writer.openTag("SCRIPT");
+
+
+		ArrayList<XML_Writer.attributes> attrs = new ArrayList<>();
+		ArrayList<String> values = new ArrayList<>();
+		String elementName = XML_Writer.tags.SCRIPT.name();
+		attrs.add(XML_Writer.attributes.Title);
+		values.add(scriptTitle);
+		output += XML_Writer.openTag(XML_Writer.tagWithAttributes(elementName, attrs, values));
 		for (Plotline plt : plotlines)
 		{
 			output += plt.toXML();
 		}
-		output += XML_Writer.closeTag("SCRIPT");
+		output += XML_Writer.closeTag(elementName);
 		return output;
 	}
 

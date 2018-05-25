@@ -151,11 +151,20 @@ public class Data_Menu implements Buildable
 	public String toXML()
 	{
 		String output = "";
-		for (String opt : options)
+		ArrayList<XML_Writer.attributes> attrs = new ArrayList<>();
+		ArrayList<String> values = new ArrayList<>();
+		attrs.add(XML_Writer.attributes.Data_Type);
+		values.add("Menu");
+		output += XML_Writer.openTag(XML_Writer.tagWithAttributes(elementName, attrs, values));
+		for (int i = 0; i < options.size(); i++)
 		{
-			output += XML_Writer.SimpleTag(XML_Writer.tags.MENU_OPTION.name(), opt);
+			XML_Writer.tags tag = XML_Writer.tags.MENU_OPTION;
+			ArrayList<String> vals = new ArrayList<>();
+			vals.add(options.get(i));
+			vals.add(Boolean.toString(i == currentlySelected));
+			output += XML_Writer.emptyTag(XML_Writer.tagWithAttributes(tag.name(), tag.ATTRS, vals));
 		}
-		output += XML_Writer.SimpleTag(XML_Writer.tags.MENU_SELECTED.name(), "" + currentlySelected);
+		output += XML_Writer.closeTag(elementName);
 		return output;
 	}
 
