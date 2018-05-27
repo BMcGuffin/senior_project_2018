@@ -239,8 +239,6 @@ public class XML_ParseHandler extends DefaultHandler
 				{
 					currentlyDefiningEvent = false;
 					System.out.println("Finished a user-defined event.");
-					// TODO: Utilize EventBuilder.recordEventToDeck() to generate a new event config
-					// file with the given name.
 					currentEventIndex++;
 				}
 			}
@@ -248,29 +246,6 @@ public class XML_ParseHandler extends DefaultHandler
 			else
 			{
 				System.out.println("We shouldn't get here. If we do, ERROR!");
-			}
-		}
-		else
-		{
-			switch (elementTag)
-			{
-				case INSTANT:
-					// TODO: Fill out this switch case
-					break;
-				case MENU_OPTION:
-					// MENU_OPTION is an empty tag
-					break;
-				case PLOTLINE:
-					// TODO: Fill out this switch case
-					break;
-				case SCRIPT:
-					// TODO: Fill out this switch case
-					break;
-				case TS_DIALOG_LINE:
-					// MENU_OPTION is an empty tag
-				default:
-					// This won't run because tags is fully enumerated here
-					break;
 			}
 		}
 	}
