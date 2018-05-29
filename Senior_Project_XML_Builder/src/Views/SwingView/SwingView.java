@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.Box;
@@ -48,14 +50,15 @@ public class SwingView implements I_View
 			plotlineDisplay.removeAll();
 			System.out.println("This is a script event.");
 			scr = (Script) o;
+			System.out.println("Script contains " + scr.countPlotlines() + " plotlines.");
 			for (Plotline plt : scr.plotlines)
 			{
 				plotlineDisplay.add(new PlotlinePanel(plt));
 				System.out.println("Added a plotline panel.");
-				
 			}
 			System.out.println("Finished updating.");
 			plotlineDisplay.revalidate();
+			plotlineDisplay.repaint();
 		}
 	}
 
@@ -76,47 +79,131 @@ public class SwingView implements I_View
 		frmScriptBuilder.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JMenuBar menuBar = new JMenuBar();
 		frmScriptBuilder.setJMenuBar(menuBar);
+		// File
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
-		
 		JMenuItem mntmNew = new JMenuItem("New");
+		mntmNew.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Implement this method.
+			}
+		});
 		mnFile.add(mntmNew);
-		
 		JMenuItem mntmLoad = new JMenuItem("Load");
+		mntmLoad.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Implement this method.
+			}
+		});
 		mnFile.add(mntmLoad);
-		
 		JMenuItem mntmSave = new JMenuItem("Save");
+		mntmSave.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Implement this method.
+			}
+		});
 		mnFile.add(mntmSave);
-		
 		JMenuItem mntmSaveAs = new JMenuItem("Save As");
+		mntmSaveAs.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Implement this method.
+			}
+		});
 		mnFile.add(mntmSaveAs);
-		
 		JMenuItem mntmScriptPreferences = new JMenuItem("Script Preferences");
+		mntmScriptPreferences.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Implement this method.
+			}
+		});
 		mnFile.add(mntmScriptPreferences);
+		// Plotlines
 		JMenu mnPlotlines = new JMenu("Plotlines");
 		menuBar.add(mnPlotlines);
-		
 		JMenuItem mntmAdd = new JMenuItem("Add");
+		mntmAdd.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Implement this method.
+			}
+		});
 		mnPlotlines.add(mntmAdd);
-		
 		JMenuItem mntmRemove = new JMenuItem("Remove");
+		mntmRemove.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Implement this method.
+			}
+		});
 		mnPlotlines.add(mntmRemove);
-		
 		JMenuItem mntmEdit = new JMenuItem("Edit");
+		mntmEdit.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Implement this method.
+			}
+		});
 		mnPlotlines.add(mntmEdit);
+		// Events
 		JMenu mnEvents = new JMenu("Events");
 		menuBar.add(mnEvents);
-		
 		JMenuItem mntmCreatePrototype = new JMenuItem("Create Prototype");
+		mntmCreatePrototype.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				PrototypeView prototypePanel = new PrototypeView();
+				prototypePanel.setVisible(true);
+				// TODO Implement this method.
+			}
+		});
 		mnEvents.add(mntmCreatePrototype);
-		
 		JMenuItem mntmEditPrototype = new JMenuItem("Edit Prototype");
+		mntmEditPrototype.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Implement this method.
+			}
+		});
 		mnEvents.add(mntmEditPrototype);
+		// Media
 		JMenu mnMedia = new JMenu("Media");
 		menuBar.add(mnMedia);
-		
 		JMenuItem mntmImportMedia = new JMenuItem("Import Media");
+		mntmImportMedia.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Implement this method.
+			}
+		});
 		mnMedia.add(mntmImportMedia);
+		// Options
 		JMenu mnOptions = new JMenu("Options");
 		menuBar.add(mnOptions);
 		frmScriptBuilder.getContentPane().setLayout(new BorderLayout(0, 0));
@@ -134,6 +221,4 @@ public class SwingView implements I_View
 		scrollPane = new JScrollPane(plotlineDisplay);
 		frmScriptBuilder.getContentPane().add(scrollPane, BorderLayout.CENTER);
 	}
-
-	
 }

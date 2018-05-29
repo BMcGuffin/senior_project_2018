@@ -179,7 +179,8 @@ public class Script extends Observable implements XML_Writable
 		{
 			System.out.println("Unable to generate XML file " + saveFile.getName());
 		}
-
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -193,6 +194,8 @@ public class Script extends Observable implements XML_Writable
 		saveFile = null;
 		dtd.reset();
 		eb.reset();
+		setChanged();
+		notifyObservers();
 	}
 
 	public void loadFromFile(File newFile)
@@ -215,6 +218,8 @@ public class Script extends Observable implements XML_Writable
 		{
 			System.out.println("Unable to read XML file " + newFile.getName());
 		}
+		setChanged();
+		notifyObservers();
 	}
 
 	public String toString()
