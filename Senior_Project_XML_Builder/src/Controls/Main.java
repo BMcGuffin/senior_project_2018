@@ -9,6 +9,7 @@ package Controls;
 
 import Models.*;
 import Views.*;
+import Views.SwingView.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -43,6 +44,10 @@ public class Main
 		{
 			SwingView window = new SwingView(ctrl);
 			script.addObserver(window);
+			TerminalView term = new TerminalView(ctrl);
+			script.addObserver(term);
+			script.spark();
+			
 			java.awt.EventQueue.invokeLater(new Runnable()
 			{
 				public void run()
@@ -50,6 +55,7 @@ public class Main
 					window.setVisible(true);
 				}
 			});
+			term.setVisible(true);
 		}
 	}
 }

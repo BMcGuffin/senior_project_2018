@@ -222,4 +222,17 @@ public class Script extends Observable implements XML_Writable
 		return "Script \"" + this.scriptTitle + "\"";
 	}
 
+	public int getLength()
+	{
+		int largest = 0;
+		for (Plotline plt : plotlines)
+		{
+			if ((plt.startTime + plt.length()) > largest)
+			{
+				largest = (plt.startTime + plt.length());
+			}
+		}
+		return largest;
+	}
+
 }
