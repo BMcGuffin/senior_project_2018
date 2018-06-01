@@ -20,17 +20,8 @@ import java.util.List;
  */
 public class Coordinator implements I_Controller
 {
-
 	private Script sc;
 	private EventBuilder builder;
-
-	private int currentPlotIndex;
-
-	private int currentInstIndex;
-
-	private int currentEventIndex;
-
-	private int currentDataFieldIndex;
 
 	/**
 	 * Constructor
@@ -41,53 +32,19 @@ public class Coordinator implements I_Controller
 	{
 		sc = script;
 		builder = EventBuilder.getBuilder();
-		currentPlotIndex = 0;
-
-		currentInstIndex = 0;
-
-		currentEventIndex = 0;
-
-		currentDataFieldIndex = 0;
-	}
-
-	@Override
-	public void setPlotNum(int newNum)
-	{
-		currentPlotIndex = newNum;
-	}
-
-	@Override
-	public void setInstNum(int newNum)
-	{
-		currentInstIndex = newNum;
-	}
-
-	@Override
-	public void setEvtNum(int newNum)
-	{
-		currentEventIndex = newNum;
-	}
-
-	@Override
-	public void setDataNum(int newNum)
-	{
-		currentDataFieldIndex = newNum;
 	}
 
 	@Override
 	public void readCommand(Command cmd, List<String> args)
 	{
 		int len = args.size();
-
 		switch (cmd)
 		{
 			case NOTHING:
 				break;
-
 			case ADD_PLOTLINE:
 				String title;
 				int startTime;
-
 				if (len == 2)
 				{
 					title = args.get(0);
@@ -102,7 +59,6 @@ public class Coordinator implements I_Controller
 					}
 				}
 				break;
-
 			case REMOVE_PLOTLINE:
 				if (len == 1)
 				{
@@ -152,7 +108,6 @@ public class Coordinator implements I_Controller
 						e.printStackTrace();
 					}
 				}
-
 				break;
 			case CHANGE_SCRIPT_TITLE:
 				if (len == 1)
@@ -161,11 +116,11 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case CHANGE_PLOTLINE_TITLE:
-				if (len == 1)
+				if (len == 2)
 				{
 					try
 					{
-						sc.getPlotLine(currentPlotIndex).title = args.get(0);
+						sc.getPlotLine(Integer.parseInt(args.get(0))).title = args.get(1);
 					}
 					catch (Exception e)
 					{
@@ -197,12 +152,13 @@ public class Coordinator implements I_Controller
 				sc.saveToFile();
 				break;
 			case ADD_EVENT:
-				if (len == 2)
+				if (len == 3)
 				{
 					try
 					{
-						int time = Integer.parseInt(args.get(0));
-						Event evt = builder.generateEvent(args.get(1));
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int time = Integer.parseInt(args.get(1));
+						Event evt = builder.generateEvent(args.get(2));
 						if (sc.getPlotLine(currentPlotIndex).getInstance(time) == null)
 						{
 							sc.getPlotLine(currentPlotIndex).addInstance(time);
@@ -214,16 +170,18 @@ public class Coordinator implements I_Controller
 						e.printStackTrace();
 					}
 					sc.spark();
-					// TODO remove dependency on spark
+					// FUTURE remove dependency on spark
 				}
 				break;
 			case RELOCATE_EVENT:
-				if (len == 2)
+				if (len == 4)
 				{
 					try
 					{
-						int pos = Integer.parseInt(args.get(0));
-						int to = Integer.parseInt(args.get(1));
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int pos = Integer.parseInt(args.get(2));
+						int to = Integer.parseInt(args.get(3));
 						Instance inst = sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex);
 						Event evt = inst.events.get(pos);
 						inst.removeEvent(evt);
@@ -244,11 +202,13 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case REMOVE_EVENT:
-				if (len == 1)
+				if (len == 3)
 				{
 					try
 					{
-						int evt = Integer.parseInt(args.get(0));
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int evt = Integer.parseInt(args.get(2));
 						Instance inst = sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex);
 						inst.removeEvent(inst.events.get(evt));
 					}
@@ -257,7 +217,7 @@ public class Coordinator implements I_Controller
 						e.printStackTrace();
 					}
 					sc.spark();
-					// TODO remove dependency on spark
+					// FUTURE remove dependency on spark
 				}
 				break;
 			case CHANGE_SCRIPT_DESCRIPTION:
@@ -267,11 +227,12 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case CHANGE_PLOTLINE_DESCRIPTION:
-				if (len == 1)
+				if (len == 2)
 				{
 					try
 					{
-						sc.getPlotLine(currentPlotIndex).description = args.get(0);
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						sc.getPlotLine(currentPlotIndex).description = args.get(1);
 					}
 					catch (Exception e)
 					{
@@ -280,11 +241,12 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case CHANGE_PLOTLINE_START:
-				if (len == 1)
+				if (len == 2)
 				{
 					try
 					{
-						int newStart = Integer.parseInt(args.get(0));
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int newStart = Integer.parseInt(args.get(1));
 						sc.getPlotLine(currentPlotIndex).startTime = newStart;
 					}
 					catch (Exception e)
@@ -294,13 +256,17 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case DATA_TEXTFIELD_REPLACE_TEXT:
-				if (len == 1)
+				if (len == 5)
 				{
 					try
 					{
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int currentEventIndex = Integer.parseInt(args.get(2));
+						int currentDataFieldIndex = Integer.parseInt(args.get(3));
 						Data_Text dt = (Data_Text) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
 								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
-						dt.setContent(args.get(0));
+						dt.setContent(args.get(4));
 					}
 					catch (Exception e)
 					{
@@ -309,13 +275,17 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case DATA_MEDIA_CHANGE_FILE:
-				if (len == 1)
+				if (len == 5)
 				{
 					try
 					{
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int currentEventIndex = Integer.parseInt(args.get(2));
+						int currentDataFieldIndex = Integer.parseInt(args.get(3));
 						Data_Media dm = (Data_Media) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
 								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
-						dm.setMediaFile(new File(args.get(0)));
+						dm.setMediaFile(new File(args.get(4)));
 					}
 					catch (Exception e)
 					{
@@ -324,13 +294,17 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case DATA_MEDIA_PLAYBACK_LENGTH:
-				if (len == 1)
+				if (len == 5)
 				{
 					try
 					{
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int currentEventIndex = Integer.parseInt(args.get(2));
+						int currentDataFieldIndex = Integer.parseInt(args.get(3));
 						Data_Media dm = (Data_Media) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
 								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
-						int newLen = Integer.parseInt(args.get(0));
+						int newLen = Integer.parseInt(args.get(4));
 						dm.setPlayLength(newLen);
 					}
 					catch (Exception e)
@@ -340,13 +314,17 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case DATA_MEDIA_START_TIME:
-				if (len == 1)
+				if (len == 5)
 				{
 					try
 					{
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int currentEventIndex = Integer.parseInt(args.get(2));
+						int currentDataFieldIndex = Integer.parseInt(args.get(3));
 						Data_Media dm = (Data_Media) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
 								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
-						int newStart = Integer.parseInt(args.get(0));
+						int newStart = Integer.parseInt(args.get(4));
 						dm.setStartTime(newStart);
 					}
 					catch (Exception e)
@@ -356,13 +334,17 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case DATA_MENU_OPTION_SELECT:
-				if (len == 1)
+				if (len == 5)
 				{
 					try
 					{
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int currentEventIndex = Integer.parseInt(args.get(2));
+						int currentDataFieldIndex = Integer.parseInt(args.get(3));
 						Data_Menu du = (Data_Menu) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
 								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
-						int index = Integer.parseInt(args.get(0));
+						int index = Integer.parseInt(args.get(4));
 						du.setSelected(index);
 					}
 					catch (Exception e)
@@ -372,13 +354,18 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case DATA_TRANSCRIPT_LINE_BACK:
-				if (len == 1)
+				if (len == 5)
 				{
 					try
 					{
-						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
-								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
-						int index = Integer.parseInt(args.get(0));
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int currentEventIndex = Integer.parseInt(args.get(2));
+						int currentDataFieldIndex = Integer.parseInt(args.get(3));
+						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex)
+								.getInstance(currentInstIndex).getEvent(currentEventIndex)
+								.getElement(currentDataFieldIndex);
+						int index = Integer.parseInt(args.get(4));
 						dt.moveLineUp(index);
 					}
 					catch (Exception e)
@@ -388,13 +375,18 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case DATA_TRANSCRIPT_LINE_FORWARD:
-				if (len == 1)
+				if (len == 5)
 				{
 					try
 					{
-						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
-								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
-						int index = Integer.parseInt(args.get(0));
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int currentEventIndex = Integer.parseInt(args.get(2));
+						int currentDataFieldIndex = Integer.parseInt(args.get(3));
+						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex)
+								.getInstance(currentInstIndex).getEvent(currentEventIndex)
+								.getElement(currentDataFieldIndex);
+						int index = Integer.parseInt(args.get(4));
 						dt.moveLineDown(index);
 					}
 					catch (Exception e)
@@ -404,13 +396,18 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case DATA_TRANSCRIPT_NEW_LINE:
-				if (len == 2)
+				if (len == 6)
 				{
 					try
 					{
-						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
-								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
-						dt.addLine(args.get(0), args.get(1));
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int currentEventIndex = Integer.parseInt(args.get(2));
+						int currentDataFieldIndex = Integer.parseInt(args.get(3));
+						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex)
+								.getInstance(currentInstIndex).getEvent(currentEventIndex)
+								.getElement(currentDataFieldIndex);
+						dt.addLine(args.get(4), args.get(5));
 					}
 					catch (Exception e)
 					{
@@ -419,13 +416,18 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case DATA_TRANSCRIPT_REMOVE_LINE:
-				if (len == 1)
+				if (len == 5)
 				{
 					try
 					{
-						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
-								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
-						int index = Integer.parseInt(args.get(0));
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int currentEventIndex = Integer.parseInt(args.get(2));
+						int currentDataFieldIndex = Integer.parseInt(args.get(3));
+						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex)
+								.getInstance(currentInstIndex).getEvent(currentEventIndex)
+								.getElement(currentDataFieldIndex);
+						int index = Integer.parseInt(args.get(4));
 						dt.removeLine(index);
 					}
 					catch (Exception e)
@@ -435,16 +437,21 @@ public class Coordinator implements I_Controller
 				}
 				break;
 			case DATA_TRANSCRIPT_EDIT_LINE:
-				if (len == 3)
+				if (len == 7)
 				{
 					try
 					{
-						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex).getInstance(currentInstIndex)
-								.getEvent(currentEventIndex).getElement(currentDataFieldIndex);
-						int index = Integer.parseInt(args.get(0));
+						int currentPlotIndex = Integer.parseInt(args.get(0));
+						int currentInstIndex = Integer.parseInt(args.get(1));
+						int currentEventIndex = Integer.parseInt(args.get(2));
+						int currentDataFieldIndex = Integer.parseInt(args.get(3));
+						Data_Transcript dt = (Data_Transcript) sc.getPlotLine(currentPlotIndex)
+								.getInstance(currentInstIndex).getEvent(currentEventIndex)
+								.getElement(currentDataFieldIndex);
+						int index = Integer.parseInt(args.get(4));
 						Line l = dt.getLine(index);
-						l.actor = args.get(1);
-						l.dialog = args.get(2);
+						l.actor = args.get(5);
+						l.dialog = args.get(6);
 					}
 					catch (Exception e)
 					{
@@ -455,7 +462,5 @@ public class Coordinator implements I_Controller
 			default:
 				break;
 		}
-
 	}
-
 }

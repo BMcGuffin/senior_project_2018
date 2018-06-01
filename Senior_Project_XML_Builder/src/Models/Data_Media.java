@@ -199,7 +199,7 @@ public class Data_Media implements Buildable
 		fileName = f.getName();
 		if (isVideo)
 		{
-			// TODO Add code for determining duration of a video file.
+			// FUTURE Add code for determining duration of a video file.
 			throw new UnsupportedOperationException("Not supported yet.");
 		}
 		if (isAudio)

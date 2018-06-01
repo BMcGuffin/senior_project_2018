@@ -25,28 +25,4 @@ public interface I_Controller
 	 *            the data values going along with this command.
 	 */
 	void readCommand(Command cmd, List<String> args);
-	
-	/**
-	 * Change the reference to the current plotline.
-	 * @param newNum the index of the new plotline
-	 */
-	void setPlotNum(int newNum);
-	
-	/**
-	 * Change the reference to the current instance.
-	 * @param newNum the time of the new instance
-	 */
-	void setInstNum(int newNum);
-	
-	/**
-	 * Change the reference to the current event.
-	 * @param newNum the index of the new event
-	 */
-	void setEvtNum(int newNum);
-	
-	/**
-	 * Change the reference to the current data field.
-	 * @param newNum the index of the new data field
-	 */
-	void setDataNum(int newNum);
 }

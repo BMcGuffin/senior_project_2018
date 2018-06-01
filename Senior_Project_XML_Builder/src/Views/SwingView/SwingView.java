@@ -17,6 +17,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
@@ -52,20 +54,47 @@ public class SwingView implements I_View
 	@Override
 	public void update(Observable o, Object arg)
 	{
-		System.out.println("Got an update event for the GUI.");
 		if (o instanceof Script)
 		{
 			plotlineDisplay.removeAll();
-			System.out.println("This is a script event.");
 			scr = (Script) o;
-			System.out.println("Script contains " + scr.countPlotlines() + " plotlines.");
-			for (Plotline plt : scr.plotlines)
+			for (int i = 0; i < scr.plotlines.size(); i++)
 			{
-				PlotlinePanel pp = new PlotlinePanel(plt);
+				Plotline plt = scr.getPlotLine(i);
+				PlotlinePanel pp = new PlotlinePanel(scr, ctrl, i);
+				pp.addMouseListener(new MouseListener()
+				{
+					@Override
+					public void mouseReleased(MouseEvent e)
+					{}
+
+					@Override
+					public void mousePressed(MouseEvent e)
+					{}
+
+					@Override
+					public void mouseExited(MouseEvent e)
+					{}
+
+					@Override
+					public void mouseEntered(MouseEvent e)
+					{}
+
+					@Override
+					public void mouseClicked(MouseEvent e)
+					{
+						if (e.getClickCount() == 2)
+						{
+							int index = scr.plotlines.indexOf(plt);
+							System.out.println("Index of plot " + plt.title + " is " + index);
+							PlotlineEditorView pltEditor = new PlotlineEditorView(scr, ctrl, index);
+							scr.addObserver(pltEditor);
+							pltEditor.setVisible(true);
+						}
+					}
+				});
 				plotlineDisplay.add(pp);
-				System.out.println("Added a plotline panel.");
 			}
-			System.out.println("Finished updating.");
 			plotlineDisplay.revalidate();
 			plotlineDisplay.repaint();
 		}
@@ -82,6 +111,10 @@ public class SwingView implements I_View
 	 */
 	private void initialize()
 	{
+		// TODO Add timestamp
+		// FUTURE Add zoom bar
+		// TODO Add Plotline Options panel
+		// TODO Add info panel
 		frmScriptBuilder = new JFrame();
 		frmScriptBuilder.setTitle("Script Builder");
 		frmScriptBuilder.setBounds(0, 0, 1000, 700);
@@ -245,7 +278,9 @@ public class SwingView implements I_View
 							JOptionPane.OK_CANCEL_OPTION);
 					if (response == JOptionPane.OK_OPTION && index != -1)
 					{
-						scr.removePlotline(index);
+						ArrayList<String> args = new ArrayList<>();
+						args.add("" + index);
+						ctrl.readCommand(Command.REMOVE_PLOTLINE, args);
 					}
 				}
 			}
@@ -273,10 +308,11 @@ public class SwingView implements I_View
 				Object result = JOptionPane.showInputDialog(frmScriptBuilder, "Select Plotline:", "Edit Plotline",
 						JOptionPane.PLAIN_MESSAGE, null, scr.plotlines.toArray(), scr.getPlotLine(0));
 				if (result instanceof Plotline)
-				{	
+				{
 					Plotline plot = (Plotline) result;
 					int index = scr.plotlines.indexOf(plot);
-					PlotlineEditorView pltEditor = new PlotlineEditorView(scr, index, ctrl);
+					System.out.println("Index of plot " + plot.title + " is " + index);
+					PlotlineEditorView pltEditor = new PlotlineEditorView(scr, ctrl, index);
 					scr.addObserver(pltEditor);
 					pltEditor.setVisible(true);
 				}
@@ -307,7 +343,7 @@ public class SwingView implements I_View
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO Implement prototype editing.
+				// FUTURE Implement prototype editing.
 			}
 		});
 		mnEvents.add(mntmEditPrototype);
@@ -335,7 +371,7 @@ public class SwingView implements I_View
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO Implement media importing.
+				// FUTURE Implement media importing.
 			}
 		});
 		mnMedia.add(mntmImportMedia);

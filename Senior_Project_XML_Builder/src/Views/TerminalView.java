@@ -183,15 +183,18 @@ public class TerminalView implements I_View
 					case "n":// Rename plotline
 						cmd = Command.CHANGE_PLOTLINE_TITLE;
 						System.out.println("Enter new plotline title:");
+						args.add("" + currentPlotIndex);
 						args.add(in.nextLine());
 						break;
 					case "d":// Change plotline description
 						cmd = Command.CHANGE_PLOTLINE_DESCRIPTION;
 						System.out.println("Enter new plotline description:");
+						args.add("" + currentPlotIndex);
 						args.add(in.nextLine());
 						break;
 					case "t":// Change start time
 						cmd = Command.CHANGE_PLOTLINE_START;
+						args.add("" + currentPlotIndex);
 						args.add("" + getIntFromInput("Enter new start time in seconds:"));
 						break;
 					case "l":// Get list of events in this plotline
@@ -208,6 +211,7 @@ public class TerminalView implements I_View
 						break;
 					case "a":// Add new event
 						cmd = Command.ADD_EVENT;
+						args.add("" + currentPlotIndex);
 						if (scr.getPlotLine(currentPlotIndex).instanceCount() == 0)
 						{
 							System.out.println("First event in this plotline will be added to time T = 0.");
@@ -228,6 +232,7 @@ public class TerminalView implements I_View
 						break;
 					case "r":// Remove event
 						cmd = Command.REMOVE_EVENT;
+						args.add("" + currentPlotIndex);
 						int tempInstIndex = getIntFromInput("Enter time (in seconds) of event to be removed:");
 						if (scr.getPlotLine(currentPlotIndex).getInstance(tempInstIndex) == null)
 						{
@@ -236,6 +241,7 @@ public class TerminalView implements I_View
 							break;
 						}
 						currentInstIndex = tempInstIndex;
+						args.add("" + currentInstIndex);
 						inst = scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex);
 						System.out.println("Found " + inst.events.size() + " events at this time.");
 						for (int i = 0; i < inst.events.size(); i++)
@@ -274,6 +280,7 @@ public class TerminalView implements I_View
 						break;
 					case "m":// Move event
 						cmd = Command.RELOCATE_EVENT;
+						args.add("" + currentPlotIndex);
 						tempInstIndex = getIntFromInput("Enter time (in seconds) of event to be moved:");
 						if (scr.getPlotLine(currentPlotIndex).getInstance(tempInstIndex) == null)
 						{
@@ -282,6 +289,7 @@ public class TerminalView implements I_View
 							break;
 						}
 						currentInstIndex = tempInstIndex;
+						args.add("" + currentInstIndex);
 						inst = scr.getPlotLine(currentPlotIndex).getInstance(currentInstIndex);
 						System.out.println("Found " + inst.events.size() + " events at this time.");
 						for (int i = 0; i < inst.events.size(); i++)
@@ -341,6 +349,10 @@ public class TerminalView implements I_View
 				{
 					case "r": // Replace the current text
 						cmd = Command.DATA_TEXTFIELD_REPLACE_TEXT;
+						args.add("" + currentPlotIndex);
+						args.add("" + currentInstIndex);
+						args.add("" + currentEventIndex);
+						args.add("" + currentDataFieldIndex);
 						System.out.println("Enter the new text for this text field:");
 						args.add(in.nextLine());
 						break;
@@ -356,15 +368,27 @@ public class TerminalView implements I_View
 				{
 					case "c": // Change the current media file
 						cmd = Command.DATA_MEDIA_CHANGE_FILE;
+						args.add("" + currentPlotIndex);
+						args.add("" + currentInstIndex);
+						args.add("" + currentEventIndex);
+						args.add("" + currentDataFieldIndex);
 						System.out.println("Enter the path to the new media file:");
 						args.add(in.nextLine());
 						break;
 					case "s": // Change start time
 						cmd = Command.DATA_MEDIA_START_TIME;
+						args.add("" + currentPlotIndex);
+						args.add("" + currentInstIndex);
+						args.add("" + currentEventIndex);
+						args.add("" + currentDataFieldIndex);
 						args.add("" + getIntFromInput("Enter the number of seconds into the file to begin playback:"));
 						break;
 					case "l": // Change playback length
 						cmd = Command.DATA_MEDIA_PLAYBACK_LENGTH;
+						args.add("" + currentPlotIndex);
+						args.add("" + currentInstIndex);
+						args.add("" + currentEventIndex);
+						args.add("" + currentDataFieldIndex);
 						args.add("" + getIntFromInput("Enter the length, in seconds, of playback:"));
 						break;
 					case "b": // Back to event editing menu
@@ -381,6 +405,10 @@ public class TerminalView implements I_View
 				{
 					case "c": // Choose new option from the list
 						cmd = Command.DATA_MENU_OPTION_SELECT;
+						args.add("" + currentPlotIndex);
+						args.add("" + currentInstIndex);
+						args.add("" + currentEventIndex);
+						args.add("" + currentDataFieldIndex);
 						String[] options = data_menu.getElements();
 						System.out.println("Available options:");
 						for (int i = 0; i < options.length; i++)
@@ -403,6 +431,10 @@ public class TerminalView implements I_View
 				{
 					case "a": // Add new line of dialogue
 						cmd = Command.DATA_TRANSCRIPT_NEW_LINE;
+						args.add("" + currentPlotIndex);
+						args.add("" + currentInstIndex);
+						args.add("" + currentEventIndex);
+						args.add("" + currentDataFieldIndex);
 						System.out.println("Enter the identifier for the speaker of this line:");
 						args.add(in.nextLine());
 						System.out.println("Enter the text for this line:");
@@ -410,10 +442,18 @@ public class TerminalView implements I_View
 						break;
 					case "r": // Remove existing line of dialogue
 						cmd = Command.DATA_TRANSCRIPT_REMOVE_LINE;
+						args.add("" + currentPlotIndex);
+						args.add("" + currentInstIndex);
+						args.add("" + currentEventIndex);
+						args.add("" + currentDataFieldIndex);
 						args.add("" + getIntFromInput("Enter the index of the line to remove:"));
 						break;
 					case "e": // Edit existing line of dialogue
 						cmd = Command.DATA_TRANSCRIPT_EDIT_LINE;
+						args.add("" + currentPlotIndex);
+						args.add("" + currentInstIndex);
+						args.add("" + currentEventIndex);
+						args.add("" + currentDataFieldIndex);
 						args.add("" + getIntFromInput("Enter the index of the line to edit:"));
 						System.out.println("Enter the new identifier for the speaker of this line:");
 						args.add(in.nextLine());
@@ -422,10 +462,18 @@ public class TerminalView implements I_View
 						break;
 					case "<": // Move a line earlier in the conversation
 						cmd = Command.DATA_TRANSCRIPT_LINE_BACK;
+						args.add("" + currentPlotIndex);
+						args.add("" + currentInstIndex);
+						args.add("" + currentEventIndex);
+						args.add("" + currentDataFieldIndex);
 						args.add("" + getIntFromInput("Enter the index of the line to move back:"));
 						break;
 					case ">": // Move a line later in the conversation
 						cmd = Command.DATA_TRANSCRIPT_LINE_FORWARD;
+						args.add("" + currentPlotIndex);
+						args.add("" + currentInstIndex);
+						args.add("" + currentEventIndex);
+						args.add("" + currentDataFieldIndex);
 						args.add("" + getIntFromInput("Enter the index of the line to move forward:"));
 						break;
 					case "b": // Back to event editing menu
@@ -438,10 +486,6 @@ public class TerminalView implements I_View
 			default:
 				break;
 		}
-		ctrl.setPlotNum(currentPlotIndex);
-		ctrl.setInstNum(currentInstIndex);
-		ctrl.setEvtNum(currentEventIndex);
-		ctrl.setDataNum(currentDataFieldIndex);
 		ctrl.readCommand(cmd, args);
 	}
 

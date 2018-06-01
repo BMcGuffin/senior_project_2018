@@ -96,6 +96,16 @@ public class Data_Menu implements Buildable
 		}
 		return null;
 	}
+	
+	/**
+	 * Get the currently selected list index.
+	 *
+	 * @return the index of the currently selected item.
+	 */
+	public int getSelectedIndex()
+	{
+		return currentlySelected;
+	}
 
 	/**
 	 * Set the currently selected option to a different valid state.

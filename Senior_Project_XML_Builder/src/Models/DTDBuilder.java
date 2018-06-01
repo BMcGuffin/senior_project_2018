@@ -88,7 +88,7 @@ public class DTDBuilder
 	 */
 	public void generateDTD(String scriptTitle) throws IOException
 	{
-		//FIXME this method should save the DTD in the same folder as the script
+		// FIXME this method should save the DTD in the same folder as the script
 		String filename = getDTDName(scriptTitle);
 		File file = new File(filename);
 		file.createNewFile();
@@ -124,14 +124,12 @@ public class DTDBuilder
 		if (subelements.containsKey(evt.eventType))
 		{
 			System.out.println("ERROR: Event name is in list of known elements");
-
 			return false;
 		}
 		// Check to make sure the event name doesn't contain an invalid character.
 		if (evt.eventType.contains("."))
 		{
 			System.out.println("ERROR: Event name contains invalid characters");
-
 			return false;
 		}
 		// Check data field names for uniqueness.

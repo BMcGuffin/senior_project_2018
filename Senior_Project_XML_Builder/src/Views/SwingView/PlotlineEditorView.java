@@ -41,11 +41,11 @@ public class PlotlineEditorView extends JFrame implements Observer
 	/**
 	 * Create the frame.
 	 */
-	public PlotlineEditorView(Script script, int index, I_Controller control)
+	public PlotlineEditorView(Script script, I_Controller control, int plotindex)
 	{
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		scr = script;
-		plotIndex = index;
+		this.plotIndex = plotindex;
 		plt = scr.getPlotLine(plotIndex);
 		ctrl = control;
 		scr.addObserver(this);
@@ -69,7 +69,7 @@ public class PlotlineEditorView extends JFrame implements Observer
 			scr = (Script) o;
 			plt = scr.getPlotLine(plotIndex);
 			contentPane.removeAll();
-			contentPane.add(new PlotlineEventsPanel(plt));
+			contentPane.add(new PlotlineEventsPanel(scr, ctrl, plotIndex));
 			// Reset the "add events" sub-menu
 			mnAddEvent.removeAll();
 			ArrayList<String> eventTypes = eb.viableEventTypes();
@@ -88,6 +88,7 @@ public class PlotlineEditorView extends JFrame implements Observer
 						{
 							try
 							{
+								args.add("" + plotIndex);
 								args.add("" + Integer.parseInt(result));
 								args.add(menuItem.getText());
 								ctrl.readCommand(Command.ADD_EVENT, args);
@@ -111,6 +112,9 @@ public class PlotlineEditorView extends JFrame implements Observer
 	 */
 	private void initialize()
 	{
+		// TODO Add relative and absolute timestamps
+		// TODO Add "add time" buttons
+		// FUTURE Add zoom bar
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		/*********************************************************/
@@ -136,7 +140,7 @@ public class PlotlineEditorView extends JFrame implements Observer
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				PlotlinePreferencesView plotPrefs = new PlotlinePreferencesView(plt, ctrl);
+				PlotlinePreferencesView plotPrefs = new PlotlinePreferencesView(scr, ctrl, plotIndex);
 				plotPrefs.setVisible(true);
 			}
 		});
@@ -165,7 +169,7 @@ public class PlotlineEditorView extends JFrame implements Observer
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO Implement prototype editing.
+				// FUTURE Implement prototype editing.
 			}
 		});
 		mnEvents.add(mntmEditPrototype);
@@ -196,7 +200,7 @@ public class PlotlineEditorView extends JFrame implements Observer
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO Implement media importing.
+				// FUTURE Implement media importing.
 			}
 		});
 		mnMedia.add(mntmImportMedia);
