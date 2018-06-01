@@ -2,30 +2,36 @@ package Views.SwingView;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import Models.Plotline;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import java.awt.Component;
 
-public class PlotlinePanel extends JPanel
+public class PlotlineEventsPanel extends JPanel
 {
-	PlotlinePanel(Plotline plt)
+	Plotline plt;
+
+	/**
+	 * Create the panel.
+	 */
+	public PlotlineEventsPanel(Plotline plot)
 	{
+		plt = plot;
+		
 		this.setBackground(Color.WHITE);
 		this.setAlignmentX(LEFT_ALIGNMENT);
 		this.setAlignmentY(TOP_ALIGNMENT);
 		this.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
-		Dimension defaultSize = new Dimension(SwingView.WIDTH_OF_INSTANCE, SwingView.HEIGHT_OF_INSTANCE);
+		Dimension defaultSize = new Dimension(PlotlineEditorView.WIDTH_OF_INSTANCE, PlotlineEditorView.HEIGHT_OF_INSTANCE);
 		
 		Box horizontalBox = Box.createHorizontalBox();
 		horizontalBox.setAlignmentX(LEFT_ALIGNMENT);
 		horizontalBox.setAlignmentY(TOP_ALIGNMENT);
-		horizontalBox.add(Box.createRigidArea(new Dimension(plt.startTime * SwingView.WIDTH_OF_INSTANCE - 1, 0)));
+		//horizontalBox.add(Box.createRigidArea(new Dimension(plt.startTime * PlotlineEditorView.WIDTH_OF_INSTANCE - 1, 0)));
 		for (int i = 0; i < plt.length(); i++)
 		{
 			JPanel instance = new JPanel();
@@ -67,6 +73,5 @@ public class PlotlinePanel extends JPanel
 			this.setMinimumSize(scriptSize);
 			this.setPreferredSize(scriptSize);
 		}
-		
 	}
 }

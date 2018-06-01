@@ -25,6 +25,7 @@ import java.util.TreeMap;
  */
 public class Plotline implements XML_Writable
 {
+	//TODO Add support for saving plotlines to their own files.
 	/**
 	 * Mapping of each instance by the number of seconds into the plotline that it
 	 * starts. Instances are chronologically distinct. Key: Number of seconds into

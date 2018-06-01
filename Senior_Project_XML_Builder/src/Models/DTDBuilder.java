@@ -88,6 +88,7 @@ public class DTDBuilder
 	 */
 	public void generateDTD(String scriptTitle) throws IOException
 	{
+		//FIXME this method should save the DTD in the same folder as the script
 		String filename = getDTDName(scriptTitle);
 		File file = new File(filename);
 		file.createNewFile();

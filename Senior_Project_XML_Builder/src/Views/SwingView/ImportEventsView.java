@@ -6,14 +6,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class ManageEventsView extends JFrame
+public class ImportEventsView extends JFrame
 {
 	private JPanel contentPane;
 
 	/**
 	 * Create the frame.
 	 */
-	public ManageEventsView()
+	public ImportEventsView()
 	{
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -21,6 +21,6 @@ public class ManageEventsView extends JFrame
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		setTitle("Manage Events");
+		setTitle("Import Event Prototypes");
 	}
 }

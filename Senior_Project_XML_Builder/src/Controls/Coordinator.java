@@ -213,6 +213,8 @@ public class Coordinator implements I_Controller
 					{
 						e.printStackTrace();
 					}
+					sc.spark();
+					// TODO remove dependency on spark
 				}
 				break;
 			case RELOCATE_EVENT:
@@ -254,6 +256,8 @@ public class Coordinator implements I_Controller
 					{
 						e.printStackTrace();
 					}
+					sc.spark();
+					// TODO remove dependency on spark
 				}
 				break;
 			case CHANGE_SCRIPT_DESCRIPTION:

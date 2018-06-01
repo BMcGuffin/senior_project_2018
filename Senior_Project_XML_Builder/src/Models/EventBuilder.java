@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -30,18 +31,13 @@ import java.util.logging.Logger;
  */
 public class EventBuilder
 {
-
 	private DTDBuilder dtd;
-
 	private File templatesFolder;
-
 	private static EventBuilder singleton;
-
 	/**
 	 * Contains a prototype for each event type in the template deck.
 	 */
 	private Map<String, Event> prototypes;
-
 	private List<Event> inScript;
 
 	/**
@@ -93,36 +89,29 @@ public class EventBuilder
 	public Event generateEvent(String eventType)
 	{
 		Event prototype = prototypes.get(eventType);
-
 		// Return a blank event if we don't have a prototype matching that event type
 		if (prototype == null)
 		{
 			prototype = new Event(null);
 		}
-
-		System.out.println("Requested a prototype of event of type "+prototype.eventType);
+		System.out.println("Requested a prototype of event of type " + prototype.eventType);
 		// If this type of event is being added to the script for the first time, add it
 		// to the dtd
 		if (!inScript.contains(prototype))
 		{
-			System.out.println("Adding reference to "+eventType+" to DTD");
+			System.out.println("Adding reference to " + eventType + " to DTD");
 			inScript.add(prototype);
 			dtd.digestEvent(prototype);
 		}
-
 		System.out.println("Building new event...");
 		Event newEvent = new Event(null);
-
 		newEvent.eventType = prototype.eventType;
-
 		for (int i = 0; i < prototype.fieldCount(); i++)
 		{
 			newEvent.addElement(prototype.getElement(i).duplicate(), prototype.getLabel(i));
 		}
-
-		System.out.println("Built new event of type "+ newEvent.eventType);
+		System.out.println("Built new event of type " + newEvent.eventType);
 		return newEvent;
-
 	}
 
 	/**
@@ -156,7 +145,6 @@ public class EventBuilder
 				return false;
 			}
 		}
-
 		// Construct a file in the templates folder.
 		File newEvent = new File(templatesFolder.getPath() + File.pathSeparator + ecfName);
 		try
@@ -167,7 +155,6 @@ public class EventBuilder
 		{
 			return false;
 		}
-
 		// Write to the new file.
 		BufferedWriter bw;
 		try
@@ -272,7 +259,6 @@ public class EventBuilder
 			evt.addElement(b, label);
 		}
 		in.close();
-
 		prototypes.put(evt.eventType, evt);
 		return evt;
 	}
@@ -323,7 +309,6 @@ public class EventBuilder
 						selectedIndex = j;
 					}
 					output += str + "\n";
-
 				}
 				// Last line is currently selected index
 				output += selectedIndex + "\n";
@@ -342,7 +327,6 @@ public class EventBuilder
 					output += 1 + "\n";
 					output += text + "\n";
 				}
-
 			}
 			else if (b instanceof Data_Transcript)
 			{
@@ -359,7 +343,21 @@ public class EventBuilder
 				}
 			}
 		}
-
 		return output;
+	}
+
+	/**
+	 * Get an arraylist of all the known event types.
+	 * 
+	 * @return a list of type names for all event types in the Deck
+	 */
+	public ArrayList<String> viableEventTypes()
+	{
+		ArrayList<String> types = new ArrayList<String>();
+		for (String type : prototypes.keySet())
+		{
+			types.add(type);
+		}
+		return types;
 	}
 }

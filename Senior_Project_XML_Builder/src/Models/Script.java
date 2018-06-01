@@ -227,6 +227,11 @@ public class Script extends Observable implements XML_Writable
 		return "Script \"" + this.scriptTitle + "\"";
 	}
 
+	/**
+	 * Get the total runtime of the script, in seconds.
+	 * 
+	 * @return the number of seconds into the script that the last plotline ends
+	 */
 	public int getLength()
 	{
 		int largest = 0;
