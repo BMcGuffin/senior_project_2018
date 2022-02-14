@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "Senior_Project_XML_Builder/mockito-1.10.19.jar"
+    ]
+}

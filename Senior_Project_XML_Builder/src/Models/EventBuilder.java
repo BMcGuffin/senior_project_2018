@@ -48,7 +48,7 @@ public class EventBuilder
 	{
 		dtd = DTDBuilder.getDTDBuilder();
 		prototypes = new TreeMap<>();
-		templatesFolder = new File("src/Templates");
+		templatesFolder = new File("Senior_Project_XML_Builder/src/Templates");
 		inScript = new ArrayList<>();
 		File[] files = templatesFolder.listFiles();
 		for (File f : files)
